@@ -5,8 +5,8 @@ function Home() {
   return (
     <div>Home
 
-      <Link to="/UserDashBord">
-        Go to User Dashboard
+      <Link to="/SupervisorDashBoard">
+        Go to Supervisor Dashboard
       </Link>
     </div>
   )

@@ -13,13 +13,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 
 import Home from './components/pages/Home';
 import { AuthProvider } from './components/all_login/AuthContext';
-import { LanguageProvider } from './components/all_login/LanguageContext';
-import UserDashBord from "./components/user_panel/UserDashBord";
-
-
-
-
-
+import SupervisorDashBoard from "./components/supervisor_panel/SupervisorDashBoard";
 
 
 
@@ -28,21 +22,13 @@ import UserDashBord from "./components/user_panel/UserDashBord";
 function AppContent() {
   const location = useLocation();
 
-  const initialRender = React.useRef(true);
-
-
-
-  const hideFooter = location.pathname.includes("/") || location.pathname.includes("/unauthorized");
-  const hideNavBar = location.pathname.includes("/") || location.pathname.includes("/unauthorized");
-
   return (
     <>
-      {!hideNavBar && <NavBar />}
       <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/UserDashBord" element={<UserDashBord />} />
+          <Route path="/SupervisorDashBoard" element={<SupervisorDashBoard />} />
+          
         </Routes>
-        {!hideFooter && <Footer />}
     </>
   );
 }
@@ -50,11 +36,9 @@ function AppContent() {
 function App() {
   return (
     <AuthProvider>
-      <LanguageProvider>
-        <Router>
-          <AppContent />
-        </Router>
-      </LanguageProvider>
+      <Router>
+        <AppContent />
+      </Router>
     </AuthProvider>
   );
 }

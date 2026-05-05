@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { Nav, Offcanvas, Collapse } from "react-bootstrap";
 import {
   FaTachometerAlt,
@@ -18,102 +18,82 @@ import {
   FaUserCircle,
   FaCalendarAlt,
   FaPlusSquare,
-  FaListUl,
   FaEdit,
   FaMusic,
   FaGlassCheers,
-  FaChalkboardTeacher,
   FaIndustry,
-  FaQuestionCircle
+  FaQuestionCircle,
+  FaTrophy,
+  FaBriefcase,
+  FaGraduationCap,
+  FaTasks,
+  FaClock
 } from "react-icons/fa";
 import axios from "axios";
 
-import "../../assets/css/UserLeftNav.css";
-import { Link } from "react-router-dom";
+import "../../assets/css/supervisorleftnav.css";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   FaInfoCircle,
   FaBullseye,
-  FaTasks
+  
 } from "react-icons/fa";
 
+import { useAuth } from "../all_login/AuthContext";
 
 
+const SupervisorLeftNav = ({ sidebarOpen, setSidebarOpen, isMobile, isTablet, onNavClick }) => {
+  const { logout, user } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-
-const UserLeftNav = ({ sidebarOpen, setSidebarOpen, isMobile, isTablet }) => {
-  const { logout } = useAuth();
-
-    const [userRole, setUserRole] = useState(null);
+  const [userRole, setUserRole] = useState(user ? user.role : null);
   const [openSubmenu, setOpenSubmenu] = useState(null);
   const toggleSubmenu = (index) => {
     setOpenSubmenu(openSubmenu === index ? null : index);
   };
 
-const menuItems = [
-    {
-      icon: <FaTachometerAlt />,
-      label: "DASHBOARD",
-      path: "/UserDashBoard",
-      active: true,
-    },
-    {
-      icon: <FaTools />,
-      label: "SERVICE REQUEST",
-      submenu: [
-        {
-          label: "Request Service",
-          path: "/RequestService",
-          icon: <FaPlusSquare />,
-        },
-        {
-          label: "View Service Requests",
-          path: "/ViewRequestService",
-          icon: <FaListUl />,
-        },
-      ],
-    },
-    {
-      icon: <FaComments />,
-      label: "CONTACT WITH ADMIN ",
-      submenu: [
-        {
-          label: "Generate Query",
-          path: "/UserQuery",
-          icon: <FaEdit />,
-        },
-        {
-          label: "All Queries",
-          path: "/UserAllQuery",
-          icon: <FaTasks />,
-        },
-      ],
-    },
-   
-    
+  // Automatically close sidebar when navigating on mobile or tablet views
+  useEffect(() => {
+    if (isMobile || isTablet) {
+      setSidebarOpen(false);
+    }
+  }, [location.pathname, isMobile, isTablet, setSidebarOpen]);
 
-   
-    
-   
+  const handleItemClick = (e, path) => {
+    if (onNavClick) {
+      e.preventDefault();
+      onNavClick(path);
+    } else {
+      setSidebarOpen(false);
+    }
+  };
 
-    // {
-    //   icon: <FaCalendarAlt />,
-    //   label: "Event",
-    //   submenu: [
-    //     {
-    //       label: "Add Event",
-    //       path: "/AddEvent",
-    //       icon: <FaPlusSquare />,
-    //     },
-    //     {
-    //       label: "Manage Event",
-    //       path: "/ManageEvent",
-    //       icon: <FaListUl />,
-    //     },
-    //   ],
-    // },
-
+ const menuItems = [
+      {
+        icon: <FaTachometerAlt />,
+        label: "DASHBOARD",
+        path: "/UserDashboard",
+        active: true,
+      },
     
-  ];
+     
+       {
+   icon: <FaClock />,
+   label: "Time Schedule",
+   path: "/Timeschedule",
+ },
+      {
+        icon: <FaComments />,
+        label: "Send Query",
+        path: "/SendQuery",
+      },
+      
+      
+      
+      
+      
+     ];
 
   //  Auto-close sidebar when switching to mobile or tablet
 
@@ -121,22 +101,24 @@ const menuItems = [
     <>
       {/* Desktop Sidebar */}
       <div
-        className={`user-Left ${sidebarOpen ? "sidebar-open" : "sidebar-closed"}`}
+        className={`user-left-nav ${sidebarOpen ? "sidebar-open" : "sidebar-closed"}`}
       >
-        {sidebarOpen && (
-          <div className="sidebar-header">
+        <div className="sidebar-header">
+          {sidebarOpen ? (
             <div className="logo-container">
               <div className="logo">
-                User DashBoard
-                {/* <span className="logo-text"><img src={BRLogo} alt="text"></img></span> */}
+                  DASHBOARD
               </div>
             </div>
-          </div>
-        )}
+          ) : (
+            <div className="logo-container logo-collapsed">
+            </div>
+          )}
+        </div>
 
         <Nav className="sidebar-nav flex-column">
           
-        {menuItems
+         {menuItems
   .filter(item =>
     item.allowedRoles ? item.allowedRoles.includes(userRole) : true
   )
@@ -158,7 +140,7 @@ const menuItems = [
         <Link
           to={item.path}
           className={`nav-item nav-link ${item.active ? "active" : ""}`}
-          onClick={() => setSidebarOpen(false)}
+          onClick={(e) => handleItemClick(e, item.path)}
         >
           <span className="nav-icon">{item.icon}</span>
           <span className="nav-text">{item.label}</span>
@@ -174,7 +156,7 @@ const menuItems = [
                 key={subIndex}
                 to={subItem.path}
                 className="submenu-item-user nav-link"
-                onClick={() => setSidebarOpen(false)}
+                onClick={(e) => handleItemClick(e, subItem.path)}
               >
                 <span className="submenu-icon">{subItem.icon}</span>
                 <span className="nav-text br-text-sub">{subItem.label}</span>
@@ -194,6 +176,7 @@ const menuItems = [
             onClick={() => {
               if (typeof logout === "function") {
                 logout();
+                navigate("/login");
               }
             }}
           >
@@ -209,17 +192,17 @@ const menuItems = [
   <Offcanvas
   show={(isMobile || isTablet) && sidebarOpen}
   onHide={() => setSidebarOpen(false)}
-  className="mobile-sidebar-user"
+  className="user-mobile-offcanvas"
   placement="start"
   backdrop={true}
   scroll={false}
   enforceFocus={false} //  ADD THIS LINE — fixes close button focus issue
 >
-  <Offcanvas.Header closeButton className="br-offcanvas-header">
+  <Offcanvas.Header closeButton className="user-offcanvas-header">
     <Offcanvas.Title className="br-off-title">Menu</Offcanvas.Title>
   </Offcanvas.Header>
 
-  <Offcanvas.Body className="br-offcanvas">
+  <Offcanvas.Body className="user-offcanvas-body">
     <Nav className="flex-column">
       {menuItems.map((item, index) => (
         <div key={index}>
@@ -238,7 +221,7 @@ const menuItems = [
             <Link
               to={item.path}
               className={`nav-item nav-link ${item.active ? "active" : ""}`}
-              onClick={() => setSidebarOpen(false)}
+              onClick={(e) => handleItemClick(e, item.path)}
             >
               <span className="nav-icon">{item.icon}</span>
               <span className="nav-text br-nav-text-mob">{item.label}</span>
@@ -253,7 +236,7 @@ const menuItems = [
                     key={subIndex}
                     to={subItem.path}
                     className="submenu-item nav-link"
-                    onClick={() => setSidebarOpen(false)}
+                    onClick={(e) => handleItemClick(e, subItem.path)}
                   >
                     <span className="nav-text">{subItem.label}</span>
                   </Link>
@@ -271,4 +254,4 @@ const menuItems = [
   );
 };
 
-export default UserLeftNav;
+export default SupervisorLeftNav;
