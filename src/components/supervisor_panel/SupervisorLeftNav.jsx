@@ -72,21 +72,32 @@ const SupervisorLeftNav = ({ sidebarOpen, setSidebarOpen, isMobile, isTablet, on
  const menuItems = [
       {
         icon: <FaTachometerAlt />,
-        label: "DASHBOARD",
-        path: "/UserDashboard",
+        label: "/SupervisorDashBoard",
+        path: "/",
         active: true,
       },
     
      
+  {
+    icon: <FaUsers />,
+    label: "test",
+    submenu: [
+      {
+        label: "Registered Student",
+        path: "#",
+        icon: <FaPlusSquare />,
+      },
+    ],
+  },
        {
    icon: <FaClock />,
    label: "Time Schedule",
-   path: "/Timeschedule",
+   path: "/SupervisorDashBoard",
  },
       {
         icon: <FaComments />,
         label: "Send Query",
-        path: "/SendQuery",
+        path: "/SupervisorDashBoard",
       },
       
       
