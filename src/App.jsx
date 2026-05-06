@@ -16,15 +16,15 @@ import { AuthProvider } from './components/all_login/AuthContext';
 import SupervisorDashBoard from "./components/supervisor_panel/SupervisorDashBoard";
 import NavBar from './components/nav_bar/NavBar';
 import Login from "./components/all_login/Login";
-
-
-
+import DPODashboard from "./components/DPO_panel/DPODashboard";
+import AnganwadiDashboard from "./components/anganwadi_panel/AnganwadiDashboard";
+import CDPODashboard from "./components/CDPO_panel/CDPODashboard";
 
 
 function AppContent() {
   const location = useLocation();
 
-  const hideNavbarRoutes = ["/SupervisorDashBoard"];
+  const hideNavbarRoutes = ["/SupervisorDashBoard", "/DPODashboard", "/AnganwadiDashboard", "/CDPODashboard"];
   const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
 
   return (
@@ -33,6 +33,9 @@ function AppContent() {
       <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/SupervisorDashBoard" element={<SupervisorDashBoard />} />
+          <Route path="/DPODashBoard" element={<DPODashboard />} />
+          <Route path="/AnganwadiDashBoard" element={<AnganwadiDashboard />} />
+          <Route path="/CDPODashBoard" element={<CDPODashboard />} />
           <Route path="/Login" element={<Login />} />
           
         </Routes>
