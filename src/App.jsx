@@ -12,7 +12,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 
 
 import Home from './components/pages/Home';
-import { AuthProvider } from './components/all_login/AuthContext';
+import { AuthProvider, useAuth } from './components/all_login/AuthContext';
 import SupervisorDashBoard from "./components/supervisor_panel/SupervisorDashBoard";
 import NavBar from './components/nav_bar/NavBar';
 import Login from "./components/all_login/Login";
@@ -21,6 +21,23 @@ import AnganwadiDashboard from "./components/anganwadi_panel/AnganwadiDashboard"
 import CDPODashboard from "./components/CDPO_panel/CDPODashboard";
 import DirectorDashboard from "./components/director_panel/DirectorDashboard";
 
+// 🔒 Protected Route component
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated, isReady } = useAuth();
+  const location = useLocation();
+
+  // While checking auth state, show nothing (prevents flash of wrong content)
+  if (!isReady) {
+    return null;
+  }
+
+  // If not authenticated, redirect to login (with return URL)
+  if (!isAuthenticated) {
+    return <Navigate to="/Login" state={{ from: location }} replace />;
+  }
+
+  return children;
+};
 
 function AppContent() {
   const location = useLocation();
@@ -33,11 +50,31 @@ function AppContent() {
       {!shouldHideNavbar && <NavBar />}
       <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/SupervisorDashBoard" element={<SupervisorDashBoard />} />
-          <Route path="/DPODashBoard" element={<DPODashboard />} />
-          <Route path="/AnganwadiDashBoard" element={<AnganwadiDashboard />} />
-          <Route path="/CDPODashBoard" element={<CDPODashboard />} />
-          <Route path="/DirectorDashboard" element={<DirectorDashboard />} />
+          <Route path="/SupervisorDashBoard" element={
+            <ProtectedRoute>
+              <SupervisorDashBoard />
+            </ProtectedRoute>
+          } />
+          <Route path="/DPODashboard" element={
+            <ProtectedRoute>
+              <DPODashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/AnganwadiDashboard" element={
+            <ProtectedRoute>
+              <AnganwadiDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/CDPODashboard" element={
+            <ProtectedRoute>
+              <CDPODashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/DirectorDashboard" element={
+            <ProtectedRoute>
+              <DirectorDashboard />
+            </ProtectedRoute>
+          } />
           <Route path="/Login" element={<Login />} />
           
         </Routes>
