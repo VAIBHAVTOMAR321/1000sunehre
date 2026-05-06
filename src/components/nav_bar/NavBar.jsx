@@ -45,7 +45,7 @@ function NavBar() {
               <span className="register-btn-arrow">→</span>
             </Nav.Link>
 
-            {/* Desktop Language Toggle */}
+            {/* Desktop Language Toggle
             <Button 
               variant="outline-primary" 
               size="sm" 
@@ -54,7 +54,7 @@ function NavBar() {
             >
               <i className="bi bi-translate me-1"></i>
               {language === 'en' ? 'हिन्दी' : 'English'}
-            </Button>
+            </Button> */}
           </Nav>
         </Navbar.Collapse>
       </Container>
