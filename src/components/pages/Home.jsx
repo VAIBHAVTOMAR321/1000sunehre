@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Container, Row, Col, Modal, Button } from 'react-bootstrap'
-import heroImg from "../../assets/images/CBSEimg.png";
+// You can replace these with relevant health/nutrition images if available
+import heroImg from "../../assets/images/CBSEimg.png"; 
 import Logo2 from "../../assets/images/gyandharalogo2.png";
 import '../../assets/css/home.css'
 
@@ -9,64 +10,63 @@ function Home() {
   const navigate = useNavigate()
   const [showModal, setShowModal] = useState(false)
 
-  // Hardcoded Content (English Only)
+  // Updated Content: Golden 1000 Days & Intervention Gap Analysis
   const content = {
-    platformBadge: "🎓 GyanDhara - Educational Platform",
-    heroTitleHTML: "Objective of <span class=\"hero-title-word\">GyanDhara</span>",
-    heroSubtitle: "Welcome to GyanDhara, your all-in-one educational ecosystem designed to bridge the gap between academic learning and real-world success. We believe that education is not just about passing exams; it is about acquiring the skills, confidence, and direction necessary to thrive in a rapidly evolving global landscape. Whether you are a student looking to master new technologies or a school aiming to streamline academic management, GyanDhara provides the tools you need to succeed.",
-    heroImg: heroImg, // Linked to the imported image
-    exploreBtn: "Explore Now",
-    joinBtn: "Register Today",
+    platformBadge: "🤰 Ministry of Health & Family Welfare",
+    // Hindi Title as requested: "सुनहरे हज़ार दिनों में अवसरों एवं विभागीय हस्तक्षेप के बीच Gap"
+    heroTitleHTML: "Intervention Gap Analysis in <span class=\"hero-title-word\">Golden 1000 Days</span>",
+    heroSubtitle: "A comprehensive dashboard designed to bridge the gap between opportunities and departmental interventions. Track Life Stages (from conception to 2 years), identify gaps in nutritional support, health checkups, and immunization to ensure the holistic development of mother and child.",
+    heroImg: heroImg, 
+    exploreBtn: "View Dashboard",
+    joinBtn: "Register Facility",
     
-    // For Students Section
-    studentTitle: "LMS For Students 🎓",
-    studentSubtitle: "Empower your future with comprehensive career guidance and learning resources",
+    // Section 1: Based on "Life Stage & Age" from the image table
+    studentTitle: "Critical Life Stages 📊",
+    studentSubtitle: "Monitoring health and nutrition status across the golden 1000 days timeline",
     studentFeatures: [
-      { icon: "bi-book", title: "Course Content", desc: "Access high-quality educational materials and resources", color: "blue" },
-      { icon: "bi-trophy-fill", title: "Competitions", desc: "Participate in competitions and showcase your talents", color: "orange" },
-      { icon: "bi-journal-check", title: "Career Guidance", desc: "Expert guidance for your academic and career journey", color: "green" },
-      { icon: "bi-pencil-square", title: "Quiz & Tests", desc: "Assess your knowledge with interactive quizzes", color: "purple" },
-      { icon: "bi-graph-up", title: "Grooming Classes", desc: "Develop professional and soft skills", color: "blue" },
-      { icon: "bi-chat-left-quote-fill", title: "Counseling", desc: "Get personalized career counseling from experts", color: "orange" },
-      { icon: "bi-bookmark-check", title: "Govt Schemes", desc: "Learn about educational schemes and benefits", color: "green" },
-      { icon: "bi-briefcase-fill", title: "Job Opportunities", desc: "Discover career opportunities across various sectors", color: "blue" },
-      { icon: "bi-calendar-event", title: "Seminar & Workshop", desc: "Attend training events and skill development workshops", color: "purple" },
-      { icon: "bi-camera-video-fill", title: "Live Session", desc: "Join interactive live sessions with experts", color: "orange" }
+      { icon: "bi-calendar-heart", title: "1st Trimester", desc: "Early registration, ANC checkups, and nutrition supplementation", color: "blue" },
+      { icon: "bi-heart-pulse", title: "2nd Trimester", desc: "Growth monitoring, anomaly scans, and dietary counseling", color: "orange" },
+      { icon: "bi-activity", title: "3rd Trimester", desc: "Birth preparedness, complication readiness, and supplements", color: "green" },
+      { icon: "bi-hospital", title: "Delivery & Birth", desc: "Institutional delivery tracking and immediate post-natal care", color: "purple" },
+      { icon: "bi-baby", title: "Infancy (0-6 Months)", desc: "Exclusive breastfeeding support and immunization (BCG, OPV, HepB1)", color: "blue" },
+      { icon: "bi-emoji-smile", title: "Early Childhood (6-24 Months)", desc: "Complementary feeding, Vitamin A, and growth monitoring", color: "orange" },
+      { icon: "bi-mortarboard", title: "Pre-School (3-6 Years)", desc: "Pre-school education and health checkups at Anganwadi centers", color: "green" },
+      { icon: "bi-shield-check", title: "Adolescent Girls", desc: "Weekly Iron Folic Acid (IFA) supplementation and nutrition", color: "blue" }
     ],
 
-    // For Schools Section
-    schoolTitle: "LMS For Schools 🏫",
-    schoolSubtitle: "Transform your institution's learning experience with GyanDhara's comprehensive platform",
+    // Section 2: Based on "Intervention Opportunity" from the image table
+    schoolTitle: "Intervention Opportunities 🏛️",
+    schoolSubtitle: "Key departmental services and schemes available for beneficiaries",
     schoolFeatures: [
-      { icon: "bi-house-check", title: "School Registration", desc: "Register your institution and get a dedicated dashboard", color: "blue" },
-      { icon: "bi-people-fill", title: "Student Management", desc: "Efficiently manage student registrations and profiles", color: "orange" },
-      { icon: "bi-question-circle-fill", title: "Events And Activities", desc: "Create and manage events and activities for your students", color: "green" },
-      { icon: "bi-bar-chart-line-fill", title: "Performance Tracking", desc: "Monitor student progress and learning outcomes", color: "purple" }
+      { icon: "bi-capsule", title: "Nutritional Support", desc: "Take Home Ration (THR), Hot Cooked Meals, and IFA Tablets", color: "blue" },
+      { icon: "bi-clipboard2-pulse", title: "Health Checkups", desc: "Regular ANC, PNC, and child health assessments", color: "orange" },
+      { icon: "bi-shield-plus", title: "Immunization", desc: "Complete vaccination schedule coverage tracking", color: "green" },
+      { icon: "bi-bank", title: "Financial Incentives", desc: "PMMVy, JSY, and other direct benefit transfers", color: "purple" }
     ],
     
-    // Platform Benefits
-    benefitsTitle: "Why Choose GyanDhara?",
+    // Platform Benefits: Why use this Gap Analysis System?
+    benefitsTitle: "Why Use This Platform?",
     benefits: [
-      { icon: "bi-collection-play", title: "Multi-Role Platform", desc: "Dedicated interfaces for students, schools, and administrators", color: "blue" },
-      { icon: "bi-people-fill", title: "Comprehensive Services", desc: "Career guidance, academic support, and skill development", color: "orange" },
-      { icon: "bi-lightbulb", title: "Career Oriented", desc: "Focus on job opportunities and professional growth", color: "green" },
-      { icon: "bi-shield-check", title: "Secure & Reliable", desc: "Safe platform for educational and career information", color: "purple" },
-      { icon: "bi-book-half", title: "Multiple Courses", desc: "Access a wide range of academic and skill-based courses", color: "blue" },
-      { icon: "bi-chat-dots-fill", title: "24/7 Text Support", desc: "Round-the-clock text assistance for all your queries", color: "orange" },
-      { icon: "bi-bar-chart-fill", title: "Data Analysis", desc: "Detailed insights and analytics for your learning journey", color: "green" },
-      { icon: "bi-award-fill", title: "Rewards & Certification", desc: "Get recognized for your success with verified certificates", color: "purple" }
+      { icon: "bi-graph-up-arrow", title: "Gap Identification", desc: "Pinpoint exactly where interventions are missing in the timeline", color: "blue" },
+      { icon: "bi-people-fill", title: "Inter-Department Data", desc: "Integrated view of Health, ICDS, and Education dept data", color: "orange" },
+      { icon: "bi-lightbulb", title: "Targeted Action", desc: "Enable focused interventions for high-risk mothers and children", color: "green" },
+      { icon: "bi-pie-chart", title: "Impact Analysis", desc: "Measure the effectiveness of current schemes and policies", color: "purple" },
+      { icon: "bi-geo-alt", title: "Geo-Tagging", desc: "Track beneficiaries and service delivery locations accurately", color: "blue" },
+      { icon: "bi-clock-history", title: "Real-Time Alerts", desc: "Notifications for due vaccinations and checkup dates", color: "orange" },
+      { icon: "bi-file-earmark-bar-graph", title: "Report Generation", desc: "Automated MIS reports for state and national levels", color: "green" },
+      { icon: "bi-check-circle", title: "100% Coverage Goal", desc: "Strive for universal coverage of all mandated interventions", color: "purple" }
     ],
 
     // CTA
-    readyTitle: "Ready to Join GyanDhara?",
-    readySub: "Start your journey towards career excellence and academic success",
-    getStartedBtn: "Get Started Today",
-    learnMoreBtn: "Learn More",
-    signInBtn: "Sign In",
+    readyTitle: "Ready to Bridge the Gap?",
+    readySub: "Join the initiative to improve maternal and child health outcomes today.",
+    getStartedBtn: "Start Monitoring",
+    learnMoreBtn: "Read Guidelines",
+    signInBtn: "Official Login",
     modalTitle: "Access Restricted",
-    modalMessage: "Please login or register for more information and features.",
+    modalMessage: "Please login with your departmental ID to access health records.",
     modalLogin: "Login",
-    modalRegister: "Register Today"
+    modalRegister: "Register Facility"
   }
 
   const handleCardClick = () => setShowModal(true)
@@ -79,15 +79,16 @@ function Home() {
         <div className="hero-section">
           <div className="hero-image-wrapper">
             <div className="hero-decoration hero-cap-decoration">
-              <i className="bi bi-mortarboard-fill"></i>
+              <i className="bi bi-heart-pulse-fill"></i>
             </div>
             {/* Using imported heroImg */}
-            <img src={content.heroImg} alt="Gyandhara Education" className="hero-image" />
+            <img src={content.heroImg} alt="Golden 1000 Days Initiative" className="hero-image" />
             <div className="hero-decoration hero-logo-decoration">
               {/* Logo2 is imported, uncomment below if you want to show it */}
-              {/* <img src={Logo2} alt="Gyandhara Logo" className="hero-logo" /> */}
+              {/* <img src={Logo2} alt="Project Logo" className="hero-logo" /> */}
             </div>
           </div>
+          
           <div className="hero-content">
             <div className="hero-badge">{content.platformBadge}</div>
             <h1 dangerouslySetInnerHTML={{ __html: content.heroTitleHTML }}></h1>
@@ -97,14 +98,14 @@ function Home() {
                 <i className="bi bi-person-plus"></i> {content.joinBtn}
               </Link>
               <Link to="/login" className="btn-gyandhara btn-outline-custom-btn">
-                <i className="bi bi-box-arrow-in-right"></i> {content.learnMoreBtn}
+                <i className="bi bi-bar-chart"></i> {content.exploreBtn}
               </Link>
             </div>
           </div>
         </div>
 
-        {/* For Students Section */}
-        <section className="role-section ">
+        {/* Life Stages Section (Mapped from Table) */}
+        <section className="role-section">
           <div className="role-header">
             <h2>{content.studentTitle}</h2>
             <p>{content.studentSubtitle}</p>
@@ -127,8 +128,8 @@ function Home() {
           </div>
         </section>
 
-        {/* For Schools Section */}
-        <section className="role-section-school ">
+        {/* Intervention Opportunities Section */}
+        <section className="role-section-school">
           <div className="role-header">
             <h2>{content.schoolTitle}</h2>
             <p>{content.schoolSubtitle}</p>
@@ -151,11 +152,10 @@ function Home() {
           </div>
         </section>
 
-        {/*Why Choose GyanDhara? section*/}
+        {/* Platform Benefits Section */}
         <section className="benefits-section role-header role-section-school ">
           <div className="role-header">
             <h2>{content.benefitsTitle}</h2>
-        
           </div>
             <Row className="g-4">
                 {content.benefits.map((benefit, index) => (
@@ -174,17 +174,15 @@ function Home() {
                     </Col>
                 ))}
             </Row>
-         
         </section>
 
         {/* Final CTA */}
         <section className="final-cta-section role-section-school">
           <h2>{content.readyTitle}</h2>
           <p>{content.readySub}</p>
-        
           <div className="cta-buttons mt-4">
             <Link to="/register" className="btn-gyandhara btn-primary-custom btn-lg">
-              <i className="bi bi-rocket-fill"></i> {content.getStartedBtn}
+              <i className="bi bi-rocket-takeoff"></i> {content.getStartedBtn}
             </Link>
             <Link to="/login" className="btn-gyandhara btn-outline-custom-btn btn-lg">
               <i className="bi bi-box-arrow-in-right"></i> {content.signInBtn}
