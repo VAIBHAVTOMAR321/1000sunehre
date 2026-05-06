@@ -100,9 +100,7 @@ const SupervisorLeftNav = ({ sidebarOpen, setSidebarOpen, isMobile, isTablet, on
         path: "/SupervisorDashBoard",
       },
       
-      
-      
-      
+       
       
      ];
 
