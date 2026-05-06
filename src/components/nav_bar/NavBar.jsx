@@ -39,13 +39,10 @@ function NavBar() {
               Courses
             </Nav.Link>
 
-            <Nav.Link as={Link} to="/Login" className="nav-link-item" onClick={() => setExpanded(false)}>
-              <span className="nav-link-dot"></span>
-              Login
-            </Nav.Link>
+           
 
-            <Nav.Link as={Link} to="/StudentRegistration" className="register-btn" onClick={() => setExpanded(false)}>
-              Register Now
+            <Nav.Link as={Link} to="/Login" className="register-btn" onClick={() => setExpanded(false)}>
+              Login
               <span className="register-btn-arrow">→</span>
             </Nav.Link>
           </Nav>
