@@ -17,15 +17,13 @@ import SupervisorDashBoard from "./components/supervisor_panel/SupervisorDashBoa
 import NavBar from './components/nav_bar/NavBar';
 import Login from "./components/all_login/Login";
 import DPODashboard from "./components/DPO_panel/DPODashboard";
-
-
-
+import AnganwadiDashboard from "./components/anganwadi_panel/AnganwadiDashboard";
 
 
 function AppContent() {
   const location = useLocation();
 
-  const hideNavbarRoutes = ["/SupervisorDashBoard", "/DPODashboard"];
+  const hideNavbarRoutes = ["/SupervisorDashBoard", "/DPODashboard", "/AnganwadiDashboard"];
   const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
 
   return (
@@ -35,6 +33,7 @@ function AppContent() {
           <Route path="/" element={<Home />} />
           <Route path="/SupervisorDashBoard" element={<SupervisorDashBoard />} />
           <Route path="/DPODashBoard" element={<DPODashboard />} />
+          <Route path="/AnganwadiDashBoard" element={<AnganwadiDashboard />} />
           <Route path="/Login" element={<Login />} />
           
         </Routes>
