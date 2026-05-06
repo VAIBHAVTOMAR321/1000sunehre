@@ -58,6 +58,17 @@ export function AuthProvider({ children }) {
 
   const logout = useCallback(() => {
     console.log('🔴 Logging out...');
+
+    // 1. Determine redirect path based on role (Logic from Login.jsx)
+    let redirectPath = '/login';
+    if (role === 'director') {
+      redirectPath = '/login?director';
+    } else if (role === 'dpo' || role === 'cdpo') {
+      redirectPath = '/login?district';
+    }
+    // For supervisor/anganwadi, it remains '/login'
+
+
     isRefreshing = false;
     failedQueue = [];
     refreshPromiseRef.current = null;
@@ -74,7 +85,11 @@ export function AuthProvider({ children }) {
       clearTimeout(logoutTimerRef.current);
       logoutTimerRef.current = null;
     }
-  }, []);
+
+    // 2. Perform redirection using window.location
+    // This avoids "useNavigate" errors and crashes
+    window.location.href = redirectPath;
+  }, [role]);
 
   const login = useCallback((data) => {
     if (data.access && data.refresh) {
