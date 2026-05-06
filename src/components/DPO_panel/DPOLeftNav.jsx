@@ -42,7 +42,7 @@ import {
 import { useAuth } from "../all_login/AuthContext";
 
 
-const SupervisorLeftNav = ({ sidebarOpen, setSidebarOpen, isMobile, isTablet, onNavClick }) => {
+const DPOLeftNav = ({ sidebarOpen, setSidebarOpen, isMobile, isTablet, onNavClick }) => {
   const { logout, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
@@ -117,7 +117,7 @@ const SupervisorLeftNav = ({ sidebarOpen, setSidebarOpen, isMobile, isTablet, on
           {sidebarOpen ? (
             <div className="logo-container">
               <div className="logo">
-                  Super visor Panel
+                  DPO Panel
               </div>
             </div>
           ) : (
@@ -264,4 +264,4 @@ const SupervisorLeftNav = ({ sidebarOpen, setSidebarOpen, isMobile, isTablet, on
   );
 };
 
-export default SupervisorLeftNav;
+export default DPOLeftNav;
