@@ -15,6 +15,7 @@ import Home from './components/pages/Home';
 import { AuthProvider } from './components/all_login/AuthContext';
 import SupervisorDashBoard from "./components/supervisor_panel/SupervisorDashBoard";
 import NavBar from './components/nav_bar/NavBar';
+import Login from "./components/all_login/Login";
 
 
 
@@ -32,6 +33,7 @@ function AppContent() {
       <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/SupervisorDashBoard" element={<SupervisorDashBoard />} />
+          <Route path="/Login" element={<Login />} />
           
         </Routes>
     </>

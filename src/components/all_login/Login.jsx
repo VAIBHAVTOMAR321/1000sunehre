@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from './AuthContext';
-import { useLanguage } from './LanguageContext';
-import './login.css';
+import '../../assets/css/login.css';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -16,99 +15,17 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const { language } = useLanguage();
 
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const content = {
-    en: {
-      title: "GyanDhara",
-      subtitle: "Skill Today, Empower Tomorrow",
-      welcome: "Welcome Back!",
-      welcomeSub: "Continue your learning journey",
-      roleLabel: "Select Your Role",
-      emailPhone: "Email / Phone",
-      emailPhonePlaceholder: "Enter email or phone",
-      schoolId: "School ID",
-      schoolIdPlaceholder: "Enter school ID",
-      aadhaar: "Aadhaar Number",
-      aadhaarPlaceholder: "Enter 12-digit Aadhaar",
-      password: "Password",
-      passwordPlaceholder: "Enter password",
-      remember: "Remember me",
-      signIn: "Sign In",
-      signingIn: "Signing in...",
-      newStudent: "New student?",
-      register: "Register here",
-      highlights: {
-        learn: { title: "Learn", desc: "Access quality education and new courses" },
-        grow: { title: "Grow", desc: "Track your academic progress" },
-        succeed: { title: "Succeed", desc: "Build your career from class 9 to 12" }
-      },
-      validation: {
-        emailRequired: "Email/Phone is required",
-        schoolIdRequired: "School ID is required",
-        aadhaarRequired: "Aadhaar number is required",
-        passwordRequired: "Password is required",
-        loginSuccess: "Login successful!",
-        loginFailed: "Login failed. Please try again."
-      },
-      roles: {
-        '9th-student': '9th Student', '10th-student': '10th Student',
-        '11th-student': '11th Student', '12th-student': '12th Student',
-        'admin': 'Admin', 'school': 'School'
-      }
-    },
-    hi: {
-      title: "GyanDhara",
-      subtitle: "करियर बनाना, भविष्य संवारना",
-      welcome: "आपका स्वागत है!",
-      welcomeSub: "अपनी सीखने की यात्रा जारी रखें",
-      roleLabel: "अपनी भूमिका चुनें",
-      emailPhone: "ईमेल / फोन",
-      emailPhonePlaceholder: "ईमेल या फोन दर्ज करें",
-      schoolId: "स्कूल आईडी",
-      schoolIdPlaceholder: "स्कूल आईडी दर्ज करें",
-      aadhaar: "आधार नंबर",
-      aadhaarPlaceholder: "12-अंकीय आधार दर्ज करें",
-      password: "पासवर्ड",
-      passwordPlaceholder: "पासवर्ड दर्ज करें",
-      remember: "मुझे याद रखें",
-      signIn: "साइन इन करें",
-      signingIn: "साइन इन हो रहा है...",
-      newStudent: "नए छात्र?",
-      register: "यहाँ पंजीकरण करें",
-      highlights: {
-        learn: { title: "सीखें", desc: "गुणवत्तापूर्ण शिक्षा और नए पाठ्यक्रमों तक पहुंचें" },
-        grow: { title: "बढ़ें", desc: "अपनी शैक्षणिक प्रगति को ट्रैक करें" },
-        succeed: { title: "सफल हों", desc: "कक्षा 9 से 12 तक अपना करियर बनाएं" }
-      },
-      validation: {
-        emailRequired: "ईमेल/फोन आवश्यक है",
-        schoolIdRequired: "स्कूल आईडी आवश्यक है",
-        aadhaarRequired: "आधार नंबर आवश्यक है",
-        passwordRequired: "पासवर्ड आवश्यक है",
-        loginSuccess: "लॉगिन सफल!",
-        loginFailed: "लॉगिन विफल रहा। कृपया पुनः प्रयास करें।"
-      },
-      roles: {
-        '9th-student': '9वीं छात्र', '10th-student': '10वीं छात्र',
-        '11th-student': '11वीं छात्र', '12th-student': '12वीं छात्र',
-        'admin': 'एडमिन', 'school': 'स्कूल'
-      }
-    }
-  };
-
-  const t = content[language] || content.en;
-
   const roleOptions = [
-    { value: '9th-student', label: t.roles['9th-student'], icon: 'bi-mortarboard' },
-    { value: '10th-student', label: t.roles['10th-student'], icon: 'bi-mortarboard' },
-    { value: '11th-student', label: t.roles['11th-student'], icon: 'bi-mortarboard' },
-    { value: '12th-student', label: t.roles['12th-student'], icon: 'bi-mortarboard' },
-    { value: 'admin', label: t.roles['admin'], icon: 'bi-shield-lock' },
-    { value: 'school', label: t.roles['school'], icon: 'bi-building' },
+    { value: '9th-student', label: '9th Student', icon: 'bi-mortarboard' },
+    { value: '10th-student', label: '10th Student', icon: 'bi-mortarboard' },
+    { value: '11th-student', label: '11th Student', icon: 'bi-mortarboard' },
+    { value: '12th-student', label: '12th Student', icon: 'bi-mortarboard' },
+    { value: 'admin', label: 'Admin', icon: 'bi-shield-lock' },
+    { value: 'school', label: 'School', icon: 'bi-building' },
   ];
 
   const handleChange = (e) => {
@@ -121,19 +38,19 @@ const Login = () => {
     e.preventDefault();
 
     if (formData.role === 'admin' && !formData.email_or_phone) {
-      setError(t.validation.emailRequired);
+      setError("Email/Phone is required");
       return;
     }
     if (formData.role === 'school' && !formData.school_id) {
-      setError(t.validation.schoolIdRequired);
+      setError("School ID is required");
       return;
     }
     if (formData.role !== 'admin' && formData.role !== 'school' && !formData.aadhaar_no) {
-      setError(t.validation.aadhaarRequired);
+      setError("Aadhaar number is required");
       return;
     }
     if (!formData.password) {
-      setError(t.validation.passwordRequired);
+      setError("Password is required");
       return;
     }
 
@@ -167,7 +84,7 @@ const Login = () => {
           unique_id: response.data.unique_id,
           user: response.data.user || null,
         });
-        alert(t.validation.loginSuccess);
+        alert("Login successful!");
         
         if (response.data.role === 'admin') {
           navigate('/DashBord');
@@ -178,7 +95,7 @@ const Login = () => {
         }
       }
     } catch (err) {
-      setError(err.response?.data?.message || t.validation.loginFailed);
+      setError(err.response?.data?.message || "Login failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -193,17 +110,17 @@ const Login = () => {
             <div className="brand-logo">
               <i className="bi bi-mortarboard-fill"></i>
             </div>
-            <h1>{t.title}</h1>
-            <p>{t.subtitle}</p>
+            <h1>GyanDhara</h1>
+            <p>Skill Today, Empower Tomorrow</p>
           </div>
 
           <div className="welcome-section">
-            <h2>{t.welcome}</h2>
-            <p>{t.welcomeSub}</p>
+            <h2>Welcome Back!</h2>
+            <p>Continue your learning journey</p>
           </div>
 
           <div className="role-selector">
-            <label>{t.roleLabel}</label>
+            <label>Select Your Role</label>
             <div className="role-tabs">
               {roleOptions.map((option) => (
                 <button
@@ -229,7 +146,7 @@ const Login = () => {
 
             {formData.role === 'admin' ? (
               <div className="form-group">
-                <label>{t.emailPhone}</label>
+                <label>Email / Phone</label>
                 <div className="input-wrapper-text">
                   <i className="bi bi-person"></i>
                   <input
@@ -237,13 +154,13 @@ const Login = () => {
                     name="email_or_phone"
                     value={formData.email_or_phone}
                     onChange={handleChange}
-                    placeholder={t.emailPhonePlaceholder}
+                    placeholder="Enter email or phone"
                   />
                 </div>
               </div>
             ) : formData.role === 'school' ? (
               <div className="form-group">
-                <label>{t.schoolId}</label>
+                <label>School ID</label>
                 <div className="input-wrapper-text">
                   <i className="bi bi-building"></i>
                   <input
@@ -251,13 +168,13 @@ const Login = () => {
                     name="school_id"
                     value={formData.school_id}
                     onChange={handleChange}
-                    placeholder={t.schoolIdPlaceholder}
+                    placeholder="Enter school ID"
                   />
                 </div>
               </div>
             ) : (
               <div className="form-group">
-                <label>{t.aadhaar}</label>
+                <label>Aadhaar Number</label>
                 <div className="input-wrapper-text">
                   <i className="bi bi-person-badge"></i>
                   <input
@@ -265,7 +182,7 @@ const Login = () => {
                     name="aadhaar_no"
                     value={formData.aadhaar_no}
                     onChange={handleChange}
-                    placeholder={t.aadhaarPlaceholder}
+                    placeholder="Enter 12-digit Aadhaar"
                     maxLength="12"
                   />
                 </div>
@@ -273,7 +190,7 @@ const Login = () => {
             )}
 
             <div className="form-group">
-              <label>{t.password}</label>
+              <label>Password</label>
               <div className="input-wrapper">
                 <i className="bi bi-lock"></i>
                 <input
@@ -281,7 +198,7 @@ const Login = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder={t.passwordPlaceholder}
+                  placeholder="Enter password"
                 />
                 <button
                   type="button"
@@ -296,7 +213,7 @@ const Login = () => {
             <div className="form-options">
               <label className="remember-me">
                 <input type="checkbox" />
-                <span>{t.remember}</span>
+                <span>Remember me</span>
               </label>
               {/* <a href="/" className="forgot-link">Forgot password?</a> */}
             </div>
@@ -305,34 +222,34 @@ const Login = () => {
               {loading ? (
                 <>
                   <span className="spinner"></span>
-                  {t.signingIn}
+                  Signing in...
                 </>
               ) : (
-                t.signIn
+                "Sign In"
               )}
             </button>
           </form>
 
           <div className="login-footer">
-            <p>{t.newStudent} <Link to="/register">{t.register}</Link></p>
+            <p>New student? <Link to="/register">Register here</Link></p>
           </div>
         </div>
 
         <div className="login-highlights">
           <div className="highlight-item">
             <i className="bi bi-book"></i>
-              <h3>{t.highlights.learn.title}</h3>
-              <p>{t.highlights.learn.desc}</p>
+              <h3>Learn</h3>
+              <p>Access quality education and new courses</p>
           </div>
           <div className="highlight-item">
             <i className="bi bi-graph-up"></i>
-              <h3>{t.highlights.grow.title}</h3>
-              <p>{t.highlights.grow.desc}</p>
+              <h3>Grow</h3>
+              <p>Track your academic progress</p>
           </div>
           <div className="highlight-item">
             <i className="bi bi-rocket-takeoff"></i>
-              <h3>{t.highlights.succeed.title}</h3>
-              <p>{t.highlights.succeed.desc}</p>
+              <h3>Succeed</h3>
+              <p>Build your career from class 9 to 12</p>
           </div>
         </div>
       </div>

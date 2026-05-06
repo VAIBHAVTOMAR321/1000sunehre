@@ -39,7 +39,7 @@ function NavBar() {
               Courses
             </Nav.Link>
 
-            <Nav.Link as={Link} to="/login" className="nav-link-item" onClick={() => setExpanded(false)}>
+            <Nav.Link as={Link} to="/Login" className="nav-link-item" onClick={() => setExpanded(false)}>
               <span className="nav-link-dot"></span>
               Login
             </Nav.Link>
