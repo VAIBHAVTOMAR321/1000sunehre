@@ -377,21 +377,6 @@ function Home() {
           </Container>
         </section>
 
-        {/* Quick Links / Portal Navigation */}
-        <section className="quick-links-section py-4 bg-light">
-          <Container>
-            <div className="text-center mb-3">
-              <h5 className="section-title-gov fw-bold">मुख्य लिंक</h5>
-            </div>
-            <div className="d-flex flex-wrap justify-content-center gap-2">
-              <Link to="/dashboard" className="btn btn-outline-primary btn-sm">डैशबोर्ड</Link>
-              <Link to="/reports" className="btn btn-outline-primary btn-sm">रिपोर्ट</Link>
-              <Link to="/tracking" className="btn btn-outline-primary btn-sm">ट्रैकिंग</Link>
-              <Link to="/resources" className="btn btn-outline-primary btn-sm">संसाधन</Link>
-              <Link to="/guidelines" className="btn btn-outline-primary btn-sm">मार्गदर्शिका</Link>
-            </div>
-          </Container>
-        </section>
 
         {/* Final CTA - Government Style */}
         <section className="final-cta-gov py-4 bg-primary text-white">
