@@ -49,6 +49,8 @@ const Login = () => {
       passwordRequired: "पासवर्ड आवश्यक है",
       loginFailed: "लॉगिन विफल रहा। कृपया पुनः प्रयास करें।",
       loginSuccess: "लॉगिन सफल!",
+      invalidCredentials: "गलत क्रेडेंशियल। कृपया पुनः प्रयास करें।",
+      userNotFound: "उपयोगकर्ता नहीं मिला।",
       defaultPasswordNotAllowed: "डिफ़ॉल्ट पासवर्ड की अनुमति नहीं है। कृपया अपना पासवर्ड रीसेट करें।"
     },
     resetPassword: {
@@ -168,9 +170,13 @@ const Login = () => {
       const responseData = err.response?.data;
       if (responseData?.action === 'FORGOT_PASSWORD_REQUIRED') {
         setError(responseData.error || content.errors.defaultPasswordNotAllowed);
-        setResetPasswordUsername(formData.email_or_phone);
-        setResetPasswordRole(formData.role);
-        setShowResetPasswordModal(true);
+      } else if (responseData?.error === 'Invalid credentials') {
+        setError(content.errors.invalidCredentials);
+      } else if (responseData?.error === 'User not found') {
+        setError(content.errors.userNotFound);
+      } else if (responseData?.error) {
+        // If there's a generic 'error' field in the response, display its message.
+        setError(responseData.error);
       } else {
         setError(responseData?.message || content.errors.loginFailed);
       }
