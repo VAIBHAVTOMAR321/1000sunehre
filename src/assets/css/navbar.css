@@ -1,27 +1,27 @@
 /* ==========================================
-   GyanDhara Navbar Theme
-   Matches warm educational logo palette
-   ========================================== */
+    GyanDhara Navbar Theme
+    Matches warm golden educational logo palette
+    ========================================== */
 
 :root {
-  --gd-saffron: #E65100;
-  --gd-orange: #FF8F00;
-  --gd-amber: #FFB300;
-  --gd-deep: #BF360C;
-  --gd-warm-white: #FFFAF5;
+  --gd-gold: #D4AF37;
+  --gd-gold-light: #F4D03F;
+  --gd-gold-dark: #8B6914;
+  --gd-bronze: #CD7F32;
+  --gd-warm-white: #FFFAF0;
   --gd-dark: #1a1a2e;
   --gd-text: #333333;
   --gd-text-light: #666666;
-  --gd-shadow: rgba(230, 81, 0, 0.15);
+  --gd-shadow: rgba(212, 175, 55, 0.2);
 }
 
 /* ---- Main Navbar ---- */
 .custom-navbar {
-  background: var(--gd-warm-white) !important;
+  background: #fff !important;
   padding: 0 !important;
   box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
   border-bottom: 3px solid transparent;
-  border-image: linear-gradient(to right, var(--gd-saffron), var(--gd-orange), var(--gd-amber)) 1;
+  border-image: linear-gradient(to right, #0D6EFD, var(--gd-gold-light), var(--gd-bronze)) 1;
   transition: all 0.3s ease;
   min-height: 70px;
   display: flex;
@@ -29,7 +29,7 @@
 }
 
 .custom-navbar.scrolled {
-  box-shadow: 0 4px 30px rgba(230, 81, 0, 0.12);
+  box-shadow: 0 4px 30px rgba(212, 175, 55, 0.15);
 }
 
 /* ---- Brand / Logo ---- */
@@ -37,8 +37,7 @@
   display: flex;
   align-items: center;
   text-decoration: none !important;
-  gap: 10px;
-  /* padding: 8px 0; */
+  gap: 12px;
 }
 
 .navbar-logo {
@@ -56,14 +55,14 @@
 
 .brand-text {
   font-weight: 800;
-  font-size: 22px;
+  font-size: 18px;
   color: var(--gd-dark) !important;
   letter-spacing: 0.5px;
   font-family: 'Segoe UI', sans-serif;
 }
 
 .brand-highlight {
-  color: var(--gd-saffron);
+  color: var(--gd-gold-dark);
   position: relative;
 }
 
@@ -74,7 +73,7 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(to right, var(--gd-saffron), var(--gd-amber));
+  background: linear-gradient(to right, #0D6EFD, var(--gd-bronze));
   border-radius: 2px;
 }
 
@@ -101,13 +100,13 @@
   width: 0;
   height: 0;
   border-radius: 50%;
-  background: var(--gd-saffron);
+  background: #0D6EFD;
   transition: all 0.3s ease;
 }
 
 .nav-link-item:hover {
-  color: var(--gd-saffron) !important;
-  background: rgba(230, 81, 0, 0.06);
+  color: var(--gd-gold-dark) !important;
+  background: rgba(212, 175, 55, 0.1);
 }
 
 .nav-link-item:hover .nav-link-dot {
@@ -117,8 +116,8 @@
 
 /* Active link styling */
 .nav-link-item.active {
-  color: var(--gd-saffron) !important;
-  background: rgba(230, 81, 0, 0.08);
+  color: var(--gd-gold-dark) !important;
+  background: rgba(212, 175, 55, 0.12);
 }
 
 .nav-link-item.active .nav-link-dot {
@@ -126,9 +125,9 @@
   height: 6px;
 }
 
-/* ---- Register Button ---- */
+/* ---- Register/Login Button ---- */
 .register-btn {
-  background: linear-gradient(135deg, var(--gd-saffron) 0%, var(--gd-orange) 100%) !important;
+  background: linear-gradient(135deg, #0D6EFD 0%, var(--gd-bronze) 100%) !important;
   color: #ffffff !important;
   font-weight: 700;
   font-size: 14px;
@@ -136,7 +135,7 @@
   border-radius: 50px !important;
   margin-left: 12px;
   letter-spacing: 0.5px;
-  box-shadow: 0 4px 15px rgba(230, 81, 0, 0.35);
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.35);
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
@@ -146,9 +145,9 @@
 }
 
 .register-btn:hover {
-  background: linear-gradient(135deg, var(--gd-deep) 0%, var(--gd-saffron) 100%) !important;
+  background: linear-gradient(135deg, var(--gd-gold-dark) 0%, #0D6EFD 100%) !important;
   color: #ffffff !important;
-  box-shadow: 0 6px 25px rgba(230, 81, 0, 0.45);
+  box-shadow: 0 6px 25px rgba(212, 175, 55, 0.45);
   transform: translateY(-2px);
 }
 
@@ -165,8 +164,8 @@
 .mobile-language-toggle {
   display: none;
   background: #ffffff !important;
-  border: 2px solid #000000 !important;
-  color: #000000 !important;
+  border: 2px solid #0D6EFD !important;
+  color: var(--gd-gold-dark) !important;
   font-weight: 600;
   font-size: 13px;
   padding: 6px 14px !important;
@@ -176,10 +175,10 @@
 }
 
 .mobile-language-toggle:hover {
-  background: #000000 !important;
+  background: #0D6EFD !important;
   color: #ffffff !important;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
 }
 
 .mobile-language-toggle i {
@@ -190,8 +189,8 @@
 .desktop-language-toggle {
   display: none;
   background: transparent !important;
-  border: 2px solid var(--gd-saffron) !important;
-  color: var(--gd-saffron) !important;
+  border: 2px solid #0D6EFD !important;
+  color: var(--gd-gold-dark) !important;
   font-weight: 600;
   font-size: 13px;
   padding: 10px 14px !important;
@@ -201,10 +200,10 @@
 }
 
 .desktop-language-toggle:hover {
-  background: var(--gd-saffron) !important;
+  background: #0D6EFD !important;
   color: #ffffff !important;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(230, 81, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
 }
 
 .desktop-language-toggle i {
@@ -224,7 +223,7 @@
 }
 
 .navbar-toggler-custom:hover {
-  background: rgba(0, 0, 0, 0.05) !important;
+  background: rgba(212, 175, 55, 0.1) !important;
   border-radius: 8px;
 }
 
@@ -235,7 +234,7 @@
 .toggler-line {
   width: 24px;
   height: 3px;
-  background: var(--gd-saffron);
+  background: #0D6EFD;
   border-radius: 2px;
   transition: all 0.3s ease;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
@@ -269,8 +268,8 @@
 }
 
 /* ==========================================
-   RESPONSIVE
-   ========================================== */
+    RESPONSIVE
+    ========================================== */
 
 /* Tablet & below */
 @media (max-width: 991px) {
@@ -289,7 +288,7 @@
   }
 
   .brand-text {
-    font-size: 20px;
+    font-size: 18px;
   }
 
 /* Mobile language toggle - visible on mobile */
@@ -305,48 +304,48 @@
      font-size: 12px;
    }
 
-   /* Push hamburger to far right */
-   .navbar-toggler-custom {
-     margin-left: auto;
-     background: #f5f5f5 !important;
-     border-radius: 8px;
-     padding: 10px !important;
+    /* Push hamburger to far right */
+    .navbar-toggler-custom {
+      margin-left: auto;
+      background: rgba(212, 175, 55, 0.1) !important;
+      border-radius: 8px;
+      padding: 10px !important;
+    }
+
+    .navbar-toggler-custom:hover {
+      background: rgba(212, 175, 55, 0.2) !important;
+    }
+
+    /* Hide desktop toggle on mobile */
+    .desktop-language-toggle {
+      display: none !important;
+    }
+
+    .nav-links {
+     text-align: center;
+     margin-top: 15px;
+     padding: 15px 0;
+     gap: 6px;
    }
 
-   .navbar-toggler-custom:hover {
-     background: #e0e0e0 !important;
+   .nav-link-item {
+     font-size: 15px;
+     padding: 12px 20px !important;
+     justify-content: center;
    }
 
-   /* Hide desktop toggle on mobile */
-   .desktop-language-toggle {
-     display: none !important;
+   .nav-link-item:hover {
+     background: rgba(212, 175, 55, 0.1);
    }
 
-   .nav-links {
-    text-align: center;
-    margin-top: 15px;
-    padding: 15px 0;
-    gap: 6px;
-  }
-
-  .nav-link-item {
-    font-size: 15px;
-    padding: 12px 20px !important;
-    justify-content: center;
-  }
-
-  .nav-link-item:hover {
-    background: rgba(230, 81, 0, 0.08);
-  }
-
-  .register-btn {
-    margin-left: 252px !important;
-    margin-top: 10px;
-    display: inline-flex;
-    justify-content: center;
-    width: fit-content;
-    padding: 12px 32px !important;
-  }
+   .register-btn {
+     margin-left: 252px !important;
+     margin-top: 10px;
+     display: inline-flex;
+     justify-content: center;
+     width: fit-content;
+     padding: 12px 32px !important;
+   }
 }
 
 /* Mobile */
@@ -356,7 +355,7 @@
   }
 
   .brand-text {
-    font-size: 18px;
+    font-size: 16px;
   }
 
   .brand-highlight::after {
@@ -382,7 +381,7 @@
   }
 
   .brand-text {
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .nav-link-item {
@@ -401,7 +400,7 @@
     transform: translateX(-50%) scaleX(0);
     width: 60%;
     height: 2px;
-    background: linear-gradient(to right, var(--gd-saffron), var(--gd-amber));
+    background: linear-gradient(to right, #0D6EFD, var(--gd-gold-light));
     border-radius: 1px;
     transition: transform 0.3s ease;
   }
