@@ -34,10 +34,7 @@ function NavBar() {
               Home
             </Nav.Link>
 
-            <Nav.Link as={Link} to="/CourseItems" className="nav-link-item" onClick={() => setExpanded(false)}>
-              <span className="nav-link-dot"></span>
-              Courses
-            </Nav.Link>
+           
 
            
 
