@@ -72,8 +72,8 @@ const SupervisorLeftNav = ({ sidebarOpen, setSidebarOpen, isMobile, isTablet, on
  const menuItems = [
       {
         icon: <FaTachometerAlt />,
-        label: "/SupervisorDashBoard",
-        path: "/",
+        label: "DashBoard",
+        path: "/SupervisorDashBoard",
         active: true,
       },
     
@@ -116,7 +116,7 @@ const SupervisorLeftNav = ({ sidebarOpen, setSidebarOpen, isMobile, isTablet, on
           {sidebarOpen ? (
             <div className="logo-container">
               <div className="logo">
-                  DASHBOARD
+                  Super visor Panel
               </div>
             </div>
           ) : (
