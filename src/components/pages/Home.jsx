@@ -29,7 +29,7 @@ function Home() {
 
     // Life Stages - Critical Phases (Yellow Marked Table Content)
     lifeStagesTitle: "महत्वपूर्ण जीवनचक्र",
-    lifeStagesSubtitle: "सोने के 1000 दिनों (1000 Days) का समय सीमाएँ",
+    lifeStagesSubtitle: "सोने के 1000 दिनों (1000 Days) की समय सीमाएँ",
     lifeStages: [
       { 
         icon: "bi-calendar3", 
@@ -55,7 +55,7 @@ function Home() {
       { 
         icon: "bi-hospital", 
         title: "प्रसव एवं जन्म", 
-        desc: "सैनिक प्रसुति ट्रैकिंग एवं तात्कालिक पोषण",
+        desc: "सुरक्षित प्रसव ट्रैकिंग एवं तात्कालिक पोषण",
         color: "orange",
         highlight: false
       },
@@ -82,8 +82,8 @@ function Home() {
       },
       { 
         icon: "bi-person", 
-        title: "किशोर लड़कियाँ", 
-        desc: "साप्ताहिक आयरन एवं फोलिक एमूलेशन",
+        title: "किशोर लड़कियाँ",
+        desc: "साप्ताहिक आयरन एवं फोलिक अनुपूरण",
         color: "saffron",
         highlight: false
       }
@@ -95,8 +95,8 @@ function Home() {
     services: [
       { 
         icon: "bi-capsule", 
-        title: "पोषण सहायता", 
-        desc: "टीकाकरण, पूरक आहार, आयरन एवं फोलिक एम्ल",
+        title: "पोषण सहायता",
+        desc: "टीकाकरण, पूरक आहार, आयरन एवं फोलिक अम्ल",
         items: ["THR (Take Home Ration)", "गर्म पकाया भोजन", "IFA गोलियाँ"],
         color: "saffron"
       },
@@ -128,10 +128,10 @@ function Home() {
     newFeaturesSubtitle: "प्लेटफॉर्म में जोड़ी गई हालिया सुविधाएँ",
     newFeatures: [
       { icon: "bi-telephone", title: "सेवा हेल्पलाइन 1800-180-1104", desc: "24x7 माता-शिशु सेवा हेल्पलाइन", color: "saffron" },
-      { icon: "bi-phone", title: "मोबाइल ऐप जन舒展", desc: "ANMOL और म-स्वास्थ्य ऐप के माध्यम से रीयल-टाइम ट्रैकिंग", color: "green" },
+      { icon: "bi-phone", title: "मोबाइल ऐप जन स्वास्थ्य", desc: "ANMOL और म-स्वास्थ्य ऐप के माध्यम से रीयल-टाइम ट्रैकिंग", color: "green" },
       { icon: "bi-qr-code", title: "QR कोड से पहचान", desc: " माता एवं शिशु की डिजिटल पहचान", color: "blue" },
       { icon: "bi-graph-up", title: "विशिष्ट मॉनिटरिंग", desc: "उच्च जोखिम वाली माताओं एवं बच्चों की विशेष निगरानी", color: "orange" },
-      { icon: "bi-geo-alt", title: "भू-तैजीकरण", desc: "सेवा केंद्रों की सटीक स्थिति मैपिंग", color: "purple" },
+      { icon: "bi-geo-alt", title: "भू-टैगिंग", desc: "सेवा केंद्रों की सटीक स्थिति मैपिंग", color: "purple" },
       { icon: "bi-bell", title: "स्मार्ट अलर्ट", desc: "ऐप और SMS द्वारा सूचना एवं अलर्ट", color: "teal" }
     ],
 
@@ -140,8 +140,8 @@ function Home() {
     benefits: [
       { icon: "bi-speedometer2", title: "तीव्र डेटा एक्सेस", desc: "राइट कैड बॉर्ड से रियल-टाइम आँकड़े", color: "blue" },
       { icon: "bi-people", title: "समन्वयित डेटा", desc: "स्वास्थ्य, ICDS एवं शिक्षा विभाग की एकीकृत जानकारी", color: "saffron" },
-      { icon: "bi-shield-check", title: "डेटा सुरक्षा", desc: "सरकारी मानकों के अनुसार डेटा एन्क्रिप्शन", color: "green" },
-      { icon: "bi-bar-chart", title: "विश्लेषण एवं रिपोर्ट", desc: "स्वचालित मिस प्रोडक्शन", color: "orange" }
+      { icon: "bi-speedometer2", title: "तीव्र डेटा एक्सेस", desc: "सटीक डैशबोर्ड से रियल-टाइम आँकड़े", color: "blue" },
+      { icon: "bi-bar-chart", title: "विश्लेषण एवं रिपोर्ट", desc: "स्वचालित MIS रिपोर्ट", color: "orange" }
     ],
 
     // Final CTA
