@@ -36,7 +36,7 @@ function SupervisorHeader({ toggleSidebar }) {
   const [imageError, setImageError] = useState(false);
 
   const getDisplayName = () => {
-    return userDetails.full_name || "User";
+    return userDetails.full_name || "Supervisor";
   };
 
   const getUserPhotoUrl = () => {
@@ -84,25 +84,7 @@ function SupervisorHeader({ toggleSidebar }) {
           <Col xs="auto">
              <div className="header-actions d-flex align-items-center">
                 
-                {/* Grooming Class Button - Visible on all screens now */}
-                <div
-                   onClick={() => navigate("/GroomingClasses")}
-                   style={{
-                     background: "#383be8",
-                     color: "#fff",
-                     padding: "4px 10px", // Tighter padding
-                     borderRadius: "6px",
-                     fontSize: "0.7rem", // Smaller font on mobile
-                     fontWeight: "500",
-                     cursor: "pointer",
-                     display: "inline-block",
-                     marginRight: "8px",
-                     whiteSpace: "nowrap",
-                     textAlign: "center"
-                   }}
-                >
-                   Grooming Class
-                </div>
+              
 
                 {/* User Profile Dropdown */}
                 <Dropdown align="end">
