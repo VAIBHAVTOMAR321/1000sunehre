@@ -102,13 +102,13 @@ const Login = () => {
 
     try {
       const payload = {
-        role: formData.role,
+        username: formData.email_or_phone,
         password: formData.password,
-        email_or_phone: formData.email_or_phone,
+        role: formData.role,
       };
 
       const response = await axios.post(
-        'https://brjobsedu.com/gyandhara/gyandhara_backend/api/login/',
+        'https://mahadevaaya.com/golden100days/golden100days_backend/api/login/',
         payload
       );
 
@@ -122,11 +122,26 @@ const Login = () => {
         });
         alert(content.errors.loginSuccess);
 
-        // Update navigation routes based on your dashboard implementation
-        if (['director', 'dpo', 'cdpo'].includes(response.data.role)) {
-          navigate('/DashBord');
-        } else {
-          navigate('/UserDashboard');
+        // Role-based redirection to specific dashboards
+        const userRole = response.data.role;
+        switch (userRole) {
+          case 'director':
+            navigate('/DirectorDashboard');
+            break;
+          case 'dpo':
+            navigate('/DPODashboard');
+            break;
+          case 'cdpo':
+            navigate('/CDPODashboard');
+            break;
+          case 'supervisor':
+            navigate('/SupervisorDashBoard');
+            break;
+          case 'anganbadi':
+            navigate('/AnganwadiDashboard');
+            break;
+          default:
+            navigate('/UserDashboard');
         }
       }
     } catch (err) {

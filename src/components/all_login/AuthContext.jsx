@@ -1,10 +1,10 @@
-import React, { createContext, useContext, useState, useMemo, useEffect } from 'react';
+import React, { createContext, useContext, useState, useMemo, useEffect, useCallback, useRef } from 'react';
 import axios from 'axios';
 
 const AuthContext = createContext(null);
 
 const STORAGE_KEY = 'gyandhara_auth';
-const API_URL = 'https://brjobsedu.com/gyandhara/gyandhara_backend/api';
+const API_URL = 'https://mahadevaaya.com/golden100days/golden100days_backend/api';
 
 let isRefreshing = false;
 let failedQueue = [];
@@ -18,69 +18,6 @@ const processQueue = (error, token = null) => {
     }
   });
   failedQueue = [];
-};
-
-const createAxiosInstance = (accessToken, refreshToken, logout) => {
-  const instance = axios.create({
-    baseURL: API_URL,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-
-  instance.interceptors.request.use(
-    (config) => {
-      if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`;
-      }
-      return config;
-    },
-    (error) => Promise.reject(error)
-  );
-
-  instance.interceptors.response.use(
-    (response) => response,
-    async (error) => {
-      const originalRequest = error.config;
-
-      if (error.response?.status === 401 && !originalRequest._retry) {
-        if (isRefreshing) {
-          return new Promise((resolve, reject) => {
-            failedQueue.push({ resolve, reject });
-          }).then(token => {
-            originalRequest.headers.Authorization = `Bearer ${token}`;
-            return instance(originalRequest);
-          }).catch(err => Promise.reject(err));
-        }
-
-        originalRequest._retry = true;
-        isRefreshing = true;
-
-        try {
-          const response = await axios.post(`${API_URL}/refresh-token/`, {
-            refresh: refreshToken,
-          });
-
-          const { access } = response.data;
-          
-          processQueue(null, access);
-
-          originalRequest.headers.Authorization = `Bearer ${access}`;
-          return instance(originalRequest);
-        } catch (refreshError) {
-          processQueue(refreshError, null);
-          logout();
-          return Promise.reject(refreshError);
-        } finally {
-          isRefreshing = false;
-        }
-      }
-
-      return Promise.reject(error);
-    }
-  );
-
-  return instance;
 };
 
 export function AuthProvider({ children }) {
@@ -102,6 +39,7 @@ export function AuthProvider({ children }) {
         setRefreshToken(parsed.refresh || null);
         setRole(parsed.role || null);
         setUniqueId(parsed.unique_id || null);
+        tokensRef.current = { accessToken: parsed.access, refreshToken: parsed.refresh };
       } catch (err) {
         console.error('Failed to parse auth data:', err);
         localStorage.removeItem(STORAGE_KEY);
@@ -126,38 +64,121 @@ export function AuthProvider({ children }) {
     }
   }, [user, accessToken, refreshToken, role, uniqueId]);
 
-  const login = (data) => {
+  const login = useCallback((data) => {
     setUser(data.user);
     setAccessToken(data.access);
     setRefreshToken(data.refresh);
     setRole(data.role);
     setUniqueId(data.unique_id);
-  };
+    tokensRef.current = { accessToken: data.access, refreshToken: data.refresh };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
+    isRefreshing = false;
+    failedQueue = [];
     setUser(null);
     setAccessToken(null);
     setRefreshToken(null);
     setRole(null);
     setUniqueId(null);
-    localStorage.removeItem(STORAGE_KEY);
-  };
+    tokensRef.current = { accessToken: null, refreshToken: null };
+    localStorage.clear();
+  }, []);
 
-  const refreshAccessToken = async () => {
-    if (!refreshToken) return null;
-    
+  // Store tokens in a ref so interceptors can access current values without re-creating the axios instance
+  const tokensRef = useRef({ accessToken, refreshToken });
+  useEffect(() => {
+    tokensRef.current = { accessToken, refreshToken };
+  }, [accessToken, refreshToken]);
+
+  // Authenticated axios instance with automatic token refresh logic
+  const api = useMemo(() => {
+    const instance = axios.create({
+      baseURL: API_URL,
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    instance.interceptors.request.use(
+      (config) => {
+        const token = tokensRef.current.accessToken;
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+      },
+      (error) => Promise.reject(error)
+    );
+
+    instance.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        const originalRequest = error.config;
+        const refresh = tokensRef.current.refreshToken;
+
+        if (error.response?.status === 401) {
+          // If we already tried to refresh and failed, or if no refresh token is available, log out immediately
+          if (originalRequest._retry || !refresh) {
+            logout();
+            return Promise.reject(error);
+          }
+
+          if (isRefreshing) {
+            return new Promise((resolve, reject) => {
+              failedQueue.push({ resolve, reject });
+            }).then(token => {
+              originalRequest.headers.Authorization = `Bearer ${token}`;
+              return instance(originalRequest);
+            }).catch(err => Promise.reject(err));
+          }
+
+          originalRequest._retry = true;
+          isRefreshing = true;
+
+          try {
+            const response = await axios.post(`${API_URL}/refresh-token/`, {
+              refresh: refresh,
+            });
+
+            const { access } = response.data;
+            tokensRef.current.accessToken = access; // Sync ref immediately before retry
+            setAccessToken(access); // Updates context state and localStorage
+            processQueue(null, access);
+
+            originalRequest.headers.Authorization = `Bearer ${access}`;
+            return instance(originalRequest);
+          } catch (refreshError) {
+            processQueue(refreshError, null);
+            logout();
+            return Promise.reject(refreshError);
+          } finally {
+            isRefreshing = false;
+          }
+        }
+        return Promise.reject(error);
+      }
+    );
+
+    return instance;
+  }, [logout]);
+
+  const refreshAccessToken = useCallback(async () => {
+    if (!refreshToken) {
+      logout();
+      return null;
+    }
     try {
       const response = await axios.post(`${API_URL}/refresh-token/`, {
         refresh: refreshToken,
       });
       const { access } = response.data;
+      tokensRef.current.accessToken = access; // Sync ref immediately
       setAccessToken(access);
       return access;
     } catch (error) {
       logout();
       return null;
     }
-  };
+  }, [refreshToken, logout]);
 
   const value = useMemo(() => ({
     user,
@@ -167,10 +188,11 @@ export function AuthProvider({ children }) {
     uniqueId,
     login,
     logout,
+    api,
     refreshAccessToken,
     isAuthenticated: !!accessToken,
     isReady,
-  }), [user, accessToken, refreshToken, role, uniqueId, isReady]);
+  }), [user, accessToken, refreshToken, role, uniqueId, api, refreshAccessToken, isReady]);
 
   return (
     <AuthContext.Provider value={value}>
