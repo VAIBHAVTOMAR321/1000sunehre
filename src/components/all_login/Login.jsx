@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import '../../assets/css/login.css';
 
 const Login = () => {
+  const [searchParams] = useSearchParams();
   const [formData, setFormData] = useState({
-    role: '9th-student',
+    role: '',
     email_or_phone: '',
-    aadhaar_no: '',
-    school_id: '',
     password: '',
   });
   const [loading, setLoading] = useState(false);
@@ -19,14 +18,38 @@ const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const roleOptions = [
-    { value: '9th-student', label: '9th Student', icon: 'bi-mortarboard' },
-    { value: '10th-student', label: '10th Student', icon: 'bi-mortarboard' },
-    { value: '11th-student', label: '11th Student', icon: 'bi-mortarboard' },
-    { value: '12th-student', label: '12th Student', icon: 'bi-mortarboard' },
-    { value: 'admin', label: 'Admin', icon: 'bi-shield-lock' },
-    { value: 'school', label: 'School', icon: 'bi-building' },
-  ];
+  const roleOptions = useMemo(() => {
+    const allRoles = [
+      { value: 'director', label: 'Director', icon: 'bi-person-workspace' },
+      { value: 'dpo', label: 'DPO', icon: 'bi-briefcase' },
+      { value: 'cdpo', label: 'CDPO', icon: 'bi-person-badge' },
+      { value: 'supervisor', label: 'Supervisor', icon: 'bi-person-check' },
+      { value: 'anganbadi', label: 'Anganbadi', icon: 'bi-house-door' },
+    ];
+
+    if (searchParams.has('director')) return allRoles.filter(r => r.value === 'director');
+    if (searchParams.has('district')) return allRoles.filter(r => ['dpo', 'cdpo'].includes(r.value));
+    
+    // Default view shows Supervisor and Anganbadi
+    return allRoles.filter(r => ['supervisor', 'anganbadi'].includes(r.value));
+  }, [searchParams]);
+
+  const loginTitle = useMemo(() => {
+    if (searchParams.has('director')) {
+      return 'Director Login';
+    } else if (searchParams.has('district')) {
+      return 'DPO / CDPO Login';
+    } else {
+      return 'Field Staff Login'; // Default for Supervisor and Anganbadi
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    // Sync selected role with filtered options on mount or param change
+    if (roleOptions.length > 0 && !roleOptions.some(o => o.value === formData.role)) {
+      setFormData(prev => ({ ...prev, role: roleOptions[0].value }));
+    }
+  }, [roleOptions, formData.role]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -37,16 +60,8 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (formData.role === 'admin' && !formData.email_or_phone) {
-      setError("Email/Phone is required");
-      return;
-    }
-    if (formData.role === 'school' && !formData.school_id) {
-      setError("School ID is required");
-      return;
-    }
-    if (formData.role !== 'admin' && formData.role !== 'school' && !formData.aadhaar_no) {
-      setError("Aadhaar number is required");
+    if (!formData.email_or_phone) {
+      setError("User ID / Phone is required");
       return;
     }
     if (!formData.password) {
@@ -61,15 +76,8 @@ const Login = () => {
       const payload = {
         role: formData.role,
         password: formData.password,
+        email_or_phone: formData.email_or_phone,
       };
-
-      if (formData.role === 'admin') {
-        payload.email_or_phone = formData.email_or_phone;
-      } else if (formData.role === 'school') {
-        payload.school_id = formData.school_id;
-      } else {
-        payload.aadhaar_no = formData.aadhaar_no;
-      }
 
       const response = await axios.post(
         'https://brjobsedu.com/gyandhara/gyandhara_backend/api/login/',
@@ -86,12 +94,11 @@ const Login = () => {
         });
         alert("Login successful!");
         
-        if (response.data.role === 'admin') {
+        // Update navigation routes based on your dashboard implementation
+        if (['director', 'dpo', 'cdpo'].includes(response.data.role)) {
           navigate('/DashBord');
-        } else if (response.data.role === 'school') {
-          navigate('/SchoolDashBoard');
         } else {
-          navigate('/UserDashboard');
+          navigate('/UserDashboard'); 
         }
       }
     } catch (err) {
@@ -110,7 +117,7 @@ const Login = () => {
             <div className="brand-logo">
               <i className="bi bi-mortarboard-fill"></i>
             </div>
-            <h1>GyanDhara</h1>
+            <h1>{loginTitle}</h1>
             <p>Skill Today, Empower Tomorrow</p>
           </div>
 
@@ -119,22 +126,24 @@ const Login = () => {
             <p>Continue your learning journey</p>
           </div>
 
-          <div className="role-selector">
-            <label>Select Your Role</label>
-            <div className="role-tabs">
-              {roleOptions.map((option) => (
-                <button
-                  key={option.value}
-                  type="button"
-                  className={`role-tab ${formData.role === option.value ? 'active' : ''}`}
-                  onClick={() => setFormData({ ...formData, role: option.value })}
-                >
-                  <i className={option.icon}></i>
-                  <span>{option.label}</span>
-                </button>
-              ))}
+          {roleOptions.length > 1 && (
+            <div className="role-selector">
+              <label>Select Your Role</label>
+              <div className="role-tabs">
+                {roleOptions.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    className={`role-tab ${formData.role === option.value ? 'active' : ''}`}
+                    onClick={() => setFormData({ ...formData, role: option.value })}
+                  >
+                    <i className={option.icon}></i>
+                    <span>{option.label}</span>
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           <form onSubmit={handleSubmit} className="login-form">
             {error && (
@@ -144,50 +153,19 @@ const Login = () => {
               </div>
             )}
 
-            {formData.role === 'admin' ? (
-              <div className="form-group">
-                <label>Email / Phone</label>
-                <div className="input-wrapper-text">
-                  <i className="bi bi-person"></i>
-                  <input
-                    type="text"
-                    name="email_or_phone"
-                    value={formData.email_or_phone}
-                    onChange={handleChange}
-                    placeholder="Enter email or phone"
-                  />
-                </div>
+            <div className="form-group">
+              <label>User ID / Phone</label>
+              <div className="input-wrapper-text">
+                <i className="bi bi-person"></i>
+                <input
+                  type="text"
+                  name="email_or_phone"
+                  value={formData.email_or_phone}
+                  onChange={handleChange}
+                  placeholder="Enter User ID or Phone"
+                />
               </div>
-            ) : formData.role === 'school' ? (
-              <div className="form-group">
-                <label>School ID</label>
-                <div className="input-wrapper-text">
-                  <i className="bi bi-building"></i>
-                  <input
-                    type="text"
-                    name="school_id"
-                    value={formData.school_id}
-                    onChange={handleChange}
-                    placeholder="Enter school ID"
-                  />
-                </div>
-              </div>
-            ) : (
-              <div className="form-group">
-                <label>Aadhaar Number</label>
-                <div className="input-wrapper-text">
-                  <i className="bi bi-person-badge"></i>
-                  <input
-                    type="text"
-                    name="aadhaar_no"
-                    value={formData.aadhaar_no}
-                    onChange={handleChange}
-                    placeholder="Enter 12-digit Aadhaar"
-                    maxLength="12"
-                  />
-                </div>
-              </div>
-            )}
+            </div>
 
             <div className="form-group">
               <label>Password</label>
@@ -231,7 +209,7 @@ const Login = () => {
           </form>
 
           <div className="login-footer">
-            <p>New student? <Link to="/register">Register here</Link></p>
+            <p>Need access? <Link to="/contact">Contact Administration</Link></p>
           </div>
         </div>
 
