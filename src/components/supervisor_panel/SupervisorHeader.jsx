@@ -114,7 +114,7 @@ function SupervisorHeader({ toggleSidebar }) {
                       <FaUserCircle style={{ fontSize: 24, color: "rgb(250 93 77)" }} />
                     )}
                     {/* Name hidden on mobile to save space for other buttons, but Avatar remains visible */}
-                    <span style={{ fontWeight: 500, fontSize: "0.85rem" }} className="d-none d-md-inline">
+                    <span style={{ fontWeight: 500, fontSize: "0.85rem" }} className="">
                       {getDisplayName()}
                     </span>
                   </Dropdown.Toggle>
