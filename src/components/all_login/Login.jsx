@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import '../../assets/css/login.css';
+import ResetPasswordModal from './ResetPasswordModal';
 
 const Login = () => {
   const [searchParams] = useSearchParams();
@@ -15,6 +16,10 @@ const Login = () => {
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
 
+  // New state for password reset modal
+  const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
+  const [resetPasswordUsername, setResetPasswordUsername] = useState('');
+  const [resetPasswordRole, setResetPasswordRole] = useState('');
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -43,7 +48,18 @@ const Login = () => {
       userIdRequired: "यूजर आईडी / फोन आवश्यक है",
       passwordRequired: "पासवर्ड आवश्यक है",
       loginFailed: "लॉगिन विफल रहा। कृपया पुनः प्रयास करें।",
-      loginSuccess: "लॉगिन सफल!"
+      loginSuccess: "लॉगिन सफल!",
+      defaultPasswordNotAllowed: "डिफ़ॉल्ट पासवर्ड की अनुमति नहीं है। कृपया अपना पासवर्ड रीसेट करें।"
+    },
+    resetPassword: {
+      title: "पासवर्ड रीसेट करें",
+      newPasswordLabel: "नया पासवर्ड",
+      confirmPasswordLabel: "पासवर्ड की पुष्टि करें",
+      resetButton: "पासवर्ड रीसेट करें",
+      resettingButton: "रीसेट हो रहा है...",
+      passwordMismatch: "पासवर्ड मेल नहीं खाते।",
+      resetSuccess: "पासवर्ड सफलतापूर्वक रीसेट किया गया।",
+      resetFailed: "पासवर्ड रीसेट विफल रहा। कृपया पुनः प्रयास करें।"
     }
   };
 
@@ -85,6 +101,39 @@ const Login = () => {
     setError('');
   };
 
+  const handleLoginSuccess = (data) => {
+    login({
+      access: data.access,
+      refresh: data.refresh,
+      role: data.role,
+      unique_id: data.unique_id,
+      user: data.user || null,
+    });
+    alert(content.errors.loginSuccess);
+
+    // Role-based redirection to specific dashboards
+    const userRole = data.role;
+    switch (userRole) {
+      case 'director':
+        navigate('/DirectorDashboard');
+        break;
+      case 'dpo':
+        navigate('/DPODashboard');
+        break;
+      case 'cdpo':
+        navigate('/CDPODashboard');
+        break;
+      case 'supervisor':
+        navigate('/SupervisorDashBoard');
+        break;
+      case 'anganwadi':
+        navigate('/AnganwadiDashboard');
+        break;
+      default:
+        navigate('/UserDashboard');
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -113,36 +162,32 @@ const Login = () => {
       );
 
       if (response.data.access) {
-        login({
-          access: response.data.access,
-          refresh: response.data.refresh,
-          role: response.data.role,
-          unique_id: response.data.unique_id,
-          user: response.data.user || null,
-        });
-        alert(content.errors.loginSuccess);
+        handleLoginSuccess(response.data);
+      }
+    } catch (err) {
+      const responseData = err.response?.data;
+      if (responseData?.action === 'FORGOT_PASSWORD_REQUIRED') {
+        setError(responseData.error || content.errors.defaultPasswordNotAllowed);
+        setResetPasswordUsername(formData.email_or_phone);
+        setResetPasswordRole(formData.role);
+        setShowResetPasswordModal(true);
+      } else {
+        setError(responseData?.message || content.errors.loginFailed);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        // Role-based redirection to specific dashboards
-        const userRole = response.data.role;
-        switch (userRole) {
-          case 'director':
-            navigate('/DirectorDashboard');
-            break;
-          case 'dpo':
-            navigate('/DPODashboard');
-            break;
-          case 'cdpo':
-            navigate('/CDPODashboard');
-            break;
-          case 'supervisor':
-            navigate('/SupervisorDashBoard');
-            break;
-          case 'anganwadi':
-            navigate('/AnganwadiDashboard');
-            break;
-          default:
-            navigate('/UserDashboard');
-        }
+  const handlePasswordResetSuccess = async (newPassword) => {
+    setShowResetPasswordModal(false);
+    // After successful password reset, attempt to log in with the new password
+    setLoading(true);
+    try {
+      const payload = { username: resetPasswordUsername, password: newPassword, role: resetPasswordRole };
+      const response = await axios.post('https://mahadevaaya.com/golden100days/golden100days_backend/api/login/', payload); //
+      if (response.data.access) {
+        handleLoginSuccess(response.data);
       }
     } catch (err) {
       setError(err.response?.data?.message || content.errors.loginFailed);
@@ -274,6 +319,17 @@ const Login = () => {
           </div>
         </div>
       </div>
+
+      {showResetPasswordModal && (
+        <ResetPasswordModal
+          isOpen={showResetPasswordModal}
+          onClose={() => setShowResetPasswordModal(false)}
+          username={resetPasswordUsername}
+          role={resetPasswordRole}
+          onPasswordResetSuccess={handlePasswordResetSuccess}
+          content={content.resetPassword}
+        />
+      )}
     </div>
   );
 };
