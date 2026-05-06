@@ -53,14 +53,14 @@ const Login = () => {
       { value: 'dpo', label: 'डीपीओ', icon: 'bi-briefcase' },
       { value: 'cdpo', label: 'सीडीपीओ', icon: 'bi-person-badge' },
       { value: 'supervisor', label: 'पर्यवेक्षक', icon: 'bi-person-check' },
-      { value: 'anganbadi', label: 'आंगनवाड़ी', icon: 'bi-house-door' },
+      { value: 'anganwadi', label: 'आंगनवाड़ी', icon: 'bi-house-door' },
     ];
 
     if (searchParams.has('director')) return allRoles.filter(r => r.value === 'director');
     if (searchParams.has('district')) return allRoles.filter(r => ['dpo', 'cdpo'].includes(r.value));
 
-    // Default view shows Supervisor and Anganbadi
-    return allRoles.filter(r => ['supervisor', 'anganbadi'].includes(r.value));
+    // Default view shows Supervisor and Anganwadi
+    return allRoles.filter(r => ['supervisor', 'anganwadi'].includes(r.value));
   }, [searchParams]);
 
   const loginTitle = useMemo(() => {
@@ -69,7 +69,7 @@ const Login = () => {
     } else if (searchParams.has('district')) {
       return 'डीपीओ / सीडीपीओ लॉगिन';
     } else {
-      return 'फील्ड स्टाफ लॉगिन'; // Default for Supervisor and Anganbadi
+      return 'फील्ड स्टाफ लॉगिन'; // Default for Supervisor and Anganwadi
     }
   }, [searchParams]);
 
@@ -137,7 +137,7 @@ const Login = () => {
           case 'supervisor':
             navigate('/SupervisorDashBoard');
             break;
-          case 'anganbadi':
+          case 'anganwadi':
             navigate('/AnganwadiDashboard');
             break;
           default:
