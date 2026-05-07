@@ -1,15 +1,14 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import axios from 'axios';
-import { useNavigate, Link, useSearchParams } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import '../../assets/css/login.css';
-import UkLogo from '../../assets/images/logouk.webp';
+import UkLogo from '../../assets/images/new_logo_uk.png';
 import ResetPasswordModal from './ResetPasswordModal';
 
 const Login = () => {
-  const [searchParams] = useSearchParams();
   const [formData, setFormData] = useState({
-    role: '',
+    role: 'supervisor',
     email_or_phone: '',
     password: '',
   });
@@ -28,7 +27,6 @@ const Login = () => {
   const content = {
     brandSubtitle: "आज का कौशल, कल का सशक्तिकरण",
    
-   
     roleLabel: "अपनी भूमिका चुनें",
     userIdLabel: "यूजर आईडी / फोन",
     userIdPlaceholder: "यूजर आईडी या फोन दर्ज करें",
@@ -37,8 +35,7 @@ const Login = () => {
     rememberMe: "मुझे याद रखें",
     signIn: "साइन इन करें",
     signingIn: "साइन इन हो रहा है...",
-    needAccess: "पहुंच की आवश्यकता है? ",
-    contactAdmin: "प्रशासन से संपर्क करें",
+    
     learnTitle: "सीखें",
     learnDesc: "गुणवत्तापूर्ण शिक्षा और नए पाठ्यक्रमों तक पहुंच प्राप्त करें",
     growTitle: "बढ़ें",
@@ -68,17 +65,17 @@ const Login = () => {
 
   const roleOptions = useMemo(() => {
     return [
-      { value: 'director', label: 'Directorate Login', icon: 'bi-person-workspace' },
-      { value: 'dpo', label: 'DPO Login', icon: 'bi-briefcase' },
-      { value: 'cdpo', label: 'CDPO Login', icon: 'bi-person-badge' },
-      { value: 'supervisor', label: 'Supervisor Login', icon: 'bi-person-check' },
-      { value: 'anganwadi', label: 'Center Login', icon: 'bi-house-door' },
+      { value: 'director', label: 'निदेशक', icon: 'bi-person-workspace' },
+      { value: 'dpo', label: 'डीपीओ', icon: 'bi-briefcase' },
+      { value: 'cdpo', label: 'सीडीपीओ', icon: 'bi-person-badge' },
+      { value: 'supervisor', label: 'पर्यवेक्षक', icon: 'bi-person-check' },
+      { value: 'anganwadi', label: 'आंगनवाड़ी', icon: 'bi-house-door' },
     ];
   }, []);
 
   const loginTitle = useMemo(() => {
     const selectedRole = roleOptions.find(r => r.value === formData.role);
-    return selectedRole ? selectedRole.label : 'Login';
+    return selectedRole ? selectedRole.label : 'लॉगिन';
   }, [formData.role, roleOptions]);
 
   useEffect(() => {
@@ -165,7 +162,6 @@ const Login = () => {
       } else if (responseData?.error === 'User not found') {
         setError(content.errors.userNotFound);
       } else if (responseData?.error) {
-        // If there's a generic 'error' field in the response, display its message.
         setError(responseData.error);
       } else {
         setError(responseData?.message || content.errors.loginFailed);
@@ -181,7 +177,7 @@ const Login = () => {
     setLoading(true);
     try {
       const payload = { username: resetPasswordUsername, password: newPassword, role: resetPasswordRole };
-      const response = await axios.post('https://mahadevaaya.com/golden100days/golden100days_backend/api/login/', payload); //
+      const response = await axios.post('https://mahadevaaya.com/golden100days/golden100days_backend/api/login/', payload);
       if (response.data.access) {
         handleLoginSuccess(response.data);
       }
@@ -196,116 +192,116 @@ const Login = () => {
     <div className="login-page">
       <div className="login-bg-pattern"></div>
       <div className="login-container">
-        {/* Left Side - Radio Button Selection */}
-        <div className="login-content">
-          <div className="login-header">
-            <div className="brand-logo">
-              <i className="bi bi-mortarboard-fill"></i>
-            </div>
-            <h1>{loginTitle}</h1>
-            <p>{content.brandSubtitle}</p>
-          </div>
-
-          <div className="welcome-section">
-            <h2>{content.welcomeTitle}</h2>
-            <p>{content.welcomeSubtitle}</p>
-          </div>
-
-          {/* Radio Button Selection */}
-          <div className="role-selector">
-            <label className="role-selector-title">{content.roleLabel}</label>
-            <div className="radio-selection">
-              {roleOptions.map((option) => (
-                <label key={option.value} className="radio-option">
-                  <input
-                    type="radio"
-                    name="role"
-                    value={option.value}
-                    checked={formData.role === option.value}
-                    onChange={handleChange}
-                  />
-                  <span className="radio-label">{option.label}</span>
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <form onSubmit={handleSubmit} className="login-form">
-            {error && (
-              <div className="alert-message error">
-                <i className="bi bi-exclamation-circle"></i>
-                {error}
+        <div className="login-left">
+          <div className="login-content">
+            <div className="login-header">
+              <div className="brand-logo">
+                <i className="bi bi-mortarboard-fill"></i>
               </div>
-            )}
+              <h1>{loginTitle}</h1>
+              <p>{content.brandSubtitle}</p>
+            </div>
 
-            <div className="form-group">
-              <label>{content.userIdLabel}</label>
-              <div className="input-wrapper-text">
-                <i className="bi bi-person"></i>
-                <input
-                  type="text"
-                  name="email_or_phone"
-                  value={formData.email_or_phone}
-                  onChange={handleChange}
-                  placeholder={content.userIdPlaceholder}
-                />
+            <div className="welcome-section">
+              <h2>{content.welcomeTitle}</h2>
+              <p>{content.welcomeSubtitle}</p>
+            </div>
+
+            {/* Radio Button Selection */}
+            <div className="role-selector">
+              <label className="role-selector-title">{content.roleLabel}</label>
+              <div className="radio-selection">
+                {roleOptions.map((option) => (
+                  <label key={option.value} className="radio-option">
+                    <input
+                      type="radio"
+                      name="role"
+                      value={option.value}
+                      checked={formData.role === option.value}
+                      onChange={handleChange}
+                    />
+                    <span className="radio-label">{option.label}</span>
+                  </label>
+                ))}
               </div>
             </div>
 
-            <div className="form-group">
-              <label>{content.passwordLabel}</label>
-              <div className="input-wrapper">
-                <i className="bi bi-lock"></i>
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder={content.passwordPlaceholder}
-                />
-                <button
-                  type="button"
-                  className="password-toggle"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  <i className={showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'}></i>
-                </button>
-              </div>
-            </div>
-
-            <div className="form-options">
-              <label className="remember-me">
-                <input type="checkbox" />
-                <span>{content.rememberMe}</span>
-              </label>
-            </div>
-
-            <button type="submit" className="login-btn" disabled={loading}>
-              {loading ? (
-                <>
-                  <span className="spinner"></span>
-                  {content.signingIn}
-                </>
-              ) : (
-                content.signIn
+            <form onSubmit={handleSubmit} className="login-form">
+              {error && (
+                <div className="alert-message error">
+                  <i className="bi bi-exclamation-circle"></i>
+                  {error}
+                </div>
               )}
-            </button>
-          </form>
 
-          <div className="login-footer">
-            <p>{content.needAccess}<Link to="/contact">{content.contactAdmin}</Link></p>
+              <div className="form-group">
+                <label>{content.userIdLabel}</label>
+                <div className="input-wrapper-text">
+                  <i className="bi bi-person"></i>
+                  <input
+                    type="text"
+                    name="email_or_phone"
+                    value={formData.email_or_phone}
+                    onChange={handleChange}
+                    placeholder={content.userIdPlaceholder}
+                  />
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label>{content.passwordLabel}</label>
+                <div className="input-wrapper">
+                  <i className="bi bi-lock"></i>
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder={content.passwordPlaceholder}
+                  />
+                  <button
+                    type="button"
+                    className="password-toggle"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    <i className={showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'}></i>
+                  </button>
+                </div>
+              </div>
+
+              <div className="form-options">
+                <label className="remember-me">
+                  <input type="checkbox" />
+                  <span>{content.rememberMe}</span>
+                </label>
+              </div>
+
+              <button type="submit" className="login-btn" disabled={loading}>
+                {loading ? (
+                  <>
+                    <span className="spinner"></span>
+                    {content.signingIn}
+                  </>
+                ) : (
+                  content.signIn
+                )}
+              </button>
+            </form>
+
+            <div className="login-footer">
+              <p>{content.needAccess}<Link to="/contact">{content.contactAdmin}</Link></p>
+            </div>
           </div>
         </div>
 
-        {/* Right Side - Uttarakhand Logo */}
-        <div className="login-highlights">
+        <div className="login-right">
           <div className="uttarakhand-section">
-            <img src={UkLogo} alt="Uttarakhand Logo" className="uttarakhand-logo"
-             
-            />
+            <img src={UkLogo} alt="Uttarakhand Logo" className="uttarakhand-logo" />
             <h2 className="uttarakhand-title">Government of Uttarakhand</h2>
             <p className="uttarakhand-subtitle">महिला सशक्तिकरण एवं बाल विकास विभाग<br/>Women Empowerment & Child Development Department</p>
           </div>
+
+         
         </div>
       </div>
 
