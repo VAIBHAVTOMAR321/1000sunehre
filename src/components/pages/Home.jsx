@@ -40,14 +40,14 @@ function Home() {
       },
       { 
         icon: "bi-heart-pulse", 
-        title: "द्वितीय त्रैमासिक (4-6 माह)", 
+        title: "द्वितीय त्रैमासिक (3-6 माह)", 
         desc: "वृद्धि निगरानी, एनामली स्कैन, आहार सलाह",
         color: "blue",
         highlight: false
       },
       { 
         icon: "bi-activity", 
-        title: "तृतीय त्रैमासिक (7-9 माह)", 
+        title: "तृतीय त्रैमासिक (6-9 माह)", 
         desc: "जन्म तैयारी, जटिलता पूर्व तैयारी, पूरक पोषण",
         color: "green",
         highlight: true
@@ -68,25 +68,12 @@ function Home() {
       },
       { 
         icon: "bi-emoji-smile", 
-        title: "बाल्यकाल (6-24 माह)", 
+        title: "बाल्यकाल (7-2 माह)", 
         desc: "पूरक आहार, विटामिन ए, सामान्य स्वास्थ्य जाँच",
         color: "purple",
         highlight: false
       },
-      { 
-        icon: "bi-shield-check", 
-        title: "पूर्व-विद्यालय (3-6 वर्ष)", 
-        desc: "अंगनवाड़ी केंद्रों में प्रारंभिक शिक्षा एवं स्वास्थ्य जाँच",
-        color: "blue",
-        highlight: true
-      },
-      { 
-        icon: "bi-person", 
-        title: "किशोर लड़कियाँ",
-        desc: "साप्ताहिक आयरन एवं फोलिक अनुपूरण",
-        color: "saffron",
-        highlight: false
-      }
+     
     ],
 
     // Intervention Opportunities - Departmental Services
@@ -100,20 +87,8 @@ function Home() {
         items: ["THR (Take Home Ration)", "गर्म पकाया भोजन", "IFA गोलियाँ"],
         color: "saffron"
       },
-      { 
-        icon: "bi-clipboard2-pulse", 
-        title: "स्वास्थ्य जाँच", 
-        desc: "नियमित ANC, PNC एवं बच्चे की स्वास्थ्य जाँच",
-        items: ["रक्तचाप माप", "वज़न माप", "हामोग्लोबिन"],
-        color: "green"
-      },
-      { 
-        icon: "bi-shield-plus", 
-        title: "टीकाकरण योजना", 
-        desc: " MHCV, DPT, OPV, BCG, Rotavirus, PCV पूरा कवरेज",
-        items: ["12 bie ज़रूरी टीके", "विशेषज्ञ टीकाकरण", "अपडेट रजिस्ट्री"],
-        color: "blue"
-      },
+    
+    
       { 
         icon: "bi-bank", 
         title: "वित्तीय सहायता", 
@@ -270,7 +245,7 @@ function Home() {
 
             <Row className="g-3">
               {content.lifeStages.map((stage, index) => (
-                <Col md={3} sm={6} key={index}>
+                <Col md={3} sm={6} lg={3}key={index}>
                   <Card className={`life-card h-100 border-0 shadow-sm transition-hover ${stage.highlight ? 'highlight-border' : ''}`}>
                     <Card.Body className="text-center p-3">
                       <div className={`icon-wrapper icon-${stage.color} icon-sm mx-auto mb-2`}>
@@ -296,7 +271,7 @@ function Home() {
 
             <Row className="g-4">
               {content.services.map((service, index) => (
-                <Col md={6} key={index}>
+                <Col md={6} lg={6} key={index}>
                   <Card className={`service-card h-100 border-0 shadow-sm`}>
                     <Card.Body className="p-4">
                       <div className="d-flex align-items-start gap-3">
