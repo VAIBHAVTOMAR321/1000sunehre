@@ -61,6 +61,44 @@
   font-family: 'Segoe UI', sans-serif;
 }
 
+.brand-text-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 18px;
+  gap: 2px;
+}
+
+.uttarakhand-heading {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.women-logo {
+  height: 20px;
+  width: auto;
+  object-fit: contain;
+}
+
+.uttarakhand-title {
+  font-weight: 700;
+  font-size: 14px;
+  color: #1B4F8A;
+  letter-spacing: 0.3px;
+}
+
+.department-subtitle {
+  font-weight: 500;
+  font-size: 11px;
+  color: #E65100;
+  letter-spacing: 0.3px;
+
+  padding: 2px 8px;
+  border-radius: 4px;
+
+}
+
 .brand-highlight {
   color: var(--gd-gold-dark);
   position: relative;
@@ -288,7 +326,24 @@
   }
 
   .brand-text {
-    font-size: 18px;
+    font-size: 16px;
+  }
+
+  .brand-text-container {
+    gap: 1px;
+  }
+
+  .uttarakhand-title {
+    font-size: 12px;
+  }
+
+  .department-subtitle {
+    font-size: 10px;
+    padding: 1px 6px;
+  }
+
+  .women-logo {
+    height: 16px;
   }
 
 /* Mobile language toggle - visible on mobile */
@@ -304,49 +359,49 @@
      font-size: 12px;
    }
 
-    /* Push hamburger to far right */
-    .navbar-toggler-custom {
-      margin-left: auto;
-      background: rgba(212, 175, 55, 0.1) !important;
-      border-radius: 8px;
-      padding: 10px !important;
+     /* Push hamburger to far right */
+     .navbar-toggler-custom {
+       margin-left: auto;
+       background: rgba(212, 175, 55, 0.1) !important;
+       border-radius: 8px;
+       padding: 10px !important;
+     }
+
+     .navbar-toggler-custom:hover {
+       background: rgba(212, 175, 55, 0.2) !important;
+     }
+
+     /* Hide desktop toggle on mobile */
+     .desktop-language-toggle {
+       display: none !important;
+     }
+
+     .nav-links {
+      text-align: center;
+      margin-top: 15px;
+      padding: 15px 0;
+      gap: 6px;
     }
 
-    .navbar-toggler-custom:hover {
-      background: rgba(212, 175, 55, 0.2) !important;
+    .nav-link-item {
+      font-size: 15px;
+      padding: 12px 20px !important;
+      justify-content: center;
     }
 
-    /* Hide desktop toggle on mobile */
-    .desktop-language-toggle {
-      display: none !important;
+    .nav-link-item:hover {
+      background: rgba(212, 175, 55, 0.1);
     }
 
-    .nav-links {
-     text-align: center;
-     margin-top: 15px;
-     padding: 15px 0;
-     gap: 6px;
-   }
-
-   .nav-link-item {
-     font-size: 15px;
-     padding: 12px 20px !important;
-     justify-content: center;
-   }
-
-   .nav-link-item:hover {
-     background: rgba(212, 175, 55, 0.1);
-   }
-
-   .register-btn {
-     margin-left: 252px !important;
-     margin-top: 10px;
-     display: inline-flex;
-     justify-content: center;
-     width: fit-content;
-     padding: 12px 32px !important;
-   }
-}
+    .register-btn {
+      margin-left: 252px !important;
+      margin-top: 10px;
+      display: inline-flex;
+      justify-content: center;
+      width: fit-content;
+      padding: 12px 32px !important;
+    }
+  }
 
 /* Mobile */
 @media (max-width: 576px) {
@@ -355,7 +410,24 @@
   }
 
   .brand-text {
-    font-size: 16px;
+    font-size: 14px;
+  }
+
+  .brand-text-container {
+    gap: 0;
+  }
+
+  .uttarakhand-title {
+    font-size: 11px;
+  }
+
+  .department-subtitle {
+    font-size: 9px;
+    padding: 1px 4px;
+  }
+
+  .women-logo {
+    height: 14px;
   }
 
   .brand-highlight::after {

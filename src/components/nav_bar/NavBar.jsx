@@ -8,6 +8,7 @@ import { useLanguage } from "../all_login/LanguageContext";
 
 import "../../assets/css/navbar.css";
 import ukLogo from "../../assets/images/uk_logo.png";
+import womenLogo from "../../assets/images/women_logo.jpeg";
 
 function NavBar() {
   const [expanded, setExpanded] = useState(false);
@@ -22,9 +23,25 @@ function NavBar() {
             alt="UK Logo" 
             className="navbar-logo"
           />
-          <span className="brand-text">
-            {language === 'hi' ? 'सुनहरे हज़ार दिनों' : 'Golden Thousand Days'}
-          </span>
+           <div className="brand-text-container">
+            
+            <div className="uttarakhand-heading">
+              <span className="uttarakhand-title">
+                {language === 'hi' ? 'उत्तराखंड सरकार' : 'Government of Uttarakhand'}
+              </span>
+              <img 
+                src={womenLogo} 
+                alt="Women Logo" 
+                className="women-logo"
+              />
+            </div>
+            <span className="department-subtitle">
+              {language === 'hi' 
+                ? 'महिला सशक्तिकरण एवं बाल विकास विभाग' 
+                : 'Women Empowerment & Child Development Department'
+              }
+            </span>
+          </div>
         </Navbar.Brand>
 
         <Navbar.Toggle aria-controls="basic-navbar-nav" className="navbar-toggler-custom">
