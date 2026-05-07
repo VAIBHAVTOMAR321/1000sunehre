@@ -98,34 +98,17 @@ function Home() {
       }
     ],
 
-    // New Features / Recent Updates (Yellow Highlighted)
-    newFeaturesTitle: "नई सुविधाएँ एवं अद्यतन",
-    newFeaturesSubtitle: "प्लेटफॉर्म में जोड़ी गई हालिया सुविधाएँ",
-    newFeatures: [
-      { icon: "bi-telephone", title: "सेवा हेल्पलाइन 1800-180-1104", desc: "24x7 माता-शिशु सेवा हेल्पलाइन", color: "saffron" },
-      { icon: "bi-phone", title: "मोबाइल ऐप जन स्वास्थ्य", desc: "ANMOL और म-स्वास्थ्य ऐप के माध्यम से रीयल-टाइम ट्रैकिंग", color: "green" },
-      { icon: "bi-qr-code", title: "QR कोड से पहचान", desc: " माता एवं शिशु की डिजिटल पहचान", color: "blue" },
-      { icon: "bi-graph-up", title: "विशिष्ट मॉनिटरिंग", desc: "उच्च जोखिम वाली माताओं एवं बच्चों की विशेष निगरानी", color: "orange" },
-      { icon: "bi-geo-alt", title: "भू-टैगिंग", desc: "सेवा केंद्रों की सटीक स्थिति मैपिंग", color: "purple" },
-      { icon: "bi-bell", title: "स्मार्ट अलर्ट", desc: "ऐप और SMS द्वारा सूचना एवं अलर्ट", color: "teal" }
-    ],
+     // New Features / Recent Updates (Yellow Highlighted)
+     newFeaturesTitle: "नई सुविधाएँ एवं अद्यतन",
+     newFeaturesSubtitle: "बाल सहायता, महिला सहायता एवं स्वास्थ्य सेवाओं के लिए हेल्पलाइन नंबर",
+     newFeatures: [
+       { icon: "bi-telephone", title: "बाल सहायता हेल्पलाइन", desc: "बाल अधिकारों एवं सुरक्षा के लिए 24x7 सहायता", color: "saffron",  },
+       { icon: "bi-phone", title: "महिला सहायता हेल्पलाइन", desc: "महिलाओं के लिए आपात सहायता एवं सुरक्षा", color: "green", },
+       { icon: "bi-capsule", title: "स्वास्थ्य सेवा हेल्पलाइन", desc: "स्वास्थ्य संबंधी आपातकालीन सहायता", color: "blue",  }
+     ],
 
-    // Platform Benefits - Why Use This Portal
-    benefitsTitle: "प्लेटफॉर्म के लाभ",
-    benefits: [
-      { icon: "bi-speedometer2", title: "तीव्र डेटा एक्सेस", desc: "राइट कैड बॉर्ड से रियल-टाइम आँकड़े", color: "blue" },
-      { icon: "bi-people", title: "समन्वयित डेटा", desc: "स्वास्थ्य, ICDS एवं शिक्षा विभाग की एकीकृत जानकारी", color: "saffron" },
-      { icon: "bi-speedometer2", title: "तीव्र डेटा एक्सेस", desc: "सटीक डैशबोर्ड से रियल-टाइम आँकड़े", color: "blue" },
-      { icon: "bi-bar-chart", title: "विश्लेषण एवं रिपोर्ट", desc: "स्वचालित MIS रिपोर्ट", color: "orange" }
-    ],
+  
 
-    // Final CTA
-    readyTitle: "स्वास्थ्य एवं पोषण दशक में भाग लें",
-    readySub: "माता-शिशु के स्वास्थ्य सुधार के लिए अभी पंजीकरण करें।",
-    getStartedBtn: "पहला कदम",
-    learnMoreBtn: "मार्गदर्शिकाएँ",
-    signInBtn: "लॉग इन",
-    portalLinks: "सरकारी प्रपत्र | ग्रामीण विकास | स्वास्थ्य योजनाएँ | न्यायिक निगरानी",
     
     // Modal
     modalTitle: "पहुंच प्रतिबंधित",
@@ -298,76 +281,42 @@ function Home() {
           </Container>
         </section>
 
-        {/* New Features Section - Yellow Highlighted */}
-        <section className="features-section py-4 bg-warning bg-opacity-10">
-          <Container>
-            <div className="text-center mb-4">
-              <div className="badge bg-warning text-dark mb-1 px-2 py-1 small">
-                <i className="bi bi-star-fill"></i> नई सुविधाएँ
-              </div>
-              <h4 className="section-title-gov fw-bold">{content.newFeaturesTitle}</h4>
-              <p className="section-subtitle small text-muted">{content.newFeaturesSubtitle}</p>
-            </div>
+         {/* New Features Section - Yellow Highlighted */}
+         <section className="features-section py-4 bg-warning bg-opacity-10">
+           <Container>
+             <div className="text-center mb-4">
+               <div className="badge bg-warning text-dark mb-1 px-2 py-1 small">
+                 <i className="bi bi-star-fill"></i> नई सुविधाएँ
+               </div>
+               <h4 className="section-title-gov fw-bold">{content.newFeaturesTitle}</h4>
+               <p className="section-subtitle small text-muted">{content.newFeaturesSubtitle}</p>
+             </div>
 
-            <Row className="g-3">
-              {content.newFeatures.map((feature, index) => (
-                <Col md={4} sm={6} key={index}>
-                  <Card className={`feature-card h-100 border-0 shadow-sm transition-hover`}>
-                    <Card.Body className="text-center p-3">
-                      <div className={`icon-wrapper icon-${feature.color} icon-sm mx-auto mb-2`}>
-                        <i className={`bi ${feature.icon}`}></i>
-                      </div>
-                      <Card.Title className="fs-6 fw-bold mb-1">{feature.title}</Card.Title>
-                      <Card.Text className="text-muted small">{feature.desc}</Card.Text>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              ))}
-            </Row>
-          </Container>
-        </section>
+             <Row className="g-3 justify-content-center">
+               {content.newFeatures.map((feature, index) => (
+                 <Col md={4} key={index}>
+                   <Card className={`feature-card h-100 border-0 shadow-sm transition-hover text-center`}>
+                     <Card.Body className="p-4">
+                       <div className={`icon-wrapper icon-${feature.color} icon-lg mx-auto mb-3`}>
+                         <i className={`bi ${feature.icon}`}></i>
+                       </div>
+                       <Card.Title className="fs-5 fw-bold mb-2">{feature.title}</Card.Title>
+                       <Card.Text className="text-muted mb-3">{feature.desc}</Card.Text>
+                       <div className="helpline-number">
+                         <span className="badge bg-light text-dark fs-6 py-2 px-4">
+                           <i className="bi bi-telephone-fill me-2"></i>
+                           <strong>{feature.number}</strong>
+                         </span>
+                       </div>
+                     </Card.Body>
+                   </Card>
+                 </Col>
+               ))}
+             </Row>
+           </Container>
+         </section>
 
-        {/* Benefits Section */}
-        <section className="benefits-section py-4">
-          <Container>
-            <div className="text-center mb-4">
-              <h4 className="section-title-gov fw-bold">{content.benefitsTitle}</h4>
-            </div>
-
-            <Row className="g-3">
-              {content.benefits.map((benefit, index) => (
-                <Col md={3} sm={6} key={index}>
-                  <Card className={`benefit-card h-100 border-0 shadow-sm transition-hover`}>
-                    <Card.Body className="text-center p-3">
-                      <div className={`icon-wrapper icon-${benefit.color} icon-sm mx-auto mb-2`}>
-                        <i className={`bi ${benefit.icon}`}></i>
-                      </div>
-                      <Card.Title className="fs-6 fw-bold mb-1">{benefit.title}</Card.Title>
-                      <Card.Text className="text-muted small">{benefit.desc}</Card.Text>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              ))}
-            </Row>
-          </Container>
-        </section>
-
-
-        {/* Final CTA - Government Style */}
-        <section className="final-cta-gov py-4 bg-primary text-white">
-          <Container className="text-center">
-            <h3 className="mb-2 fw-bold">{content.readyTitle}</h3>
-            <p className="small mb-3 opacity-90">{content.readySub}</p>
-            <div className="d-flex justify-content-center gap-2 flex-wrap">
-              <Link to="/register" className="btn btn-light btn-sm px-4 fw-bold">
-                <i className="bi bi-rocket-takeoff"></i> {content.getStartedBtn}
-              </Link>
-              <Link to="/login" className="btn btn-outline-light btn-sm px-4">
-                <i className="bi bi-box-arrow-in-right"></i> {content.signInBtn}
-              </Link>
-            </div>
-          </Container>
-        </section>
+     
 
         {/* Footer - Government Style */}
         <footer className="gov-footer bg-dark text-white py-4">

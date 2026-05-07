@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { useLanguage } from "../all_login/LanguageContext";
 
 import "../../assets/css/navbar.css";
-import ukLogo from "../../assets/images/uk_logo.png";
+import ukLogo from "../../assets/images/new_logo_uk.png";
 import womenLogo from "../../assets/images/women_logo.jpeg";
 
 function NavBar() {
