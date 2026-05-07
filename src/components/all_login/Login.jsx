@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import '../../assets/css/login.css';
+import UkLogo from '../../assets/images/uk_logo.png';
 import ResetPasswordModal from './ResetPasswordModal';
 
 const Login = () => {
@@ -66,36 +67,25 @@ const Login = () => {
   };
 
   const roleOptions = useMemo(() => {
-    const allRoles = [
-      { value: 'director', label: 'निदेशक', icon: 'bi-person-workspace' },
-      { value: 'dpo', label: 'डीपीओ', icon: 'bi-briefcase' },
-      { value: 'cdpo', label: 'सीडीपीओ', icon: 'bi-person-badge' },
-      { value: 'supervisor', label: 'पर्यवेक्षक', icon: 'bi-person-check' },
-      { value: 'anganwadi', label: 'आंगनवाड़ी', icon: 'bi-house-door' },
+    return [
+      { value: 'director', label: 'Directorate Login', icon: 'bi-person-workspace' },
+      { value: 'dpo', label: 'DPO Login', icon: 'bi-briefcase' },
+      { value: 'cdpo', label: 'CDPO Login', icon: 'bi-person-badge' },
+      { value: 'supervisor', label: 'Supervisor Login', icon: 'bi-person-check' },
+      { value: 'anganwadi', label: 'Anganwadi Login', icon: 'bi-house-door' },
     ];
-
-    if (searchParams.has('director')) return allRoles.filter(r => r.value === 'director');
-    if (searchParams.has('district')) return allRoles.filter(r => ['dpo', 'cdpo'].includes(r.value));
-
-    // Default view shows Supervisor and Anganwadi
-    return allRoles.filter(r => ['supervisor', 'anganwadi'].includes(r.value));
-  }, [searchParams]);
+  }, []);
 
   const loginTitle = useMemo(() => {
-    if (searchParams.has('director')) {
-      return 'निदेशक लॉगिन';
-    } else if (searchParams.has('district')) {
-      return 'डीपीओ / सीडीपीओ लॉगिन';
-    } else {
-      return 'फील्ड स्टाफ लॉगिन'; // Default for Supervisor and Anganwadi
-    }
-  }, [searchParams]);
+    const selectedRole = roleOptions.find(r => r.value === formData.role);
+    return selectedRole ? selectedRole.label : 'Login';
+  }, [formData.role, roleOptions]);
 
   useEffect(() => {
-    if (roleOptions.length > 0 && !roleOptions.some(o => o.value === formData.role)) {
+    if (roleOptions.length > 0 && !formData.role) {
       setFormData(prev => ({ ...prev, role: roleOptions[0].value }));
     }
-  }, [roleOptions, formData.role]); // Removed extra comma for cleaner code
+  }, [roleOptions]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -206,6 +196,7 @@ const Login = () => {
     <div className="login-page">
       <div className="login-bg-pattern"></div>
       <div className="login-container">
+        {/* Left Side - Radio Button Selection */}
         <div className="login-content">
           <div className="login-header">
             <div className="brand-logo">
@@ -220,24 +211,24 @@ const Login = () => {
             <p>{content.welcomeSubtitle}</p>
           </div>
 
-          {roleOptions.length > 1 && (
-            <div className="role-selector">
-              <label>{content.roleLabel}</label>
-              <div className="role-tabs">
-                {roleOptions.map((option) => (
-                  <button
-                    key={option.value}
-                    type="button"
-                    className={`role-tab ${formData.role === option.value ? 'active' : ''}`}
-                    onClick={() => setFormData({ ...formData, role: option.value })}
-                  >
-                    <i className={option.icon}></i>
-                    <span>{option.label}</span>
-                  </button>
-                ))}
-              </div>
+          {/* Radio Button Selection */}
+          <div className="role-selector">
+            <label className="role-selector-title">{content.roleLabel}</label>
+            <div className="radio-selection">
+              {roleOptions.map((option) => (
+                <label key={option.value} className="radio-option">
+                  <input
+                    type="radio"
+                    name="role"
+                    value={option.value}
+                    checked={formData.role === option.value}
+                    onChange={handleChange}
+                  />
+                  <span className="radio-label">{option.label}</span>
+                </label>
+              ))}
             </div>
-          )}
+          </div>
 
           <form onSubmit={handleSubmit} className="login-form">
             {error && (
@@ -262,7 +253,7 @@ const Login = () => {
             </div>
 
             <div className="form-group">
-              <label>Password</label>
+              <label>{content.passwordLabel}</label>
               <div className="input-wrapper">
                 <i className="bi bi-lock"></i>
                 <input
@@ -287,7 +278,6 @@ const Login = () => {
                 <input type="checkbox" />
                 <span>{content.rememberMe}</span>
               </label>
-              {/* <a href="/" className="forgot-link">Forgot password?</a> */}
             </div>
 
             <button type="submit" className="login-btn" disabled={loading}>
@@ -307,21 +297,14 @@ const Login = () => {
           </div>
         </div>
 
+        {/* Right Side - Uttarakhand Logo */}
         <div className="login-highlights">
-          <div className="highlight-item">
-            <i className="bi bi-book"></i>
-              <h3>{content.learnTitle}</h3>
-              <p>{content.learnDesc}</p>
-          </div>
-          <div className="highlight-item">
-            <i className="bi bi-graph-up"></i>
-              <h3>{content.growTitle}</h3>
-              <p>{content.growDesc}</p>
-          </div>
-          <div className="highlight-item">
-            <i className="bi bi-rocket-takeoff"></i>
-              <h3>{content.succeedTitle}</h3>
-              <p>{content.succeedDesc}</p>
+          <div className="uttarakhand-section">
+            <img src={UkLogo} alt="Uttarakhand Logo" className="uttarakhand-logo"
+             
+            />
+            <h2 className="uttarakhand-title">Government of Uttarakhand</h2>
+            <p className="uttarakhand-subtitle">महिला सशक्तिकरण एवं बाल विकास विभाग<br/>Women Empowerment & Child Development Department</p>
           </div>
         </div>
       </div>

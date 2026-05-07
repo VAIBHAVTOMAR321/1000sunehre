@@ -83,14 +83,14 @@
   left: -50%;
   width: 200%;
   height: 200%;
-  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 50%);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, transparent 50%);
   pointer-events: none;
 }
 
 .brand-logo i {
   font-size: 26px;
   color: white;
-  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
 }
 
 .login-header h1 {
@@ -132,61 +132,59 @@
   margin: 0;
 }
 
-/* ---- Role Selector ---- */
+/* ---- Role Selector (Radio Buttons) ---- */
 .role-selector {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
-.role-selector label {
+.role-selector-title {
   display: block;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
   color: #5A6B80;
   text-transform: uppercase;
   letter-spacing: 0.8px;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
-.role-tabs {
+.radio-selection {
   display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
-  gap: 7px;
+  gap: 10px;
 }
 
-.role-tab {
-  flex: 1;
-  min-width: calc(50% - 4px);
-  padding: 9px 10px;
-  border: 2px solid #E2E8F0;
-  border-radius: 10px;
-  background: #F8FAFC;
-  cursor: pointer;
-  transition: all 0.25s ease;
+.radio-option {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 5px;
-  font-size: 11px;
-  font-weight: 500;
-  color: #5A6B80;
+  gap: 10px;
+  cursor: pointer;
+  padding: 10px 12px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  border: 1px solid #E2E8F0;
+  background: #F8FAFC;
+  flex: 1 1 calc(50% - 5px);
+  min-width: 150px;
 }
 
-.role-tab:hover {
+.radio-option:hover {
+  background: #EFF6FF;
   border-color: #FF8F00;
-  background: #FFF8E1;
-  color: #E65100;
 }
 
-.role-tab.active {
-  /* border-color: transparent; */
-  background: linear-gradient(135deg, #1B4F8A 0%, #E65100 100%);
-  color: white;
-  box-shadow: 0 4px 14px rgba(230, 81, 0, 3);
-  font-weight: 600;
+.radio-option input[type="radio"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: #1B4F8A;
 }
 
-.role-tab i {
+.radio-label {
   font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
 }
 
 /* ---- Form ---- */
@@ -213,9 +211,19 @@
 }
 
 @keyframes shakeX {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-6px); }
-  75% { transform: translateX(6px); }
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-6px);
+  }
+
+  75% {
+    transform: translateX(6px);
+  }
 }
 
 .form-group {
@@ -249,7 +257,7 @@
   pointer-events: none;
 }
 
-.input-wrapper-text input:focus ~ i {
+.input-wrapper-text input:focus~i {
   color: #E65100;
 }
 
@@ -293,7 +301,7 @@
   pointer-events: none;
 }
 
-.input-wrapper input:focus ~ i:first-of-type {
+.input-wrapper input:focus~i:first-of-type {
   color: #E65100;
 }
 
@@ -419,7 +427,7 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
   transition: left 0.5s ease;
 }
 
@@ -452,7 +460,9 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ---- Footer ---- */
@@ -480,7 +490,7 @@
   color: #1B4F8A;
 }
 
-/* ---- Right Panel (Highlights) ---- */
+/* ---- Right Panel (Uttarakhand Logo) ---- */
 .login-highlights {
   flex: 1;
   background: linear-gradient(160deg, #0E3A6B 0%, #1B4F8A 40%, #16213E 100%);
@@ -488,6 +498,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   gap: 14px;
   position: relative;
   overflow: hidden;
@@ -513,6 +524,51 @@
   height: 200px;
   background: radial-gradient(circle, rgba(46, 109, 180, 0.06) 0%, transparent 70%);
   pointer-events: none;
+}
+
+.uttarakhand-section {
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.uttarakhand-logo {
+  width: 100px;
+  height: 100px;
+  filter: brightness(1.3) drop-shadow(0 4px 12px rgba(255, 165, 0, 0.3));
+  animation: logoFloat 3s ease-in-out infinite;
+}
+
+@keyframes logoFloat {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.uttarakhand-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #FFFFFF;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.uttarakhand-subtitle {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0;
+  line-height: 1.6;
+  letter-spacing: 0.3px;
 }
 
 .highlight-item {
@@ -574,24 +630,68 @@
    ========================================== */
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(15px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-.login-header { animation: fadeInUp 0.4s ease 0.05s both; }
-.welcome-section { animation: fadeInUp 0.4s ease 0.1s both; }
-.role-selector { animation: fadeInUp 0.4s ease 0.15s both; }
-.role-tab { animation: fadeInUp 0.3s ease both; }
-.role-tab:nth-child(1) { animation-delay: 0.18s; }
-.role-tab:nth-child(2) { animation-delay: 0.22s; }
-.role-tab:nth-child(3) { animation-delay: 0.26s; }
-.role-tab:nth-child(4) { animation-delay: 0.30s; }
-.role-tab:nth-child(5) { animation-delay: 0.34s; }
-.role-tab:nth-child(6) { animation-delay: 0.38s; }
+.login-header {
+  animation: fadeInUp 0.4s ease 0.05s both;
+}
 
-.highlight-item:nth-child(1) { animation: fadeInUp 0.5s ease 0.3s both; }
-.highlight-item:nth-child(2) { animation: fadeInUp 0.5s ease 0.4s both; }
-.highlight-item:nth-child(3) { animation: fadeInUp 0.5s ease 0.5s both; }
+.welcome-section {
+  animation: fadeInUp 0.4s ease 0.1s both;
+}
+
+.role-selector {
+  animation: fadeInUp 0.4s ease 0.15s both;
+}
+
+.role-tab {
+  animation: fadeInUp 0.3s ease both;
+}
+
+.role-tab:nth-child(1) {
+  animation-delay: 0.18s;
+}
+
+.role-tab:nth-child(2) {
+  animation-delay: 0.22s;
+}
+
+.role-tab:nth-child(3) {
+  animation-delay: 0.26s;
+}
+
+.role-tab:nth-child(4) {
+  animation-delay: 0.30s;
+}
+
+.role-tab:nth-child(5) {
+  animation-delay: 0.34s;
+}
+
+.role-tab:nth-child(6) {
+  animation-delay: 0.38s;
+}
+
+.highlight-item:nth-child(1) {
+  animation: fadeInUp 0.5s ease 0.3s both;
+}
+
+.highlight-item:nth-child(2) {
+  animation: fadeInUp 0.5s ease 0.4s both;
+}
+
+.highlight-item:nth-child(3) {
+  animation: fadeInUp 0.5s ease 0.5s both;
+}
 
 /* ==========================================
    RESPONSIVE
@@ -616,27 +716,33 @@
     right: 5%;
   }
 
+  .radio-selection {
+    gap: 6px;
+  }
+
+  .radio-option {
+    padding: 8px 10px;
+  }
+
+  .radio-label {
+    font-size: 12px;
+  }
+
   .login-highlights {
     padding: 22px 20px;
-    flex-direction: row;
-    gap: 10px;
   }
 
-  .highlight-item {
-    padding: 14px 10px;
+  .uttarakhand-logo {
+    width: 80px;
+    height: 80px;
   }
 
-  .highlight-item i {
-    font-size: 22px;
-    margin-bottom: 5px;
+  .uttarakhand-title {
+    font-size: 18px;
   }
 
-  .highlight-item h3 {
-    font-size: 13px;
-  }
-
-  .highlight-item p {
-    font-size: 10px;
+  .uttarakhand-subtitle {
+    font-size: 11px;
   }
 }
 
@@ -663,14 +769,27 @@
     font-size: 20px;
   }
 
-  .role-tab {
-    min-width: 100%;
-    padding: 8px 8px;
-    font-size: 10px;
+  .role-selector-title {
+    font-size: 11px;
+    margin-bottom: 10px;
   }
 
-  .role-tab i {
-    font-size: 12px;
+  .radio-selection {
+    gap: 6px;
+  }
+
+  .radio-option {
+    padding: 8px 10px;
+    border-radius: 6px;
+  }
+
+  .radio-option input[type="radio"] {
+    width: 14px;
+    height: 14px;
+  }
+
+  .radio-label {
+    font-size: 11px;
   }
 
   .input-wrapper input {
@@ -686,24 +805,19 @@
 
   .login-highlights {
     padding: 18px 14px;
-    gap: 8px;
   }
 
-  .highlight-item {
-    padding: 12px 8px;
-    border-radius: 10px;
+  .uttarakhand-logo {
+    width: 70px;
+    height: 70px;
   }
 
-  .highlight-item i {
-    font-size: 20px;
+  .uttarakhand-title {
+    font-size: 16px;
   }
 
-  .highlight-item h3 {
-    font-size: 12px;
-  }
-
-  .highlight-item p {
-    font-size: 9px;
+  .uttarakhand-subtitle {
+    font-size: 10px;
   }
 }
 
@@ -723,5 +837,10 @@
 
   .login-highlights {
     padding: 14px 10px;
+  }
+
+  .uttarakhand-logo {
+    width: 60px;
+    height: 60px;
   }
 }
