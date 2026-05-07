@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import '../../assets/css/login.css';
-import UkLogo from '../../assets/images/uk_logo.png';
+import UkLogo from '../../assets/images/logouk.webp';
 import ResetPasswordModal from './ResetPasswordModal';
 
 const Login = () => {
@@ -27,8 +27,8 @@ const Login = () => {
   // Content in Hindi - Government Portal Style (consistent with Home.jsx)
   const content = {
     brandSubtitle: "आज का कौशल, कल का सशक्तिकरण",
-    welcomeTitle: "वापसी पर आपका स्वागत है!",
-    welcomeSubtitle: "अपनी सेवा यात्रा जारी रखें",
+   
+   
     roleLabel: "अपनी भूमिका चुनें",
     userIdLabel: "यूजर आईडी / फोन",
     userIdPlaceholder: "यूजर आईडी या फोन दर्ज करें",
