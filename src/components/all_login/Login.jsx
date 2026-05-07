@@ -72,7 +72,7 @@ const Login = () => {
       { value: 'dpo', label: 'DPO Login', icon: 'bi-briefcase' },
       { value: 'cdpo', label: 'CDPO Login', icon: 'bi-person-badge' },
       { value: 'supervisor', label: 'Supervisor Login', icon: 'bi-person-check' },
-      { value: 'anganwadi', label: 'Anganwadi Login', icon: 'bi-house-door' },
+      { value: 'anganwadi', label: 'Center Login', icon: 'bi-house-door' },
     ];
   }, []);
 
