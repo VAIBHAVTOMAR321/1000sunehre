@@ -224,8 +224,8 @@ const AnganwadiDashboard = () => {
                 
                 <Row>
                   <Col md={3}>
-                    <Form.Group className="mb-2">
-                      <Form.Label>Candidate Name</Form.Label>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="form-label-custom">Candidate Name</Form.Label>
                       <Form.Control
                         type="text"
                         name="candidate_name"
@@ -236,8 +236,8 @@ const AnganwadiDashboard = () => {
                     </Form.Group>
                   </Col>
                   <Col md={3}>
-                    <Form.Group className="mb-2">
-                      <Form.Label>Phone</Form.Label>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="form-label-custom">Phone</Form.Label>
                       <Form.Control
                         type="tel"
                         name="phone"
@@ -248,8 +248,8 @@ const AnganwadiDashboard = () => {
                     </Form.Group>
                   </Col>
                   <Col md={3}>
-                    <Form.Group className="mb-2">
-                      <Form.Label>Date of Birth</Form.Label>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="form-label-custom">Date of Birth</Form.Label>
                       <Form.Control
                         type="date"
                         name="dob"
@@ -260,8 +260,8 @@ const AnganwadiDashboard = () => {
                     </Form.Group>
                   </Col>
                   <Col md={3}>
-                    <Form.Group className="mb-2">
-                      <Form.Label>Aadhar Number</Form.Label>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="form-label-custom">Aadhar Number</Form.Label>
                       <Form.Control
                         type="text"
                         name="aadhar_number"
@@ -275,8 +275,8 @@ const AnganwadiDashboard = () => {
 
                 <Row>
                   <Col md={3}>
-                    <Form.Group className="mb-2">
-                      <Form.Label>Pregnancy Number</Form.Label>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="form-label-custom">Pregnancy Number</Form.Label>
                       <Form.Control
                         type="number"
                         name="pregancy_num"
@@ -286,8 +286,8 @@ const AnganwadiDashboard = () => {
                     </Form.Group>
                   </Col>
                   <Col md={3}>
-                    <Form.Group className="mb-2">
-                      <Form.Label>Child Name</Form.Label>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="form-label-custom">Child Name</Form.Label>
                       <Form.Control
                         type="text"
                         name="child_name"
@@ -297,8 +297,8 @@ const AnganwadiDashboard = () => {
                     </Form.Group>
                   </Col>
                   <Col md={3}>
-                    <Form.Group className="mb-2">
-                      <Form.Label>LMP Date</Form.Label>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="form-label-custom">LMP Date</Form.Label>
                       <Form.Control
                         type="date"
                         name="lmp_date"
@@ -308,8 +308,8 @@ const AnganwadiDashboard = () => {
                     </Form.Group>
                   </Col>
                   <Col md={3}>
-                    <Form.Group className="mb-2">
-                      <Form.Label>Child DOB</Form.Label>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="form-label-custom">Child DOB</Form.Label>
                       <Form.Control
                         type="date"
                         name="dob_child"
@@ -322,8 +322,8 @@ const AnganwadiDashboard = () => {
 
                 <Row>
                   <Col md={3}>
-                    <Form.Group className="mb-2">
-                      <Form.Label>PAN Number</Form.Label>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="form-label-custom">PAN Number</Form.Label>
                       <Form.Control
                         type="text"
                         name="pan_no"
@@ -333,8 +333,8 @@ const AnganwadiDashboard = () => {
                     </Form.Group>
                   </Col>
                   <Col md={3}>
-                    <Form.Group className="mb-2">
-                      <Form.Label>Account Number</Form.Label>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="form-label-custom">Account Number</Form.Label>
                       <Form.Control
                         type="text"
                         name="account_number"
@@ -344,8 +344,8 @@ const AnganwadiDashboard = () => {
                     </Form.Group>
                   </Col>
                   <Col md={3}>
-                    <Form.Group className="mb-2">
-                      <Form.Label>IFSC Code</Form.Label>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="form-label-custom">IFSC Code</Form.Label>
                       <Form.Control
                         type="text"
                         name="ifsc_code"
@@ -355,8 +355,8 @@ const AnganwadiDashboard = () => {
                     </Form.Group>
                   </Col>
                   <Col md={3}>
-                    <Form.Group className="mb-2">
-                      <Form.Label>PAN File</Form.Label>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="form-label-custom">PAN File</Form.Label>
                       <Form.Control
                         type="file"
                         name="pan_file"
@@ -369,8 +369,8 @@ const AnganwadiDashboard = () => {
 
                 <Row>
                   <Col md={6}>
-                    <Form.Group className="mb-2">
-                      <Form.Label>Aadhar File</Form.Label>
+                    <Form.Group className="mb-3">
+                      <Form.Label className="form-label-custom">Aadhar File</Form.Label>
                       <Form.Control
                         type="file"
                         name="aadhar_file"
