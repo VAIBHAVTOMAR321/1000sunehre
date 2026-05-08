@@ -298,8 +298,8 @@ const Login = () => {
         <div className="login-right">
           <div className="uttarakhand-section">
             <img src={UkLogo} alt="Uttarakhand Logo" className="uttarakhand-logo" />
-            <h2 className="uttarakhand-title">Government of Uttarakhand</h2>
-            <p className="uttarakhand-subtitle">महिला सशक्तिकरण एवं बाल विकास विभाग<br/>Women Empowerment & Child Development Department</p>
+            <h2 className="uttarakhand-title">महिला सशक्तिकरण एवं बाल विकास विभाग<br/>Women Empowerment & Child Development Department</h2>
+            <p className="uttarakhand-subtitle">Uttarakhand<br/></p>
           </div>
 
          

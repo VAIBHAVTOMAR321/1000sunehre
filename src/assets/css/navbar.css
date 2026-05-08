@@ -315,7 +315,9 @@
     min-height: auto;
     padding: 10px 0 !important;
   }
-
+.uttarakhand-title{
+  font-size: 12px !important;
+}
   .brand-logo-wrapper {
     padding: 4px 0;
     margin-right: 8px;
@@ -408,7 +410,9 @@
   .navbar-logo {
     height: 38px;
   }
-
+.uttarakhand-title{
+  font-size: 8px !important;
+}
   .brand-text {
     font-size: 14px;
   }

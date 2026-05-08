@@ -4,7 +4,7 @@ import { Container, Row, Col } from 'react-bootstrap'
 
 function Footer() {
   const footerContent = {
-    aboutTitle: "स्वास्थ्य एवं पोषण दशक",
+   
     aboutText: "माता एवं शिशु के स्वास्थ्य एवं पोषण की निगरानी के लिए एक एकीकृत डैशबोर्ड। 1000 दिनों (गर्भावधि से 2 वर्ष तक) के दौरान की जाँच, पोषण एवं टीकाकरण की निगरानी।",
     quickLinks: [
       { path: "/", label: "होम" },
@@ -23,7 +23,7 @@ function Footer() {
       phone: "****-**-****",
       email: "****@****.in"
     },
-    copyright: "© 2024 स्वास्थ्य एवं पोषण दशक। भारत सरकार। सर्वाधिकार सुरक्षित।"
+    copyright: "© 2024 स्वास्थ्य एवं पोषण दशक।  सर्वाधिकार सुरक्षित।"
   }
 
   return (
@@ -33,13 +33,8 @@ function Footer() {
           <Col lg={4} md={6}>
             <div className="footer-brand mb-3">
               <div className="d-flex align-items-center gap-2 mb-3">
-                <div className="footer-logo-placeholder">
-                  <i className="bi bi-shield-fill text-warning fs-3"></i>
-                </div>
-                <div>
-                  <h5 className="mb-0 text-white fw-bold">{footerContent.aboutTitle}</h5>
-                  <small className="text-white-50">Government of India</small>
-                </div>
+               
+               
               </div>
               <p className="text-white-50 small mb-0">{footerContent.aboutText}</p>
             </div>

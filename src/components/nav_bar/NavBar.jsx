@@ -27,7 +27,7 @@ function NavBar() {
             
             <div className="uttarakhand-heading">
               <span className="uttarakhand-title">
-                {language === 'hi' ? 'उत्तराखंड सरकार' : 'Government of Uttarakhand'}
+                {language === 'hi' ? '' : 'Women Empowerment & Child Development Department'}
               </span>
               <img 
                 src={womenLogo} 
@@ -38,8 +38,8 @@ function NavBar() {
             <span className="department-subtitle">
               {language === 'hi' 
                 ? 'महिला सशक्तिकरण एवं बाल विकास विभाग' 
-                : 'Women Empowerment & Child Development Department'
-              }
+                : 'Uttarakhand'} 
+              
             </span>
           </div>
         </Navbar.Brand>
