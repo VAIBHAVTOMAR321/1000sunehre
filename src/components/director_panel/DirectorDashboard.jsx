@@ -48,8 +48,63 @@ const DirectorDashboard = () => {
          <DirectorHeader toggleSidebar={toggleSidebar} />
 
          <Container fluid className="dashboard-box mt-3">
-          Director Dashboard Content
-         </Container>
+          <div className="main-heading">
+         <h3 className="mb-4 fw-bold">
+                Director Dashboard Table
+              </h3>
+              </div>
+          <Card className="shadow border-0 rounded-4">
+            <Card.Body>
+              
+
+              <Table striped bordered hover responsive>
+                <thead className="table-thead">
+                  <tr>
+                    <th>#</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Username</th>
+                    <th>Username</th>
+                    <th>Username</th>
+                    <th>Username</th>
+                    <th>Username</th>
+                    <th>Username</th>
+                    <th>Username</th>
+                    <th>Username</th>
+                    <th>Username</th>
+                    <th>Username</th>
+                    <th>Username</th>
+                    <th>Username</th>
+                    <th>Username</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                    <td>@mdo</td>
+                    <td>@mdo</td>
+                    <td>@mdo</td>
+                    <td>@mdo</td>
+                    <td>@mdo</td>
+                    <td>@mdo</td>
+                    <td>@mdo</td>
+                    <td>@mdo</td>
+                    <td>@mdo</td>
+                    <td>@mdo</td>
+                    <td>@mdo</td>
+                    <td>@mdo</td>
+                    
+                  </tr>
+
+                </tbody>
+              </Table>
+            </Card.Body>
+          </Card>
+        </Container>
        </div>
      </div>
    );

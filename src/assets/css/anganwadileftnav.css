@@ -3,6 +3,10 @@
     height: 40px !important;
     object-fit: cover;
 }
+.table-thead tr th{
+    background-color: #1a73e8 !important;
+    color: #fff !important;
+}
 .sidebar-nav{
     padding-top: 0px !important;
 }
