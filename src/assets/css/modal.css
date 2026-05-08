@@ -12,15 +12,6 @@
   z-index: 1000;
 }
 
-.modal-content {
-  background: #fff;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-  width: 90%;
-  max-width: 450px;
-  text-align: center;
-}
 
 .modal-content h2 {
   margin-bottom: 20px;
