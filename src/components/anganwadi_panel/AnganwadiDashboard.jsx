@@ -229,6 +229,7 @@ const AnganwadiDashboard = () => {
                       <Form.Control
                         type="text"
                         name="candidate_name"
+                        placeholder="Enter Candidate Name"
                         value={formData.candidate_name}
                         onChange={handleInputChange}
                         required
@@ -241,6 +242,7 @@ const AnganwadiDashboard = () => {
                       <Form.Control
                         type="tel"
                         name="phone"
+                        placeholder="Enter Phone Number"
                         value={formData.phone}
                         onChange={handleInputChange}
                         required
@@ -253,6 +255,7 @@ const AnganwadiDashboard = () => {
                       <Form.Control
                         type="date"
                         name="dob"
+                        placeholder="yyyy-mm-dd"
                         value={formData.dob}
                         onChange={handleInputChange}
                         required
@@ -265,6 +268,7 @@ const AnganwadiDashboard = () => {
                       <Form.Control
                         type="text"
                         name="aadhar_number"
+                        placeholder="Enter Aadhar Number"
                         value={formData.aadhar_number}
                         onChange={handleInputChange}
                         required
@@ -280,6 +284,7 @@ const AnganwadiDashboard = () => {
                       <Form.Control
                         type="number"
                         name="pregancy_num"
+                        placeholder="Enter Pregnancy Number"
                         value={formData.pregancy_num}
                         onChange={handleInputChange}
                       />
@@ -291,6 +296,7 @@ const AnganwadiDashboard = () => {
                       <Form.Control
                         type="text"
                         name="child_name"
+                        placeholder="Enter Child Name"
                         value={formData.child_name}
                         onChange={handleInputChange}
                       />
@@ -302,6 +308,7 @@ const AnganwadiDashboard = () => {
                       <Form.Control
                         type="date"
                         name="lmp_date"
+                        placeholder="yyyy-mm-dd"
                         value={formData.lmp_date}
                         onChange={handleInputChange}
                       />
@@ -313,6 +320,7 @@ const AnganwadiDashboard = () => {
                       <Form.Control
                         type="date"
                         name="dob_child"
+                        placeholder="yyyy-mm-dd"
                         value={formData.dob_child}
                         onChange={handleInputChange}
                       />
@@ -327,6 +335,7 @@ const AnganwadiDashboard = () => {
                       <Form.Control
                         type="text"
                         name="pan_no"
+                        placeholder="Enter PAN Number"
                         value={formData.pan_no}
                         onChange={handleInputChange}
                       />
@@ -338,6 +347,7 @@ const AnganwadiDashboard = () => {
                       <Form.Control
                         type="text"
                         name="account_number"
+                        placeholder="Enter Account Number"
                         value={formData.account_number}
                         onChange={handleInputChange}
                       />
@@ -349,6 +359,7 @@ const AnganwadiDashboard = () => {
                       <Form.Control
                         type="text"
                         name="ifsc_code"
+                        placeholder="Enter IFSC Code"
                         value={formData.ifsc_code}
                         onChange={handleInputChange}
                       />
@@ -360,6 +371,7 @@ const AnganwadiDashboard = () => {
                       <Form.Control
                         type="file"
                         name="pan_file"
+                        placeholder="Upload PAN document"
                         onChange={handleInputChange}
                         accept=".pdf,.jpg,.jpeg,.png"
                       />
@@ -374,6 +386,7 @@ const AnganwadiDashboard = () => {
                       <Form.Control
                         type="file"
                         name="aadhar_file"
+                        placeholder="Upload Aadhar document"
                         onChange={handleInputChange}
                         accept=".pdf,.jpg,.jpeg,.png"
                       />
