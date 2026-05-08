@@ -10,7 +10,7 @@ const SupervisorDashBoard = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
   
-  const { user, api } = useAuth();
+  const { user, api, uniqueId } = useAuth();
   const [candidates, setCandidates] = useState([]);
   const [loading, setLoading] = useState(false);
   const [totalRegistrations, setTotalRegistrations] = useState(0);
