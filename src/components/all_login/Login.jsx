@@ -66,10 +66,10 @@ const Login = () => {
   const roleOptions = useMemo(() => {
     return [
       { value: 'director', label: 'निदेशक', icon: 'bi-person-workspace' },
-      { value: 'dpo', label: 'डीपीओ', icon: 'bi-briefcase' },
-      { value: 'cdpo', label: 'सीडीपीओ', icon: 'bi-person-badge' },
-      { value: 'supervisor', label: 'पर्यवेक्षक', icon: 'bi-person-check' },
-      { value: 'anganwadi', label: 'आंगनवाड़ी', icon: 'bi-house-door' },
+      { value: 'dpo', label: 'जिला कार्यक्रम अधिकारी', icon: 'bi-briefcase' },
+      { value: 'cdpo', label: 'परियोजना कार्यक्रम अधिकारी', icon: 'bi-person-badge' },
+      { value: 'supervisor', label: 'सुपरवाईजर', icon: 'bi-person-check' },
+      { value: 'anganwadi', label: 'आंगनबाड़ी केन्द्र', icon: 'bi-house-door' },
     ];
   }, []);
 
