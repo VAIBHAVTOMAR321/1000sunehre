@@ -193,6 +193,15 @@ const Login = () => {
     <div className="login-page">
       <div className="login-bg-pattern"></div>
       <div className="login-container">
+          <div className="login-right">
+          <div className="uttarakhand-section">
+            <img src={UkLogo} alt="Uttarakhand Logo" className="uttarakhand-logo" />
+            <h2 className="uttarakhand-title">महिला सशक्तिकरण एवं बाल विकास विभाग<br/>Women Empowerment & Child Development Department</h2>
+            
+          </div>
+
+         
+        </div>
         <div className="login-left">
           <div className="login-content">
             <div className="login-header">
@@ -295,15 +304,7 @@ const Login = () => {
           </div>
         </div>
 
-        <div className="login-right">
-          <div className="uttarakhand-section">
-            <img src={UkLogo} alt="Uttarakhand Logo" className="uttarakhand-logo" />
-            <h2 className="uttarakhand-title">महिला सशक्तिकरण एवं बाल विकास विभाग<br/>Women Empowerment & Child Development Department</h2>
-            <p className="uttarakhand-subtitle">Uttarakhand<br/></p>
-          </div>
-
-         
-        </div>
+      
       </div>
 
       {showResetPasswordModal && (
