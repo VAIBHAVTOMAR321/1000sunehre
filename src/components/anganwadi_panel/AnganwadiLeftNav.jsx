@@ -74,7 +74,7 @@ const AnganwadiLeftNav = ({ sidebarOpen, setSidebarOpen, isMobile, isTablet, onN
       {
         icon: <FaTachometerAlt />,
         label: "DashBoard",
-        path: "/SupervisorDashBoard",
+        path: "/AnganwadiDashboard",
         active: true,
       },
     

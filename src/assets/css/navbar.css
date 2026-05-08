@@ -20,7 +20,7 @@
   background: #fff !important;
   padding: 0 !important;
   box-shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
-  border-bottom: 3px solid transparent;
+  border-bottom: 2px solid transparent;
   border-image: linear-gradient(to right, #0D6EFD, var(--gd-gold-light), var(--gd-bronze)) 1;
   transition: all 0.3s ease;
   min-height: 70px;
