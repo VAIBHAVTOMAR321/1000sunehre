@@ -12,6 +12,7 @@ const AnganwadiDashboard = () => {
   const [isTablet, setIsTablet] = useState(false);
 
   const { user, api } = useAuth();
+  const [showRegistrationForm, setShowRegistrationForm] = useState(false);
 
   const [showModal, setShowModal] = useState(false);
   const [candidates, setCandidates] = useState([]);
@@ -204,40 +205,15 @@ const AnganwadiDashboard = () => {
             <h3 className="mb-4 fw-bold">
               Anganwadi Dashboard
             </h3>
-             <Button variant="primary" onClick={() => setShowModal(true)}>
+             <Button variant="primary" onClick={() => setShowRegistrationForm(true)}>
                <i className="bi bi-person-plus me-2"></i>
                Register Candidate
              </Button>
           </div>
 
-          <Row>
-            <Col md={3}>
-              <Card className="h-100 shadow-sm border-0" style={{ cursor: 'pointer', transition: 'all 0.2s ease', minWidth: '200px' }} onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)'; }} onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'; }} onClick={handleCardClick}>
-                <Card.Body className="text-center py-3">
-                  <div className="mb-2">
-                    <i className="bi bi-people-fill" style={{ fontSize: '2rem', color: '#0d6efd' }}></i>
-                  </div>
-                  <Card.Title as="h6" className="mb-1 text-muted text-uppercase" style={{ fontSize: '0.75rem', letterSpacing: '0.5px', fontWeight: 600 }}>
-                    Total Registrations
-                  </Card.Title>
-                  <Card.Text as="h3" className="fw-bold text-primary mb-0" style={{ fontSize: '1.75rem', lineHeight: 1 }}>
-                    {totalRegistrations}
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            </Col>
-          </Row>
-
-          
-
-          <Modal show={showModal} onHide={() => setShowModal(false)} size="xl" centered className="candidate-modal">
-            <Modal.Header closeButton className="bg-primary text-white">
-              <Modal.Title>
-                <i className="bi bi-person-plus me-2"></i>
-                Register New Candidate
-              </Modal.Title>
-            </Modal.Header>
-            <Modal.Body className="p-4">
+          {showRegistrationForm ? (
+            <Card className="p-4 shadow-sm border-0 mt-4">
+              <Card.Title className="mb-4 fw-bold">Register New Candidate</Card.Title>
               <Form onSubmit={handleSubmit}>
                 {submitError && (
                   <div className="alert alert-danger alert-dismissible fade show" role="alert">
@@ -415,7 +391,7 @@ const AnganwadiDashboard = () => {
                 </Row>
 
                 <div className="d-flex justify-content-end gap-2">
-                  <Button variant="secondary" onClick={() => setShowModal(false)}>
+                  <Button variant="secondary" onClick={() => setShowRegistrationForm(false)}>
                     Cancel
                   </Button>
                   <Button variant="primary" type="submit" disabled={submitting}>
@@ -423,8 +399,26 @@ const AnganwadiDashboard = () => {
                   </Button>
                 </div>
               </Form>
-            </Modal.Body>
-           </Modal>
+            </Card>
+          ) : (
+            <Row>
+              <Col md={3}>
+                <Card className="h-100 shadow-sm border-0" style={{ cursor: 'pointer', transition: 'all 0.2s ease', minWidth: '200px' }} onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)'; }} onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'; }} onClick={handleCardClick}>
+                  <Card.Body className="text-center py-3">
+                    <div className="mb-2">
+                      <i className="bi bi-people-fill" style={{ fontSize: '2rem', color: '#0d6efd' }}></i>
+                    </div>
+                    <Card.Title as="h6" className="mb-1 text-muted text-uppercase" style={{ fontSize: '0.75rem', letterSpacing: '0.5px', fontWeight: 600 }}>
+                      Total Registrations
+                    </Card.Title>
+                    <Card.Text as="h3" className="fw-bold text-primary mb-0" style={{ fontSize: '1.75rem', lineHeight: 1 }}>
+                      {totalRegistrations}
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
+            </Row>
+          )}
           </Container>
 
           {showTable && (
