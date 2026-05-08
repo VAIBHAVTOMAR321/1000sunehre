@@ -44,7 +44,9 @@ function AppContent() {
   const location = useLocation();
 
   const hideNavbarRoutes = ["/SupervisorDashBoard", "/DPODashboard", "/AnganwadiDashboard", "/CDPODashboard", "/DirectorDashboard"];
+  const hideFooterRoutes = ["/SupervisorDashBoard", "/DPODashboard", "/AnganwadiDashboard", "/CDPODashboard", "/DirectorDashboard"];
   const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname);
+  const shouldHideFooter = hideFooterRoutes.includes(location.pathname);
 
   return (
     <>
@@ -79,7 +81,7 @@ function AppContent() {
           <Route path="/Login" element={<Login />} />
           
         </Routes>
-        <Footer />
+        {!shouldHideFooter && <Footer />}
     </>
   );
 }
