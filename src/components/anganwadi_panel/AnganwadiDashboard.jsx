@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { Container, Card, Table, Modal, Button, Form, Row, Col } from "react-bootstrap";
+import { Container, Card, Table, Modal, Button, Form, Row, Col, Spinner } from "react-bootstrap";
 import { useAuth } from "../all_login/AuthContext";
 import "../../assets/css/anganwadileftnav.css";
 import AnganwadiLeftNav from "./AnganwadiLeftNav";
 import AnganwadiHeader from "./AnganwadiHeader";
 import "../../assets/css/dashboard.css";
+
+const interventions = [
+  { id: 1, name: "Intervention 1", apiName: "intervention-1", propName: "intervention1", monthsAfterLMP: 3, dependsOn: null },
+  { id: 2, name: "Intervention 2", apiName: "intervention-2", propName: "intervention2", monthsAfterLMP: 6, dependsOn: 1 },
+  { id: 3, name: "Intervention 3", apiName: "intervention-3", propName: "intervention3", monthsAfterLMP: 9, dependsOn: 2 },
+  { id: 4, name: "Intervention 4", apiName: "intervention-4", propName: "intervention4", monthsAfterLMP: 12, dependsOn: 3 },
+];
 
 const AnganwadiDashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -39,6 +46,18 @@ const AnganwadiDashboard = () => {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
 
+  const [currentIntervention, setCurrentIntervention] = useState(null); // New state to store the full intervention object
+  // States for Eligibility Questionnaire
+  const [showEligibilityModal, setShowEligibilityModal] = useState(false);
+  const [currentQuestions, setCurrentQuestions] = useState([]);
+  const [selectedCandidate, setSelectedCandidate] = useState(null);
+  const [eligibilityAnswers, setEligibilityAnswers] = useState({});
+  const [eligibilityRemarks, setEligibilityRemarks] = useState("");
+  const [isEligibleCheck, setIsEligibleCheck] = useState(true);
+  const [loadingQuestions, setLoadingQuestions] = useState(false);
+  const [currentInterventionStage, setCurrentInterventionStage] = useState(1);
+  const [previousInterventionsData, setPreviousInterventionData] = useState([]);
+
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
@@ -55,7 +74,156 @@ const AnganwadiDashboard = () => {
     setSidebarOpen(!sidebarOpen);
   };
 
+  // Logic for a single intervention's status for display in the table
+  const getInterventionStatusForDisplay = (candidate, intervention) => {
+    if (!candidate.lmp_date) {
+      return { text: "LMP Missing", variant: "outline-secondary", disabled: true };
+    }
 
+    const lmp = new Date(candidate.lmp_date);
+    if (isNaN(lmp.getTime())) {
+      return { text: "Invalid LMP", variant: "outline-secondary", disabled: true };
+    }
+
+    const today = new Date();
+    const diffTime = today.getTime() - lmp.getTime();
+    const diffMonths = diffTime / (1000 * 60 * 60 * 24 * 30.44); // Approximate months
+
+    const completed = Array.isArray(candidate.completed_interventions) ? candidate.completed_interventions : [];
+
+    const isCompleted = completed.includes(intervention.id);
+
+    if (isCompleted) {
+      return { text: "Passed", variant: "success", disabled: true };
+    }
+
+    // Check dependencies
+    if (intervention.dependsOn) {
+      const isPrevCompleted = completed.includes(intervention.dependsOn);
+      const prevInt = interventions.find(i => i.id === intervention.dependsOn);
+      const prevEndMonth = prevInt.monthsAfterLMP + 3;
+      const isPrevPassed = diffMonths >= prevEndMonth;
+
+      if (!isPrevCompleted && !isPrevPassed) {
+        return { text: `Requires Stage ${intervention.dependsOn}`, variant: "warning", disabled: true };
+      }
+    }
+
+    // Check time window
+    const startMonth = intervention.monthsAfterLMP;
+    const endMonth = intervention.monthsAfterLMP + 3; // Strict 3-month window for all stages
+    
+    if (diffMonths < startMonth) {
+      return { text: `Opens in ${Math.ceil(startMonth - diffMonths)} mo`, variant: "info", disabled: true };
+    } else if (diffMonths >= endMonth) {
+      return { text: "Missed", variant: "danger", disabled: true };
+    } else {
+      return { text: "Apply", variant: "primary", disabled: false };
+    }
+  };
+
+  const handleApplyClick = async (candidate, intervention) => {
+    setSelectedCandidate(candidate);
+    setCurrentInterventionStage(intervention.id);
+    setCurrentIntervention(intervention); // Store the full intervention object
+    setLoadingQuestions(true);
+    setSubmitError("");
+
+    // Extract history from candidate details nested arrays
+    const history = [];
+    interventions.forEach(int => {
+      if (int.id < intervention.id && candidate[int.propName]?.length > 0) {
+        const record = candidate[int.propName][0];
+        history.push({ ...record, stage: int.id, name: int.name });
+      }
+    });
+    setPreviousInterventionData(history);
+
+    try {
+      // 1. Fetch Questions (shared endpoint)
+      const qResponse = await api.get("/questionnaire-intervention/");
+
+      if (qResponse.data && qResponse.data.data) {
+        // Filter questions based on the current stage (intervention-1, intervention-2, etc.)
+        const stageLabel = intervention.apiName;
+        const filteredQuestions = qResponse.data.data.filter(q => q.intervention === stageLabel);
+
+        setCurrentQuestions(filteredQuestions);
+        // Initialize all questions as false (No)
+        const initialAnswers = {};
+        filteredQuestions.forEach((q) => {
+          initialAnswers[q.id] = false;
+        });
+        setEligibilityAnswers(initialAnswers);
+        setEligibilityRemarks("");
+        setIsEligibleCheck(true);
+        setShowEligibilityModal(true);
+      }
+    } catch (err) {
+      console.error("❌ Failed to fetch questions:", err);
+      alert("Failed to load questionnaire. Please try again.");
+    } finally {
+      setLoadingQuestions(false);
+    }
+  };
+
+  const handleAnswerChange = (questionId, value) => {
+    setEligibilityAnswers(prev => ({
+      ...prev,
+      [questionId]: value
+    }));
+  };
+
+  const handleEligibilitySubmit = async () => {
+    if (!selectedCandidate) return;
+    
+    setSubmitting(true);
+    setSubmitError("");
+
+    // Map answers to the [id, true/false] format
+    const answersArray = currentQuestions.map((q) => [
+      q.id, 
+      eligibilityAnswers[q.id] === true
+    ]);
+
+    const payload = {
+      candidate_id: selectedCandidate.candidate_id,
+      intervention_opportunity: "Nutrition Support",
+      ques_answer: answersArray,
+      remarks: eligibilityRemarks,
+      is_eligible: isEligibleCheck
+    };
+
+    try {
+      // Use the specific API for Stage 1, and dynamic for others as they are provided
+      const apiEndpoint = currentInterventionStage === 1 
+        ? "/intervention1/create/" 
+        : `/intervention${currentInterventionStage}/create/`;
+
+      await api.post(apiEndpoint, payload);
+      
+      alert("Eligibility details submitted successfully!");
+      setShowEligibilityModal(false);
+      setSelectedCandidate(null);
+      fetchCandidates();
+      setEligibilityAnswers({});
+    } catch (err) {
+      // Handle the "already exists" error gracefully as requested
+      const errorData = err.response?.data;
+      if (errorData?.message?.toLowerCase().includes("already exists") || 
+          errorData?.error?.toLowerCase().includes("already exists")) {
+        
+        alert(`Intervention ${currentInterventionStage} already exists for this candidate. Advancing stage...`);
+        setShowEligibilityModal(false);
+        fetchCandidates(); // Re-fetch to update local state with completed flags
+      } else {
+        const errorMsg = errorData?.message || err.message || "Failed to submit eligibility.";
+        setSubmitError(errorMsg);
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value, files } = e.target;
@@ -70,9 +238,18 @@ const AnganwadiDashboard = () => {
     setLoading(true);
     try {
       const response = await api.get("/candidate/details/", {
-        params: { registred_by: user?.user_id || "USR-000002" }
+        params: { ca_id: user?.user_id || "USR-000002" }
       });
-      setCandidates(response.data.data || []);
+      setCandidates(response.data.data.map(c => {
+        const completed = [];
+        interventions.forEach(int => {
+          if (c[int.propName]?.length > 0) completed.push(int.id);
+        });
+        return {
+          ...c,
+          completed_interventions: completed
+        };
+      }) || []);
       setTotalRegistrations(response.data.count || 0);
     } catch (err) {
       console.error("❌ Failed to fetch candidates:", err);
@@ -440,6 +617,10 @@ const AnganwadiDashboard = () => {
                       <thead className="table-dark text-white" style={{ backgroundColor: '#2c3e50' }}>
                         <tr>
                           <th className="text-center" style={{ minWidth: '50px' }}>#</th>
+                          {interventions.map(int => (
+                            <th key={int.id} style={{ minWidth: '120px' }}>{int.name}</th>
+                          ))}
+                          {/* <th style={{ minWidth: '100px' }}>Eligibility</th> */}
                           <th style={{ minWidth: '130px' }}>Candidate ID</th>
                           <th style={{ minWidth: '150px' }}>Name</th>
                           <th style={{ minWidth: '110px' }}>Phone</th>
@@ -474,6 +655,22 @@ const AnganwadiDashboard = () => {
                             return (
                               <tr key={c.id} style={{ backgroundColor: index % 2 === 0 ? '#f8f9fa' : 'white' }}>
                                 <td className="text-center fw-bold">{startIndex + index + 1}</td>
+                                {interventions.map(int => {
+                                  const status = getInterventionStatusForDisplay(c, int);
+                                  return (
+                                    <td key={int.id} className="text-center">
+                                      <Button 
+                                        variant={status.variant} 
+                                        size="sm" 
+                                        className="fw-bold"
+                                        disabled={status.disabled}
+                                        onClick={() => handleApplyClick(c, int)}
+                                      >
+                                        {status.text}
+                                      </Button>
+                                    </td>
+                                  );
+                                })}
                                 <td><span className="badge bg-primary">{c.candidate_id}</span></td>
                                 <td className="fw-semibold">{c.candidate_name}</td>
                                 <td>{c.phone}</td>
@@ -568,6 +765,120 @@ const AnganwadiDashboard = () => {
             </Container>
           )}
       </div>
+
+      {/* Eligibility Questionnaire Modal */}
+      <Modal show={showEligibilityModal} onHide={() => !submitting && setShowEligibilityModal(false)} size="lg" centered>
+        <Modal.Header closeButton={!submitting}>
+          <Modal.Title className="fw-bold">
+            Intervention Stage {currentInterventionStage} - {selectedCandidate?.candidate_name}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {loadingQuestions ? (
+            <div className="text-center py-5">
+              <Spinner animation="border" variant="primary" />
+              <p className="mt-2 text-muted">Fetching questions...</p>
+            </div>
+          ) : (
+            <Form>
+              {submitError && <div className="alert alert-danger mb-4">{submitError}</div>}
+
+              {/* Detailed Intervention Timeline (History & Missed Stages) */}
+              <div className="mb-4">
+                <h6 className="text-primary fw-bold border-bottom pb-2">Previous Intervention Status</h6>
+                {interventions.filter(int => int.id < currentInterventionStage).map((int) => {
+                  const history = previousInterventionsData.find(h => h.stage === int.id);
+                  
+                  const lmp = new Date(selectedCandidate.lmp_date);
+                  const today = new Date();
+                  const diffTime = today.getTime() - lmp.getTime();
+                  const diffMonths = diffTime / (1000 * 60 * 60 * 24 * 30.44);
+                  const isWindowClosed = diffMonths >= (int.monthsAfterLMP + 3);
+
+                  return (
+                    <Card key={int.id} className={`mb-2 border-0 ${history ? 'bg-success bg-opacity-10' : 'bg-danger bg-opacity-10'}`}>
+                      <Card.Body className="py-2">
+                        <div className="d-flex justify-content-between align-items-center">
+                          <span className="fw-bold">Stage {int.id}: {int.name}</span>
+                          {history ? (
+                            <span className="badge bg-success">Passed ({new Date(history.created_at).toLocaleDateString()})</span>
+                          ) : isWindowClosed ? (
+                            <span className="badge bg-danger">Missed</span>
+                          ) : (
+                            <span className="badge bg-secondary">Pending</span>
+                          )}
+                        </div>
+                        {history && (
+                          <div className="mt-1 small">
+                            <strong>Remarks:</strong> {history.remarks}
+                            <span className="ms-3 text-primary"><strong>Eligible:</strong> {history.is_eligible ? 'Yes' : 'No'}</span>
+                            {history.ques_answer && (
+                              <div className="mt-2 p-2 bg-white rounded border">
+                                {history.ques_answer.map((qa, qi) => (
+                                  <div key={qi} className={`text-muted ${qi === history.ques_answer.length - 1 ? '' : 'border-bottom mb-1 pb-1'}`}>
+                                    <small>{qa[1]}: <strong>{qa[2] ? 'True' : 'False'}</strong></small>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </Card.Body>
+                    </Card>
+                  );
+                })}
+              </div>
+
+              <h6 className="fw-bold mb-3">Current Questionnaire:</h6>
+              
+              {currentQuestions.map((q, idx) => (
+                <Form.Group key={q.id} className="mb-4 p-3 border rounded bg-light">
+                  <Form.Label className="fw-bold mb-3">{idx + 1}. {q.question_text}</Form.Label>
+                  <div className="d-flex gap-4">
+                    <Form.Check
+                      type="radio"
+                      id={`q-${q.id}-yes`}
+                      label="true"
+                      name={`q-${q.id}`}
+                      checked={eligibilityAnswers[q.id] === true}
+                      onChange={() => handleAnswerChange(q.id, true)}
+                    />
+                    <Form.Check
+                      type="radio"
+                      id={`q-${q.id}-no`}
+                      label="false"
+                      name={`q-${q.id}`}
+                      checked={eligibilityAnswers[q.id] === false}
+                      onChange={() => handleAnswerChange(q.id, false)}
+                    />
+                  </div>
+                </Form.Group>
+              ))}
+
+              <Form.Group className="mb-4 d-flex align-items-center gap-3">
+                <Form.Label className="fw-bold mb-0">Is Eligible?</Form.Label>
+                <Form.Check 
+                  type="switch"
+                  id="eligibility-switch"
+                  checked={isEligibleCheck}
+                  onChange={(e) => setIsEligibleCheck(e.target.checked)}
+                />
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label className="fw-bold">Remarks</Form.Label>
+                <Form.Control as="textarea" rows={3} value={eligibilityRemarks} onChange={(e) => setEligibilityRemarks(e.target.value)} placeholder="Enter remarks..." />
+              </Form.Group>
+            </Form>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowEligibilityModal(false)} disabled={submitting}>Cancel</Button>
+          <Button variant="primary" onClick={handleEligibilitySubmit} disabled={submitting || loadingQuestions}>
+            {submitting ? "Submitting..." : "Submit Answers"}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
