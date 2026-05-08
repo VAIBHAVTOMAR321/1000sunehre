@@ -19,12 +19,11 @@ function Home() {
     statsTitle: "मुख्य आंकड़े एवं प्रगति",
     statsSubtitle: "वर्ष 2024-25 के दौरान किए गए उपलब्धियों का संक्षिप्त विवरण",
     statsTable: [
-      { label: "कुल पंजीकृत माताएँ", value: "1,45,000+", change: "+12%", color: "blue" },
+      { label: "कुल पंजीकृत गर्भवती महिलाएँ", value: "1,45,000+", change: "+12%", color: "blue" },
       { label: "पूर्ण टीकाकरण दर", value: "87.5%", change: "+5.2%", color: "green" },
       { label: "माता-शिशु सेवाएँ केंद्र", value: "3,200+", change: "+8%", color: "orange" },
-      { label: "पोषण सम्बन्धित बालक", value: "92%", change: "+3%", color: "purple" },
-      { label: "स्वास्थ्य जाँच भेजी गई", value: "4,15,000+", change: "+15%", color: "teal" },
-      { label: "वित्तीय सहायता वितरित", value: "₹180 Cr+", change: "+22%", color: "red" }
+      { label: "पोषण सम्बन्धित आहार", value: "92%", change: "+3%", color: "purple" },
+     
     ],
 
     // Life Stages - Critical Phases (Yellow Marked Table Content)
@@ -122,7 +121,7 @@ function Home() {
 
   // Statistics Card Component
   const StatCard = ({ stat, index }) => (
-    <Col xs={6} md={4} lg={2} key={index} className="mb-3">
+    <Col xs={6} md={4} lg={3} key={index} className="mb-3">
       <Card className={`stat-card stat-${stat.color} h-100 border-0 shadow-sm transition-hover`}>
         <Card.Body className="text-center p-2">
           <div className="stat-value fs-5 fw-bold">{stat.value}</div>
@@ -318,41 +317,7 @@ function Home() {
 
      
 
-        {/* Footer - Government Style */}
-        <footer className="gov-footer bg-dark text-white py-4">
-          <Container>
-            <Row className="g-3">
-              <Col md={4}>
-                <h6 className="mb-2 fw-bold text-uppercase small text-warning">स्वास्थ्य एवं परिवार कल्याण मंत्रालय</h6>
-                <p className="small opacity-75">
-                  भारत सरकार // Government of India<br />
-                  स्वास्थ्य एवं पोषण दशक पोर्टल
-                </p>
-              </Col>
-              <Col md={4}>
-                <h6 className="mb-2 fw-bold small">सहायक लिंक</h6>
-                <ul className="list-unstyled small">
-                  <li><Link to="/about" className="text-white-50 text-decoration-none">हमारे बारे में</Link></li>
-                  <li><Link to="/contact" className="text-white-50 text-decoration-none">संपर्क</Link></li>
-                  <li><Link to="/privacy" className="text-white-50 text-decoration-none">गोपनीयता नीति</Link></li>
-                  <li><Link to="/terms" className="text-white-50 text-decoration-none">नियम एवं शर्तें</Link></li>
-                </ul>
-              </Col>
-              <Col md={4}>
-                <h6 className="mb-2 fw-bold small">संपर्क करें</h6>
-                <p className="small opacity-75">
-                  <i className="bi bi-telephone"></i> टोल-फ्री: 1800-180-1104<br />
-                  <i className="bi bi-envelope"></i> helpdesk@gyandhara.gov.in<br />
-                  <i className="bi bi-geo-alt"></i> नई दिल्ली, भारत
-                </p>
-              </Col>
-            </Row>
-            <hr className="my-3 opacity-25" />
-            <div className="text-center small opacity-50">
-              © 2024 सरकारी भारत // © 2024 Government of India. सर्वाधিকার सुरक्षित।
-            </div>
-          </Container>
-        </footer>
+      
       </div>
 
       {/* Login/Register Modal */}

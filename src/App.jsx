@@ -20,8 +20,9 @@ import DPODashboard from "./components/DPO_panel/DPODashboard";
 import AnganwadiDashboard from "./components/anganwadi_panel/AnganwadiDashboard";
 import CDPODashboard from "./components/CDPO_panel/CDPODashboard";
 import DirectorDashboard from "./components/director_panel/DirectorDashboard";
+import Footer from "./components/footer/Footer";
 
-// 🔒 Protected Route component
+//  Protected Route component
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, isReady } = useAuth();
   const location = useLocation();
@@ -78,6 +79,7 @@ function AppContent() {
           <Route path="/Login" element={<Login />} />
           
         </Routes>
+        <Footer />
     </>
   );
 }
