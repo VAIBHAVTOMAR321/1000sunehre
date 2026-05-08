@@ -240,7 +240,7 @@ const AnganwadiDashboard = () => {
       const response = await api.get("/candidate/details/", {
         params: { ca_id: user?.user_id || "USR-000002" }
       });
-      setCandidates(response.data.data.map(c => {
+      setCandidates((response?.data?.data || []).map(c => {
         const completed = [];
         interventions.forEach(int => {
           if (c[int.propName]?.length > 0) completed.push(int.id);
@@ -249,7 +249,7 @@ const AnganwadiDashboard = () => {
           ...c,
           completed_interventions: completed
         };
-      }) || []);
+      }));
       setTotalRegistrations(response.data.count || 0);
     } catch (err) {
       console.error("❌ Failed to fetch candidates:", err);
@@ -330,7 +330,7 @@ const AnganwadiDashboard = () => {
 
       console.log("✅ Registration successful:", response.data);
       alert("Candidate registered successfully!");
-      setShowModal(false);
+      setShowRegistrationForm(false);
       fetchCandidates();
       setFormData({
         candidate_name: "",
