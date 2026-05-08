@@ -74,7 +74,7 @@ const DirectorLeftNav = ({ sidebarOpen, setSidebarOpen, isMobile, isTablet, onNa
       {
         icon: <FaTachometerAlt />,
         label: "DashBoard",
-        path: "/SupervisorDashBoard",
+        path: "/DirectorDashboard",
         active: true,
       },
     

@@ -74,7 +74,7 @@ const CDPOLeftNav = ({ sidebarOpen, setSidebarOpen, isMobile, isTablet, onNavCli
       {
         icon: <FaTachometerAlt />,
         label: "DashBoard",
-        path: "/SupervisorDashBoard",
+        path: "/CDPODashboard",
         active: true,
       },
     

@@ -74,7 +74,7 @@ const DPOLeftNav = ({ sidebarOpen, setSidebarOpen, isMobile, isTablet, onNavClic
       {
         icon: <FaTachometerAlt />,
         label: "DashBoard",
-        path: "/SupervisorDashBoard",
+        path: "/DPODashboard",
         active: true,
       },
     
