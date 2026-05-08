@@ -5,6 +5,7 @@ import { useAuth } from './AuthContext';
 import '../../assets/css/login.css';
 import UkLogo from '../../assets/images/new_logo_uk.png';
 import ResetPasswordModal from './ResetPasswordModal';
+import Womenlogo from '../../assets/images/women_logo.jpeg';
 
 const Login = () => {
   const [formData, setFormData] = useState({
@@ -196,7 +197,7 @@ const Login = () => {
           <div className="login-content">
             <div className="login-header">
               <div className="brand-logo">
-                <i className="bi bi-mortarboard-fill"></i>
+                <img src={Womenlogo} alt="Brand Logo" />
               </div>
               <h1>{loginTitle}</h1>
               <p>{content.brandSubtitle}</p>

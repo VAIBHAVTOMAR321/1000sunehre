@@ -80,8 +80,8 @@
 .brand-logo {
   width: 56px;
   height: 56px;
-  background: linear-gradient(135deg, #1B4F8A 0%, #E65100 100%);
-  border-radius: 16px;
+ 
+  border-radius: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
