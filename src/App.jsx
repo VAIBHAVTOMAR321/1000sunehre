@@ -87,7 +87,7 @@ function AppContent() {
 function App() {
   return (
     <AuthProvider>
-      <Router>
+      <Router basename="/golden100days">
         <AppContent />
       </Router>
     </AuthProvider>

@@ -4,6 +4,7 @@ import { Container, Row, Col, Modal, Button, Card, Table } from 'react-bootstrap
 import logo from "../../assets/images/gyandharalogo2.png";
 import heroImg from "../../assets/images/CBSEimg.png";
 import '../../assets/css/home.css'
+import Footer from '../footer/Footer'
 
 function Home() {
   const navigate = useNavigate()
@@ -12,6 +13,9 @@ function Home() {
   // All content in Hindi - Government Portal Style
   const content = {
     platformBadge: "🤝 स्वास्थ्य एवं परिवार कल्याण मंत्रालय",
+    signInBtn: "साइन इन",
+    getStartedBtn: "शुरू करें",
+    learnMoreBtn: "अधिक जानें",
     heroTitle: "स्वास्थ्य एवं पोषण दशक: सूचना एवं प्रबंधन प्रणाली",
     heroSubtitle: "माता एवं शिशु के स्वास्थ्य एवं पोषण की निगरानी के लिए एक एकीकृत डैशबोर्ड। 1000 दिनों (गर्भावधि से 2 वर्ष तक) के दौरान जन्म से लेकर बाल्यकाल तक की जाँच, पोषण एवं टीकाकरण की निगरानी करें।",
     
@@ -318,7 +322,9 @@ function Home() {
      
 
       
-      </div>
+</div>
+
+    
 
       {/* Login/Register Modal */}
       <Modal show={showModal} onHide={handleClose} centered size="sm">
