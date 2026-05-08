@@ -1564,7 +1564,7 @@ html, body {
 }
 
 .table th, .table td {
-    font-size: 14px;
+    font-size: 10px;
     padding: clamp(4px, 0px, 12px) !important;
     vertical-align: middle;
 }

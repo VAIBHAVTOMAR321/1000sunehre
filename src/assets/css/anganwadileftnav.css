@@ -6,6 +6,10 @@
 .table-thead tr th{
     background-color: #1a73e8 !important;
     color: #fff !important;
+    font-size: 12px !important;
+}
+.table-thead tr th td{
+font-size: 8px !important;
 }
 .sidebar-nav{
     padding-top: 0px !important;
@@ -1568,7 +1572,7 @@ html, body {
 }
 
 .table th, .table td {
-    font-size: 14px;
+    font-size: 10px;
     padding: clamp(4px, 0px, 12px) !important;
     vertical-align: middle;
 }

@@ -450,7 +450,7 @@ const AnganwadiDashboard = () => {
                 <>
                   <div className="table-responsive">
                     <Table striped bordered hover size="sm" className="table-hover align-middle mb-0">
-                      <thead className="table-dark text-white" style={{ backgroundColor: '#2c3e50' }}>
+                      <thead className="table-thead" style={{ backgroundColor: '#2c3e50' }}>
                         <tr>
                           <th className="text-center" style={{ minWidth: '50px' }}>#</th>
                           <th style={{ minWidth: '130px' }}>Candidate ID</th>

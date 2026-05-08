@@ -319,8 +319,7 @@ function Home() {
            </Container>
          </section>
 
-     
-
+    
       
 </div>
 
