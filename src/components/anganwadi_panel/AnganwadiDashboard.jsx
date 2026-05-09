@@ -437,7 +437,7 @@ const AnganwadiDashboard = () => {
                       err.message || 
                       "Failed to register candidate. Please try again.";
       setSubmitError(errorMsg);
-      console.error("❌ Registration error:", {
+      console.error(" Registration error:", {
         status: err.response?.status,
         data: err.response?.data,
         message: err.message
