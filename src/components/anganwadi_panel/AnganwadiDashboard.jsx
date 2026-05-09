@@ -669,20 +669,31 @@ const [candidates, setCandidates] = useState([]);
                 <>
                   <div className="table-responsive">
                     <Table striped bordered hover size="sm" className="table-hover align-middle mb-0">
-<thead className="table-dark text-white" style={{ backgroundColor: '#2c3e50' }}>
-                           <tr>
-                             <th className="text-center" style={{ minWidth: '50px' }}>#</th>
-                             {interventions.map(int => (
-                               <React.Fragment key={`${int.id}-sub`}>
-                                 <th style={{ minWidth: '80px', display: filterEligible ? 'table-cell' : 'none' }}>{int.name}<br/>Eligible</th>
-                                 <th style={{ minWidth: '100px', display: filterEligible ? 'table-cell' : 'none' }}>{int.name}<br/>Remark</th>
-                                 <th style={{ minWidth: '110px' }}>{int.name}<br/>Payment</th>
-                               </React.Fragment>
-                             ))}
-                             <th style={{ minWidth: '130px' }}>Candidate ID</th>
-                             <th style={{ minWidth: '120px' }}>Full Details</th>
-                           </tr>
-                        </thead>
+                      <thead className="table-dark text-white" style={{ backgroundColor: '#2c3e50' }}>
+                        <tr>
+                          <th rowSpan={filterEligible ? 2 : 1} className="text-center align-middle" style={{ minWidth: '50px' }}>#</th>
+                          {interventions.map(int => (
+                            filterEligible ? (
+                              <th key={int.id} colSpan={3} className="text-center align-middle">{int.name}</th>
+                            ) : (
+                              <th key={int.id} className="text-center align-middle" style={{ minWidth: '110px' }}>{int.name}<br/>Payment</th>
+                            )
+                          ))}
+                          <th rowSpan={filterEligible ? 2 : 1} className="text-center align-middle" style={{ minWidth: '130px' }}>Candidate ID</th>
+                          <th rowSpan={filterEligible ? 2 : 1} className="text-center align-middle" style={{ minWidth: '120px' }}>Full Details</th>
+                        </tr>
+                        {filterEligible && (
+                          <tr>
+                            {interventions.map(int => (
+                              <React.Fragment key={`${int.id}-sub`}>
+                                <th className="text-center" style={{ minWidth: '80px', fontSize: '11px' }}>Eligible</th>
+                                <th className="text-center" style={{ minWidth: '100px', fontSize: '11px' }}>Remark</th>
+                                <th className="text-center" style={{ minWidth: '110px', fontSize: '11px' }}>Payment</th>
+                              </React.Fragment>
+                            ))}
+                          </tr>
+                        )}
+                      </thead>
                         <tbody>
                           {(() => {
                              const totalItems = displayCandidates.length;
@@ -710,14 +721,14 @@ const [candidates, setCandidates] = useState([]);
                                       <React.Fragment key={int.id}>
                                         <td className="text-center" style={{ display: filterEligible ? 'table-cell' : 'none' }}>
                                           {record ? (
-                                            <span className={`badge ${isEligible ? 'bg-success' : 'bg-danger'}`}>
+                                            <span className={`badge ${isEligible ? 'bg-success' : 'bg-danger'}`} style={{ fontSize: '9px' }}>
                                               {isEligible ? 'Yes' : 'No'}
                                             </span>
                                           ) : '-'}
                                         </td>
                                         <td className="text-center" style={{ display: filterEligible ? 'table-cell' : 'none' }}>
                                           {record ? (
-                                            <span title={remark} className="small">
+                                            <span title={remark} style={{ fontSize: '10px' }}>
                                               {remark.length > 20 ? `${remark.substring(0, 20)}...` : remark}
                                             </span>
                                           ) : '-'}
@@ -736,9 +747,9 @@ const [candidates, setCandidates] = useState([]);
                                                 {payingCandidate?.id === c.id && payingStage === int.id ? 'Processing...' : 'Pay Now'}
                                               </Button>
                                             ) : isEligible && !moneyTransferred && !filterEligible ? (
-                                              <span className="badge bg-success">Pass</span>
+                                              <span className="badge bg-success" style={{ fontSize: '9px' }}>Pass</span>
                                             ) : moneyTransferred ? (
-                                              <span className="badge bg-success">Paid</span>
+                                              <span className="badge bg-success" style={{ fontSize: '9px' }}>Paid</span>
                                             ) : (
                                               <span className="text-muted">-</span>
                                             )
@@ -759,7 +770,7 @@ const [candidates, setCandidates] = useState([]);
                                         </td>
                                       </React.Fragment>
                                     )})}
-                                  <td><span className="badge bg-primary">{c.candidate_id}</span></td>
+                                  <td><span className="badge bg-primary" style={{ fontSize: '10px' }}>{c.candidate_id}</span></td>
                                   <td>
                                     <Button 
                                       variant="info" 
