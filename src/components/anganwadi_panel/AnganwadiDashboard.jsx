@@ -474,37 +474,40 @@ const [candidates, setCandidates] = useState([]);
                 
                  <Row>
                    <Col md>
-                     <Form.Group className="mb-3">
-                       <Form.Label className="form-label-custom">Candidate Name</Form.Label>
-                       <Form.Control
-                         type="text"
-                         name="candidate_name"
-                         value={formData.candidate_name}
-                         onChange={handleInputChange}
-                         required
-                       />
-                     </Form.Group>
+<Form.Group className="mb-3">
+  <Form.Label className="form-label-custom">Candidate Name</Form.Label>
+  <Form.Control
+    type="text"
+    name="candidate_name"
+    value={formData.candidate_name}
+    onChange={handleInputChange}
+    required
+    placeholder="Enter candidate name"
+  />
+</Form.Group>
                    </Col>
                    <Col md>
-                     <Form.Label className="form-label-custom">Phone</Form.Label>
-                       <Form.Control
-                         type="tel"
-                         name="phone"
-                         value={formData.phone}
-                         onChange={handleInputChange}
-                         required
-                       />
+<Form.Label className="form-label-custom">Phone</Form.Label>
+                        <Form.Control
+                          type="tel"
+                          name="phone"
+                          value={formData.phone}
+                          onChange={handleInputChange}
+                          required
+                          placeholder="Enter phone number"
+                        />
                    </Col>
                    <Col md>
                      <Form.Group className="mb-3">
-                       <Form.Label className="form-label-custom">Aadhar Number</Form.Label>
-                       <Form.Control
-                         type="text"
-                         name="aadhar_number"
-                         value={formData.aadhar_number}
-                         onChange={handleInputChange}
-                         required
-                       />
+<Form.Label className="form-label-custom">Aadhar Number</Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="aadhar_number"
+                          value={formData.aadhar_number}
+                          onChange={handleInputChange}
+                          required
+                          placeholder="Enter Aadhar number"
+                        />
                      </Form.Group>
                    </Col>
                  </Row>
@@ -512,14 +515,15 @@ const [candidates, setCandidates] = useState([]);
                 <Row>
                   <Col md={3}>
                     <Form.Group className="mb-3">
-                      <Form.Label className="form-label-custom">LMP Date</Form.Label>
-                      <Form.Control
-                        type="date"
-                        name="lmp_date"
-                        value={formData.lmp_date}
-                        onChange={handleInputChange}
-                        required
-                      />
+<Form.Label className="form-label-custom">LMP Date</Form.Label>
+                       <Form.Control
+                         type="date"
+                         name="lmp_date"
+                         value={formData.lmp_date}
+                         onChange={handleInputChange}
+                         required
+                         placeholder="Select LMP date"
+                       />
                     </Form.Group>
                   </Col>
                 </Row>
@@ -527,35 +531,38 @@ const [candidates, setCandidates] = useState([]);
                 <Row>
                   <Col md={3}>
                     <Form.Group className="mb-3">
-                      <Form.Label className="form-label-custom">PAN Number</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="pan_no"
-                        value={formData.pan_no}
-                        onChange={handleInputChange}
-                      />
+<Form.Label className="form-label-custom">PAN Number</Form.Label>
+                       <Form.Control
+                         type="text"
+                         name="pan_no"
+                         value={formData.pan_no}
+                         onChange={handleInputChange}
+                         placeholder="Enter PAN number"
+                       />
                     </Form.Group>
                   </Col>
                   <Col md={3}>
                     <Form.Group className="mb-3">
-                      <Form.Label className="form-label-custom">Account Number</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="account_number"
-                        value={formData.account_number}
-                        onChange={handleInputChange}
-                      />
+<Form.Label className="form-label-custom">Account Number</Form.Label>
+                       <Form.Control
+                         type="text"
+                         name="account_number"
+                         value={formData.account_number}
+                         onChange={handleInputChange}
+                         placeholder="Enter account number"
+                       />
                     </Form.Group>
                   </Col>
                   <Col md={3}>
                     <Form.Group className="mb-3">
-                      <Form.Label className="form-label-custom">IFSC Code</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="ifsc_code"
-                        value={formData.ifsc_code}
-                        onChange={handleInputChange}
-                      />
+<Form.Label className="form-label-custom">IFSC Code</Form.Label>
+                       <Form.Control
+                         type="text"
+                         name="ifsc_code"
+                         value={formData.ifsc_code}
+                         onChange={handleInputChange}
+                         placeholder="Enter IFSC code"
+                       />
                     </Form.Group>
                   </Col>
                   <Col md={3}>
