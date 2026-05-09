@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Container, Card, Table, Modal, Button, Form, Row, Col, Spinner } from "react-bootstrap";
 import { useAuth } from "../all_login/AuthContext";
 import "../../assets/css/anganwadileftnav.css";
@@ -25,8 +25,11 @@ const AnganwadiDashboard = () => {
   const [candidates, setCandidates] = useState([]);
   const [loading, setLoading] = useState(false);
   const [totalRegistrations, setTotalRegistrations] = useState(0);
-  const [showTable, setShowTable] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [eligibleCount, setEligibleCount] = useState(0);
+   const [showTable, setShowTable] = useState(false);
+   const [filterEligible, setFilterEligible] = useState(false);
+   const [selectedInterventionFilter, setSelectedInterventionFilter] = useState(null); // null = all, 1-4 for specific
+   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(50);
   const [formData, setFormData] = useState({
     candidate_name: "",
@@ -55,8 +58,10 @@ const AnganwadiDashboard = () => {
   const [eligibilityRemarks, setEligibilityRemarks] = useState("");
   const [isEligibleCheck, setIsEligibleCheck] = useState(true);
   const [loadingQuestions, setLoadingQuestions] = useState(false);
-  const [currentInterventionStage, setCurrentInterventionStage] = useState(1);
-  const [previousInterventionsData, setPreviousInterventionData] = useState([]);
+   const [currentInterventionStage, setCurrentInterventionStage] = useState(1);
+   const [previousInterventionsData, setPreviousInterventionData] = useState([]);
+   const [payingCandidate, setPayingCandidate] = useState(null);
+   const [payingStage, setPayingStage] = useState(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -174,56 +179,82 @@ const AnganwadiDashboard = () => {
     }));
   };
 
-  const handleEligibilitySubmit = async () => {
-    if (!selectedCandidate) return;
-    
-    setSubmitting(true);
-    setSubmitError("");
+   const handleEligibilitySubmit = async () => {
+     if (!selectedCandidate) return;
+     
+     setSubmitting(true);
+     setSubmitError("");
 
-    // Map answers to the [id, true/false] format
-    const answersArray = currentQuestions.map((q) => [
-      q.id, 
-      eligibilityAnswers[q.id] === true
-    ]);
+     const answersArray = currentQuestions.map((q) => [
+       q.id, 
+       eligibilityAnswers[q.id] === true
+     ]);
 
-    const payload = {
-      candidate_id: selectedCandidate.candidate_id,
-      intervention_opportunity: "Nutrition Support",
-      ques_answer: answersArray,
-      remarks: eligibilityRemarks,
-      is_eligible: isEligibleCheck
-    };
+     const payload = {
+       candidate_id: selectedCandidate.candidate_id,
+       intervention_opportunity: "Nutrition Support",
+       ques_answer: answersArray,
+       remarks: eligibilityRemarks,
+       is_eligible: isEligibleCheck
+     };
 
-    try {
-      // Use the specific API for Stage 1, and dynamic for others as they are provided
-      const apiEndpoint = currentInterventionStage === 1 
-        ? "/intervention1/create/" 
-        : `/intervention${currentInterventionStage}/create/`;
+     try {
+       const apiEndpoint = currentInterventionStage === 1 
+         ? "/intervention1/create/" 
+         : `/intervention${currentInterventionStage}/create/`;
 
-      await api.post(apiEndpoint, payload);
-      
-      alert("Eligibility details submitted successfully!");
-      setShowEligibilityModal(false);
-      setSelectedCandidate(null);
-      fetchCandidates();
-      setEligibilityAnswers({});
-    } catch (err) {
-      // Handle the "already exists" error gracefully as requested
-      const errorData = err.response?.data;
-      if (errorData?.message?.toLowerCase().includes("already exists") || 
-          errorData?.error?.toLowerCase().includes("already exists")) {
-        
-        alert(`Intervention ${currentInterventionStage} already exists for this candidate. Advancing stage...`);
-        setShowEligibilityModal(false);
-        fetchCandidates(); // Re-fetch to update local state with completed flags
-      } else {
-        const errorMsg = errorData?.message || err.message || "Failed to submit eligibility.";
-        setSubmitError(errorMsg);
-      }
-    } finally {
-      setSubmitting(false);
-    }
-  };
+       await api.post(apiEndpoint, payload);
+       
+       alert("Eligibility details submitted successfully!");
+       setShowEligibilityModal(false);
+       setSelectedCandidate(null);
+       fetchCandidates();
+       setEligibilityAnswers({});
+     } catch (err) {
+       const errorData = err.response?.data;
+       if (errorData?.message?.toLowerCase().includes("already exists") || 
+           errorData?.error?.toLowerCase().includes("already exists")) {
+         
+         alert(`Intervention ${currentInterventionStage} already exists for this candidate. Advancing stage...`);
+         setShowEligibilityModal(false);
+         fetchCandidates();
+       } else {
+         const errorMsg = errorData?.message || err.message || "Failed to submit eligibility.";
+         setSubmitError(errorMsg);
+       }
+     } finally {
+       setSubmitting(false);
+     }
+   };
+
+   const handleMoneyTransfer = async (candidate, stage) => {
+     setPayingCandidate(candidate);
+     setPayingStage(stage);
+     
+     if (!confirm(`Confirm payment transfer for ${candidate.candidate_name} - Stage ${stage}?`)) {
+       setPayingCandidate(null);
+       setPayingStage(null);
+       return;
+     }
+
+     try {
+       const response = await api.post("/money-transferred-status/", {
+         candidate_id: candidate.candidate_id,
+         stage: stage
+       });
+
+       if (response.data.success) {
+         alert("Payment status updated successfully!");
+         fetchCandidates();
+       }
+     } catch (err) {
+       console.error("❌ Payment update failed:", err);
+       alert("Failed to update payment status. Please try again.");
+     } finally {
+       setPayingCandidate(null);
+       setPayingStage(null);
+     }
+   };
 
   const handleInputChange = (e) => {
     const { name, value, files } = e.target;
@@ -240,7 +271,7 @@ const AnganwadiDashboard = () => {
       const response = await api.get("/candidate/details/", {
         params: { ca_id: user?.user_id || "USR-000002" }
       });
-      setCandidates((response?.data?.data || []).map(c => {
+      const processedData = (response?.data?.data || []).map(c => {
         const completed = [];
         interventions.forEach(int => {
           if (c[int.propName]?.length > 0) completed.push(int.id);
@@ -249,37 +280,88 @@ const AnganwadiDashboard = () => {
           ...c,
           completed_interventions: completed
         };
-      }));
+      });
+      setCandidates(processedData);
       setTotalRegistrations(response.data.count || 0);
+      
+      const eligible = processedData.filter(candidate => {
+        return interventions.some(int => {
+          const records = candidate[int.propName];
+          if (records && records.length > 0) {
+            const latestRecord = records[0];
+            return latestRecord.is_eligible === true;
+          }
+          return false;
+        });
+      }).length;
+      setEligibleCount(eligible);
     } catch (err) {
       console.error("❌ Failed to fetch candidates:", err);
       setCandidates([]);
       setTotalRegistrations(0);
+      setEligibleCount(0);
     } finally {
       setLoading(false);
     }
-  };
+};
 
   useEffect(() => {
     fetchCandidates();
   }, [user]);
 
-  useEffect(() => {
-    const totalPages = Math.ceil(candidates.length / itemsPerPage);
-    if (totalPages === 0) {
-      setCurrentPage(1);
-    } else if (currentPage > totalPages) {
-      setCurrentPage(totalPages);
-    }
-  }, [candidates.length, itemsPerPage, currentPage]);
+   const displayCandidates = useMemo(() => {
+     let filtered = candidates;
 
-  const handleCardClick = () => {
+     // Filter by eligible status if filterEligible is true
+     if (filterEligible) {
+       filtered = filtered.filter(candidate => {
+         return interventions.some(int => {
+           const records = candidate[int.propName];
+           if (records && records.length > 0) {
+             const latestRecord = records[0];
+             return latestRecord.is_eligible === true;
+           }
+           return false;
+         });
+       });
+     }
+
+     // Filter by specific intervention if selected
+     if (selectedInterventionFilter) {
+       filtered = filtered.filter(candidate => {
+         const int = interventions.find(i => i.id === selectedInterventionFilter);
+         if (!int) return false;
+         const records = candidate[int.propName];
+         if (records && records.length > 0) {
+           const latestRecord = records[0];
+           return latestRecord.is_eligible === true;
+         }
+         return false;
+       });
+     }
+
+     return filtered;
+   }, [candidates, filterEligible, selectedInterventionFilter]);
+
+  const totalPages = Math.ceil(displayCandidates.length / itemsPerPage);
+
+   useEffect(() => {
+     if (totalPages === 0) {
+       setCurrentPage(1);
+     } else if (currentPage > totalPages) {
+       setCurrentPage(totalPages);
+     }
+   }, [displayCandidates.length, itemsPerPage, currentPage, filterEligible, selectedInterventionFilter]);
+
+  const handleCardClick = (filterType) => {
+    setFilterEligible(filterType === 'eligible');
     setShowTable(true);
     setCurrentPage(1);
   };
 
   const handleCloseTable = () => {
     setShowTable(false);
+    setFilterEligible(false);
     setCurrentPage(1);
   };
 
@@ -366,6 +448,7 @@ const AnganwadiDashboard = () => {
   };
 
   return (
+  
     <div className="dashboard-container">
       <AnganwadiLeftNav
         sidebarOpen={sidebarOpen}
@@ -571,7 +654,7 @@ const AnganwadiDashboard = () => {
           ) : (
             <Row>
               <Col md={3}>
-                <Card className="h-100 shadow-sm border-0" style={{ cursor: 'pointer', transition: 'all 0.2s ease', minWidth: '200px' }} onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)'; }} onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'; }} onClick={handleCardClick}>
+                <Card className="h-100 shadow-sm border-0" style={{ cursor: 'pointer', transition: 'all 0.2s ease', minWidth: '200px' }} onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)'; }} onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'; }} onClick={() => handleCardClick('all')}>
                   <Card.Body className="text-center py-3">
                     <div className="mb-2">
                       <i className="bi bi-people-fill" style={{ fontSize: '2rem', color: '#0d6efd' }}></i>
@@ -585,19 +668,47 @@ const AnganwadiDashboard = () => {
                   </Card.Body>
                 </Card>
               </Col>
+              <Col md={3}>
+                <Card className="h-100 shadow-sm border-0" style={{ cursor: 'pointer', transition: 'all 0.2s ease', minWidth: '200px' }} onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)'; }} onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 2px 4px rgba(0,0,0,0.1)'; }} onClick={() => handleCardClick('eligible')}>
+                  <Card.Body className="text-center py-3">
+                    <div className="mb-2">
+                      <i className="bi bi-check-circle-fill" style={{ fontSize: '2rem', color: '#198754' }}></i>
+                    </div>
+                    <Card.Title as="h6" className="mb-1 text-muted text-uppercase" style={{ fontSize: '0.75rem', letterSpacing: '0.5px', fontWeight: 600 }}>
+                      Total Eligible
+                    </Card.Title>
+                    <Card.Text as="h3" className="fw-bold text-success mb-0" style={{ fontSize: '1.75rem', lineHeight: 1 }}>
+                      {eligibleCount}
+                    </Card.Text>
+                  </Card.Body>
+                </Card>
+              </Col>
             </Row>
           )}
           </Container>
 
-          {showTable && (
-            <Container fluid className="mt-4">
-              <div className="d-flex justify-content-between align-items-center mb-3">
-                <h4 className="mb-0">Registered Candidates</h4>
-                <Button variant="secondary" size="sm" onClick={handleCloseTable}>
-                  <i className="bi bi-arrow-up me-2"></i>
-                  Collapse
-                </Button>
-              </div>
+           {showTable && (
+             <Container fluid className="mt-4">
+               <div className="d-flex justify-content-between align-items-center mb-3">
+                 <div className="d-flex align-items-center gap-3">
+                   <h4 className="mb-0">{filterEligible ? 'Eligible Candidates' : 'Registered Candidates'}</h4>
+                   <Form.Select 
+                     size="sm" 
+                     style={{ width: 'auto', minWidth: '200px' }}
+                     value={selectedInterventionFilter || ''}
+                     onChange={(e) => setSelectedInterventionFilter(e.target.value ? parseInt(e.target.value) : null)}
+                   >
+                     <option value="">All Interventions</option>
+                     {interventions.map(int => (
+                       <option key={int.id} value={int.id}>{int.name}</option>
+                     ))}
+                   </Form.Select>
+                 </div>
+                 <Button variant="secondary" size="sm" onClick={handleCloseTable}>
+                   <i className="bi bi-arrow-up me-2"></i>
+                   Collapse
+                 </Button>
+               </div>
 
               {loading ? (
                 <div className="text-center py-4">
@@ -606,109 +717,157 @@ const AnganwadiDashboard = () => {
                   </div>
                   <p className="mt-2">Loading candidates...</p>
                 </div>
-              ) : candidates.length === 0 ? (
+              ) : displayCandidates.length === 0 ? (
                 <div className="text-center py-4">
-                  <p>No candidates found.</p>
+                  <p>{filterEligible ? 'No eligible candidates found.' : 'No candidates found.'}</p>
                 </div>
               ) : (
                 <>
                   <div className="table-responsive">
                     <Table striped bordered hover size="sm" className="table-hover align-middle mb-0">
-                      <thead className="table-dark text-white" style={{ backgroundColor: '#2c3e50' }}>
-                        <tr>
-                          <th className="text-center" style={{ minWidth: '50px' }}>#</th>
-                          {interventions.map(int => (
-                            <th key={int.id} style={{ minWidth: '120px' }}>{int.name}</th>
-                          ))}
-                          {/* <th style={{ minWidth: '100px' }}>Eligibility</th> */}
-                          <th style={{ minWidth: '130px' }}>Candidate ID</th>
-                          <th style={{ minWidth: '150px' }}>Name</th>
-                          <th style={{ minWidth: '110px' }}>Phone</th>
-                          <th style={{ minWidth: '110px' }}>LMP Date</th>
-                          <th style={{ minWidth: '100px' }}>Women DOB</th>
-                          <th style={{ minWidth: '100px' }}>Child DOB</th>
-                          <th style={{ minWidth: '120px' }}>Child Name</th>
-                          <th style={{ minWidth: '70px' }}>Preg #</th>
-                          <th style={{ minWidth: '130px' }}>Aadhar Number</th>
-                          <th style={{ minWidth: '120px' }}>PAN Number</th>
-                          <th style={{ minWidth: '140px' }}>Account Number</th>
-                          <th style={{ minWidth: '100px' }}>IFSC Code</th>
-                        <th style={{ minWidth: '100px' }}>Verified</th>
-                        <th style={{ minWidth: '80px' }}>Active</th>
-                        <th style={{ minWidth: '100px' }}>Aadhar File</th>
-                        <th style={{ minWidth: '100px' }}>PAN File</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {(() => {
-                          const totalItems = candidates.length;
-                          const totalPages = Math.ceil(totalItems / itemsPerPage);
-                          const startIndex = (currentPage - 1) * itemsPerPage;
-                          const endIndex = startIndex + itemsPerPage;
-                          const paginatedCandidates = candidates.slice(startIndex, endIndex);
+                        <thead className="table-dark text-white" style={{ backgroundColor: '#2c3e50' }}>
+                          <tr>
+                            <th className="text-center" style={{ minWidth: '50px' }}>#</th>
+                            {interventions.map(int => (
+                              <React.Fragment key={`${int.id}-sub`}>
+                                <th style={{ minWidth: '80px' }}>{int.name}<br/>Eligible</th>
+                                <th style={{ minWidth: '100px' }}>{int.name}<br/>Remark</th>
+                                <th style={{ minWidth: '110px' }}>{int.name}<br/>Payment</th>
+                              </React.Fragment>
+                            ))}
+                           <th style={{ minWidth: '130px' }}>Candidate ID</th>
+                           <th style={{ minWidth: '150px' }}>Name</th>
+                           <th style={{ minWidth: '110px' }}>Phone</th>
+                           <th style={{ minWidth: '110px' }}>LMP Date</th>
+                           <th style={{ minWidth: '100px' }}>Women DOB</th>
+                           <th style={{ minWidth: '100px' }}>Child DOB</th>
+                           <th style={{ minWidth: '120px' }}>Child Name</th>
+                           <th style={{ minWidth: '70px' }}>Preg #</th>
+                           <th style={{ minWidth: '130px' }}>Aadhar Number</th>
+                           <th style={{ minWidth: '120px' }}>PAN Number</th>
+                           <th style={{ minWidth: '140px' }}>Account Number</th>
+                           <th style={{ minWidth: '100px' }}>IFSC Code</th>
+                         <th style={{ minWidth: '100px' }}>Verified</th>
+                         <th style={{ minWidth: '80px' }}>Active</th>
+                         <th style={{ minWidth: '100px' }}>Aadhar File</th>
+                         <th style={{ minWidth: '100px' }}>PAN File</th>
+                         </tr>
+                       </thead>
+<tbody>
+                         {(() => {
+                            const totalItems = displayCandidates.length;
+                            const startIndex = (currentPage - 1) * itemsPerPage;
+                            const endIndex = startIndex + itemsPerPage;
+                            const paginatedCandidates = displayCandidates.slice(startIndex, endIndex);
 
-                          return paginatedCandidates.map((c, index) => {
+                            return paginatedCandidates.map((c, index) => {
                             const baseUrl = "https://mahadevaaya.com/golden100days/golden100days_backend";
                             const aadharFile = c.aadhar_file ? `${baseUrl}${c.aadhar_file}` : "-";
                             const panFile = c.pan_file ? `${baseUrl}${c.pan_file}` : "-";
 
-                            return (
-                              <tr key={c.id} style={{ backgroundColor: index % 2 === 0 ? '#f8f9fa' : 'white' }}>
-                                <td className="text-center fw-bold">{startIndex + index + 1}</td>
-                                {interventions.map(int => {
-                                  const status = getInterventionStatusForDisplay(c, int);
-                                  return (
-                                    <td key={int.id} className="text-center">
-                                      <Button 
-                                        variant={status.variant} 
-                                        size="sm" 
-                                        className="fw-bold"
-                                        disabled={status.disabled}
-                                        onClick={() => handleApplyClick(c, int)}
-                                      >
-                                        {status.text}
-                                      </Button>
-                                    </td>
-                                  );
-                                })}
-                                <td><span className="badge bg-primary">{c.candidate_id}</span></td>
-                                <td className="fw-semibold">{c.candidate_name}</td>
-                                <td>{c.phone}</td>
-                                <td>{c.lmp_date}</td>
-                                <td>{c.dob}</td>
-                                <td>{c.dob_child}</td>
-                                <td>{c.child_name}</td>
-                                <td>{c.pregancy_num}</td>
-                                <td><code className="text-muted small">{c.aadhar_number}</code></td>
-                                <td><span className="badge bg-secondary">{c.pan_no}</span></td>
-                                <td><code className="text-muted small">{c.account_number}</code></td>
-                                <td><span className="badge bg-secondary">{c.ifsc_code}</span></td>
-                                <td>
-                                  <span className={`badge ${c.is_verified ? 'bg-success' : 'bg-warning'}`}>
-                                    {c.is_verified ? 'Yes' : 'No'}
-                                  </span>
-                                </td>
-                                <td>
-                                <span className={`badge ${c.is_active ? 'bg-success' : 'bg-danger'}`}>
-                                  {c.is_active ? 'Active' : 'Inactive'}
-                                </span>
-                              </td>
-                              <td>
-                                {c.aadhar_file ? (
-                                    <a href={aadharFile} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline-primary">
-                                      <i className="bi bi-eye"></i> View
-                                    </a>
-                                  ) : <span className="text-muted">-</span>}
-                                </td>
-                                <td>
-                                  {c.pan_file ? (
-                                    <a href={panFile} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline-primary">
-                                      <i className="bi bi-eye"></i> View
-                                    </a>
-                                  ) : <span className="text-muted">-</span>}
-                                </td>
-                              </tr>
-                            );
+                             return (
+                               <tr key={c.id} style={{ backgroundColor: index % 2 === 0 ? '#f8f9fa' : 'white' }}>
+                                 <td className="text-center fw-bold">{startIndex + index + 1}</td>
+                                 {interventions.map(int => {
+                                   const record = c[int.propName]?.length > 0 ? c[int.propName][0] : null;
+                                   const isEligible = record?.is_eligible === true;
+                                   const remark = record?.remark || record?.remarks || "-";
+                                   const moneyTransferred = record?.money_transferred_status === true;
+                                   
+                                   // For stages with no record, check if they can apply (time window & dependencies)
+                                   let status = null;
+                                   if (!record) {
+                                     status = getInterventionStatusForDisplay(c, int);
+                                   }
+                                   
+                                   return (
+                                     <React.Fragment key={int.id}>
+                                       <td className="text-center">
+                                         {record ? (
+                                           <span className={`badge ${isEligible ? 'bg-success' : 'bg-danger'}`}>
+                                             {isEligible ? 'Yes' : 'No'}
+                                           </span>
+                                         ) : '-'}
+                                       </td>
+                                       <td className="text-center">
+                                         {record ? (
+                                           <span title={remark} className="small">
+                                             {remark.length > 20 ? `${remark.substring(0, 20)}...` : remark}
+                                           </span>
+                                         ) : '-'}
+                                       </td>
+                                        <td className="text-center">
+                                          {record ? (
+                                            isEligible && !moneyTransferred && filterEligible ? (
+                                              <Button
+                                                variant="warning"
+                                                size="sm"
+                                                className="fw-bold"
+                                                onClick={() => handleMoneyTransfer(c, int.id)}
+                                                disabled={payingCandidate?.id === c.id && payingStage === int.id}
+                                              >
+                                                {payingCandidate?.id === c.id && payingStage === int.id ? 'Processing...' : 'Pay Now'}
+                                              </Button>
+                                            ) : moneyTransferred ? (
+                                              <span className="badge bg-success">Paid</span>
+                                            ) : (
+                                              <span className="text-muted">-</span>
+                                            )
+                                          ) : status ? (
+                                            <Button
+                                              variant={status.variant}
+                                              size="sm"
+                                              className="fw-bold"
+                                              disabled={status.disabled}
+                                              onClick={() => !status.disabled && handleApplyClick(c, int)}
+                                            >
+                                              {status.text}
+                                            </Button>
+                                          ) : (
+                                            <span className="text-muted">-</span>
+                                          )}
+                                        </td>
+                                     </React.Fragment>
+                                   );
+                                 })}
+                                 <td><span className="badge bg-primary">{c.candidate_id}</span></td>
+                                 <td className="fw-semibold">{c.candidate_name}</td>
+                                 <td>{c.phone}</td>
+                                 <td>{c.lmp_date}</td>
+                                 <td>{c.dob}</td>
+                                 <td>{c.dob_child}</td>
+                                 <td>{c.child_name}</td>
+                                 <td>{c.pregancy_num}</td>
+                                 <td><code className="text-muted small">{c.aadhar_number}</code></td>
+                                 <td><span className="badge bg-secondary">{c.pan_no}</span></td>
+                                 <td><code className="text-muted small">{c.account_number}</code></td>
+                                 <td><span className="badge bg-secondary">{c.ifsc_code}</span></td>
+                                 <td>
+                                   <span className={`badge ${c.is_verified ? 'bg-success' : 'bg-warning'}`}>
+                                     {c.is_verified ? 'Yes' : 'No'}
+                                   </span>
+                                 </td>
+                                 <td>
+                                 <span className={`badge ${c.is_active ? 'bg-success' : 'bg-danger'}`}>
+                                   {c.is_active ? 'Active' : 'Inactive'}
+                                 </span>
+                               </td>
+                               <td>
+                                 {c.aadhar_file ? (
+                                     <a href={aadharFile} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline-primary">
+                                       <i className="bi bi-eye"></i> View
+                                     </a>
+                                   ) : <span className="text-muted">-</span>}
+                               </td>
+                               <td>
+                                 {c.pan_file ? (
+                                     <a href={panFile} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline-primary">
+                                       <i className="bi bi-eye"></i> View
+                                     </a>
+                                   ) : <span className="text-muted">-</span>}
+                               </td>
+                             </tr>
+                           );
                           });
                         })()}
                       </tbody>
@@ -717,7 +876,7 @@ const AnganwadiDashboard = () => {
 
                   <div className="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
                     <span className="text-muted small">
-                      Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, candidates.length)} of {candidates.length} entries
+                      Showing {displayCandidates.length > 0 ? ((currentPage - 1) * itemsPerPage) + 1 : 0} to {Math.min(currentPage * itemsPerPage, displayCandidates.length)} of {displayCandidates.length} entries
                     </span>
 
                     <div className="d-flex align-items-center gap-2">
@@ -739,22 +898,22 @@ const AnganwadiDashboard = () => {
                       </Button>
 
                       <span className="badge bg-light text-dark border px-3 py-2">
-                        Page {currentPage} of {Math.ceil(candidates.length / itemsPerPage)}
+                        Page {currentPage} of {totalPages || 1}
                       </span>
 
                       <Button
                         variant="outline-secondary"
                         size="sm"
-                        onClick={() => setCurrentPage(p => Math.min(Math.ceil(candidates.length / itemsPerPage), p + 1))}
-                        disabled={currentPage === Math.ceil(candidates.length / itemsPerPage)}
+                        onClick={() => setCurrentPage(p => Math.min(totalPages || 1, p + 1))}
+                        disabled={currentPage === (totalPages || 1)}
                       >
                         <i className="bi bi-chevron-right"></i>
                       </Button>
                       <Button
                         variant="outline-secondary"
                         size="sm"
-                        onClick={() => setCurrentPage(Math.ceil(candidates.length / itemsPerPage))}
-                        disabled={currentPage === Math.ceil(candidates.length / itemsPerPage)}
+                        onClick={() => setCurrentPage(totalPages || 1)}
+                        disabled={currentPage === (totalPages || 1)}
                       >
                         <i className="bi bi-chevron-double-right"></i>
                       </Button>
@@ -817,17 +976,17 @@ const AnganwadiDashboard = () => {
                                 {history.ques_answer.map((qa, qi) => (
                                   <div key={qi} className={`text-muted ${qi === history.ques_answer.length - 1 ? '' : 'border-bottom mb-1 pb-1'}`}>
                                     <small>{qa[1]}: <strong>{qa[2] ? 'True' : 'False'}</strong></small>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        )}
-                      </Card.Body>
-                    </Card>
-                  );
-                })}
-              </div>
+                                 </div>
+                               ))}
+                               </div>
+                             )}
+                           </div>
+                         )}
+                       </Card.Body>
+                     </Card>
+                   );
+                 })}
+               </div>
 
               <h6 className="fw-bold mb-3">Current Questionnaire:</h6>
               
