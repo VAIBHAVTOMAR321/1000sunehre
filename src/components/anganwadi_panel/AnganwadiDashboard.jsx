@@ -676,7 +676,7 @@ const [candidates, setCandidates] = useState([]);
                             filterEligible ? (
                               <th key={int.id} colSpan={3} className="text-center align-middle">{int.name}</th>
                             ) : (
-                              <th key={int.id} className="text-center align-middle" style={{ minWidth: '110px' }}>{int.name}<br/>Payment</th>
+                              <th key={int.id} className="text-center align-middle" style={{ minWidth: '110px' }}>{int.name}<br/></th>
                             )
                           ))}
                           <th rowSpan={filterEligible ? 2 : 1} className="text-center align-middle" style={{ minWidth: '130px' }}>Candidate ID</th>
