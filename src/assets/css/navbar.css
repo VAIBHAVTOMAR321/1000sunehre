@@ -410,6 +410,9 @@
   .navbar-logo {
     height: 38px;
   }
+  .department-subtitle{
+  margin-top: 4px !important;
+}
 .uttarakhand-title{
   font-size: 8px !important;
 }

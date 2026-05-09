@@ -27,7 +27,21 @@ function NavBar() {
             
             <div className="uttarakhand-heading">
               <span className="uttarakhand-title">
-                {language === 'hi' ? '' : 'Women Empowerment & Child Development Department'}
+               {language === 'hi' ? (
+  ''
+) : (
+  <>
+ <div style={{ lineHeight: "1.2" }}>
+  
+
+
+  <>
+    Women Empowerment & <br />
+    Child Development Department
+  </>
+</div>
+</>
+)}
               </span>
               <img 
                 src={womenLogo} 
