@@ -730,8 +730,8 @@ const AnganwadiDashboard = () => {
                             <th className="text-center" style={{ minWidth: '50px' }}>#</th>
                             {interventions.map(int => (
                               <React.Fragment key={`${int.id}-sub`}>
-                                <th style={{ minWidth: '80px' }}>{int.name}<br/>Eligible</th>
-                                <th style={{ minWidth: '100px' }}>{int.name}<br/>Remark</th>
+                                <th style={{ minWidth: '80px', display: filterEligible ? 'table-cell' : 'none' }}>{int.name}<br/>Eligible</th>
+                                <th style={{ minWidth: '100px', display: filterEligible ? 'table-cell' : 'none' }}>{int.name}<br/>Remark</th>
                                 <th style={{ minWidth: '110px' }}>{int.name}<br/>Payment</th>
                               </React.Fragment>
                             ))}
@@ -780,22 +780,22 @@ const AnganwadiDashboard = () => {
                                      status = getInterventionStatusForDisplay(c, int);
                                    }
                                    
-                                   return (
-                                     <React.Fragment key={int.id}>
-                                       <td className="text-center">
-                                         {record ? (
-                                           <span className={`badge ${isEligible ? 'bg-success' : 'bg-danger'}`}>
-                                             {isEligible ? 'Yes' : 'No'}
-                                           </span>
-                                         ) : '-'}
-                                       </td>
-                                       <td className="text-center">
-                                         {record ? (
-                                           <span title={remark} className="small">
-                                             {remark.length > 20 ? `${remark.substring(0, 20)}...` : remark}
-                                           </span>
-                                         ) : '-'}
-                                       </td>
+                                    return (
+                                      <React.Fragment key={int.id}>
+                                        <td className="text-center" style={{ display: filterEligible ? 'table-cell' : 'none' }}>
+                                          {record ? (
+                                            <span className={`badge ${isEligible ? 'bg-success' : 'bg-danger'}`}>
+                                              {isEligible ? 'Yes' : 'No'}
+                                            </span>
+                                          ) : '-'}
+                                        </td>
+                                        <td className="text-center" style={{ display: filterEligible ? 'table-cell' : 'none' }}>
+                                          {record ? (
+                                            <span title={remark} className="small">
+                                              {remark.length > 20 ? `${remark.substring(0, 20)}...` : remark}
+                                            </span>
+                                          ) : '-'}
+                                        </td>
                                         <td className="text-center">
                                           {record ? (
                                             isEligible && !moneyTransferred && filterEligible ? (
@@ -808,6 +808,8 @@ const AnganwadiDashboard = () => {
                                               >
                                                 {payingCandidate?.id === c.id && payingStage === int.id ? 'Processing...' : 'Pay Now'}
                                               </Button>
+                                            ) : isEligible && !moneyTransferred && !filterEligible ? (
+                                              <span className="badge bg-success">Pass</span>
                                             ) : moneyTransferred ? (
                                               <span className="badge bg-success">Paid</span>
                                             ) : (
