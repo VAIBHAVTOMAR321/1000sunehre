@@ -21,16 +21,17 @@ const AnganwadiDashboard = () => {
   const { user, api } = useAuth();
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
 
-  const [showModal, setShowModal] = useState(false);
-  const [candidates, setCandidates] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [totalRegistrations, setTotalRegistrations] = useState(0);
-  const [eligibleCount, setEligibleCount] = useState(0);
-   const [showTable, setShowTable] = useState(false);
-   const [filterEligible, setFilterEligible] = useState(false);
-   const [selectedInterventionFilter, setSelectedInterventionFilter] = useState(null); // null = all, 1-4 for specific
-   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(50);
+const [candidates, setCandidates] = useState([]);
+   const [loading, setLoading] = useState(false);
+   const [totalRegistrations, setTotalRegistrations] = useState(0);
+   const [eligibleCount, setEligibleCount] = useState(0);
+    const [showTable, setShowTable] = useState(false);
+    const [filterEligible, setFilterEligible] = useState(false);
+    const [selectedInterventionFilter, setSelectedInterventionFilter] = useState(null); // null = all, 1-4 for specific
+    const [currentPage, setCurrentPage] = useState(1);
+   const [itemsPerPage] = useState(50);
+   const [selectedCandidateDetails, setSelectedCandidateDetails] = useState(null);
+   const [showDetailsModal, setShowDetailsModal] = useState(false);
    const [formData, setFormData] = useState({
      candidate_name: "",
      phone: "",
@@ -668,57 +669,43 @@ const AnganwadiDashboard = () => {
                 <>
                   <div className="table-responsive">
                     <Table striped bordered hover size="sm" className="table-hover align-middle mb-0">
-                        <thead className="table-dark text-white" style={{ backgroundColor: '#2c3e50' }}>
-                          <tr>
-                            <th className="text-center" style={{ minWidth: '50px' }}>#</th>
-                            {interventions.map(int => (
-                              <React.Fragment key={`${int.id}-sub`}>
-                                <th style={{ minWidth: '80px', display: filterEligible ? 'table-cell' : 'none' }}>{int.name}<br/>Eligible</th>
-                                <th style={{ minWidth: '100px', display: filterEligible ? 'table-cell' : 'none' }}>{int.name}<br/>Remark</th>
-                                <th style={{ minWidth: '110px' }}>{int.name}<br/>Payment</th>
-                              </React.Fragment>
-                            ))}
-                            <th style={{ minWidth: '130px' }}>Candidate ID</th>
-                            <th style={{ minWidth: '150px' }}>Name</th>
-                            <th style={{ minWidth: '110px' }}>Phone</th>
-                            <th style={{ minWidth: '110px' }}>LMP Date</th>
-                            <th style={{ minWidth: '130px' }}>Aadhar Number</th>
-                            <th style={{ minWidth: '120px' }}>PAN Number</th>
-                            <th style={{ minWidth: '140px' }}>Account Number</th>
-                            <th style={{ minWidth: '100px' }}>IFSC Code</th>
-                         <th style={{ minWidth: '100px' }}>Verified</th>
-                         <th style={{ minWidth: '80px' }}>Active</th>
-                         <th style={{ minWidth: '100px' }}>Aadhar File</th>
-                         <th style={{ minWidth: '100px' }}>PAN File</th>
-                         </tr>
-                       </thead>
-<tbody>
-                         {(() => {
-                            const totalItems = displayCandidates.length;
-                            const startIndex = (currentPage - 1) * itemsPerPage;
-                            const endIndex = startIndex + itemsPerPage;
-                            const paginatedCandidates = displayCandidates.slice(startIndex, endIndex);
+<thead className="table-dark text-white" style={{ backgroundColor: '#2c3e50' }}>
+                           <tr>
+                             <th className="text-center" style={{ minWidth: '50px' }}>#</th>
+                             {interventions.map(int => (
+                               <React.Fragment key={`${int.id}-sub`}>
+                                 <th style={{ minWidth: '80px', display: filterEligible ? 'table-cell' : 'none' }}>{int.name}<br/>Eligible</th>
+                                 <th style={{ minWidth: '100px', display: filterEligible ? 'table-cell' : 'none' }}>{int.name}<br/>Remark</th>
+                                 <th style={{ minWidth: '110px' }}>{int.name}<br/>Payment</th>
+                               </React.Fragment>
+                             ))}
+                             <th style={{ minWidth: '130px' }}>Candidate ID</th>
+                             <th style={{ minWidth: '120px' }}>Full Details</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                          {(() => {
+                             const totalItems = displayCandidates.length;
+                             const startIndex = (currentPage - 1) * itemsPerPage;
+                             const endIndex = startIndex + itemsPerPage;
+                             const paginatedCandidates = displayCandidates.slice(startIndex, endIndex);
 
-                            return paginatedCandidates.map((c, index) => {
-                            const baseUrl = "https://mahadevaaya.com/golden100days/golden100days_backend";
-                            const aadharFile = c.aadhar_file ? `${baseUrl}${c.aadhar_file}` : "-";
-                            const panFile = c.pan_file ? `${baseUrl}${c.pan_file}` : "-";
-
-                             return (
-                               <tr key={c.id} style={{ backgroundColor: index % 2 === 0 ? '#f8f9fa' : 'white' }}>
-                                 <td className="text-center fw-bold">{startIndex + index + 1}</td>
-                                 {interventions.map(int => {
-                                   const record = c[int.propName]?.length > 0 ? c[int.propName][0] : null;
-                                   const isEligible = record?.is_eligible === true;
-                                   const remark = record?.remark || record?.remarks || "-";
-                                   const moneyTransferred = record?.money_transferred_status === true;
-                                   
-                                   // For stages with no record, check if they can apply (time window & dependencies)
-                                   let status = null;
-                                   if (!record) {
-                                     status = getInterventionStatusForDisplay(c, int);
-                                   }
-                                   
+                             return paginatedCandidates.map((c, index) => {
+                              return (
+                                <tr key={c.id} style={{ backgroundColor: index % 2 === 0 ? '#f8f9fa' : 'white' }}>
+                                  <td className="text-center fw-bold">{startIndex + index + 1}</td>
+                                  {interventions.map(int => {
+                                    const record = c[int.propName]?.length > 0 ? c[int.propName][0] : null;
+                                    const isEligible = record?.is_eligible === true;
+                                    const remark = record?.remark || record?.remarks || "-";
+                                    const moneyTransferred = record?.money_transferred_status === true;
+                                    
+                                    // For stages with no record, check if they can apply (time window & dependencies)
+                                    let status = null;
+                                    if (!record) {
+                                      status = getInterventionStatusForDisplay(c, int);
+                                    }
+                                    
                                     return (
                                       <React.Fragment key={int.id}>
                                         <td className="text-center" style={{ display: filterEligible ? 'table-cell' : 'none' }}>
@@ -768,45 +755,17 @@ const AnganwadiDashboard = () => {
                                             <span className="text-muted">-</span>
                                           )}
                                         </td>
-                                     </React.Fragment>
-                                   );
-                                 })}
+                                      </React.Fragment>
+                                    )})}
                                   <td><span className="badge bg-primary">{c.candidate_id}</span></td>
-                                  <td className="fw-semibold">{c.candidate_name}</td>
-                                  <td>{c.phone}</td>
-                                  <td>{c.lmp_date}</td>
-                                  <td><code className="text-muted small">{c.aadhar_number}</code></td>
-                                  <td><span className="badge bg-secondary">{c.pan_no}</span></td>
-                                  <td><code className="text-muted small">{c.account_number}</code></td>
-                                  <td><span className="badge bg-secondary">{c.ifsc_code}</span></td>
-                                 <td>
-                                   <span className={`badge ${c.is_verified ? 'bg-success' : 'bg-warning'}`}>
-                                     {c.is_verified ? 'Yes' : 'No'}
-                                   </span>
-                                 </td>
-                                 <td>
-                                 <span className={`badge ${c.is_active ? 'bg-success' : 'bg-danger'}`}>
-                                   {c.is_active ? 'Active' : 'Inactive'}
-                                 </span>
-                               </td>
-                               <td>
-                                 {c.aadhar_file ? (
-                                     <a href={aadharFile} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline-primary">
-                                       <i className="bi bi-eye"></i> View
-                                     </a>
-                                   ) : <span className="text-muted">-</span>}
-                               </td>
-                               <td>
-                                 {c.pan_file ? (
-                                     <a href={panFile} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline-primary">
-                                       <i className="bi bi-eye"></i> View
-                                     </a>
-                                   ) : <span className="text-muted">-</span>}
-                               </td>
-                             </tr>
-                           );
-                          });
-                        })()}
+                                  <td>
+                                    <Button variant="info" size="sm" onClick={() => { setSelectedCandidateDetails(c); setShowDetailsModal(true); }}>
+                                      Full Details
+                                    </Button>
+                                  </td>
+                                </tr>
+                            )});
+                          })()}
                       </tbody>
                     </Table>
                   </div>
@@ -968,14 +927,76 @@ const AnganwadiDashboard = () => {
             </Form>
           )}
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowEligibilityModal(false)} disabled={submitting}>Cancel</Button>
-          <Button variant="primary" onClick={handleEligibilitySubmit} disabled={submitting || loadingQuestions}>
-            {submitting ? "Submitting..." : "Submit Answers"}
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </div>
+<Modal.Footer>
+           <Button variant="secondary" onClick={() => setShowEligibilityModal(false)} disabled={submitting}>Cancel</Button>
+           <Button variant="primary" onClick={handleEligibilitySubmit} disabled={submitting || loadingQuestions}>
+             {submitting ? "Submitting..." : "Submit Answers"}
+           </Button>
+         </Modal.Footer>
+       </Modal>
+
+       {/* Full Details Modal */}
+       <Modal show={showDetailsModal} onHide={() => setShowDetailsModal(false)} size="lg" centered>
+         <Modal.Header closeButton>
+           <Modal.Title className="fw-bold">Candidate Full Details</Modal.Title>
+         </Modal.Header>
+         <Modal.Body>
+           {selectedCandidateDetails && (
+             <Row className="g-3">
+               <Col md={6}>
+                 <strong>Name:</strong> {selectedCandidateDetails.candidate_name || '-'}
+               </Col>
+               <Col md={6}>
+                 <strong>Phone:</strong> {selectedCandidateDetails.phone || '-'}
+               </Col>
+               <Col md={6}>
+                 <strong>LMP Date:</strong> {selectedCandidateDetails.lmp_date || '-'}
+               </Col>
+               <Col md={6}>
+                 <strong>Aadhaar Number:</strong> {selectedCandidateDetails.aadhar_number || '-'}
+               </Col>
+               <Col md={6}>
+                 <strong>PAN Number:</strong> {selectedCandidateDetails.pan_no || '-'}
+               </Col>
+               <Col md={6}>
+                 <strong>Account Number:</strong> {selectedCandidateDetails.account_number || '-'}
+               </Col>
+               <Col md={6}>
+                 <strong>IFSC Code:</strong> {selectedCandidateDetails.ifsc_code || '-'}
+               </Col>
+               <Col md={6}>
+                 <strong>Verified:</strong> {selectedCandidateDetails.is_verified ? 'Yes' : 'No'}
+               </Col>
+               <Col md={6}>
+                 <strong>Active:</strong> {selectedCandidateDetails.is_active ? 'Yes' : 'No'}
+               </Col>
+               <Col md={6}>
+                 <strong>Candidate ID:</strong> {selectedCandidateDetails.candidate_id || '-'}
+               </Col>
+               <Col md={6}>
+                 <strong>Aadhar File:</strong>{' '}
+                 {selectedCandidateDetails.aadhar_file ? (
+                   <a href={`https://mahadevaaya.com/golden100days/golden100days_backend${selectedCandidateDetails.aadhar_file}`} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline-primary">
+                     <i className="bi bi-eye"></i> View
+                   </a>
+                 ) : '-'}
+               </Col>
+               <Col md={6}>
+                 <strong>PAN File:</strong>{' '}
+                 {selectedCandidateDetails.pan_file ? (
+                   <a href={`https://mahadevaaya.com/golden100days/golden100days_backend${selectedCandidateDetails.pan_file}`} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline-primary">
+                     <i className="bi bi-eye"></i> View
+                   </a>
+                 ) : '-'}
+               </Col>
+             </Row>
+           )}
+         </Modal.Body>
+         <Modal.Footer>
+           <Button variant="secondary" onClick={() => setShowDetailsModal(false)}>Close</Button>
+         </Modal.Footer>
+       </Modal>
+     </div>
   );
 };
 
