@@ -729,6 +729,7 @@ const [candidates, setCandidates] = useState([]);
                                                 variant="warning"
                                                 size="sm"
                                                 className="fw-bold"
+                                                style={{ fontSize: '10px', padding: '2px 6px' }}
                                                 onClick={() => handleMoneyTransfer(c, int.id)}
                                                 disabled={payingCandidate?.id === c.id && payingStage === int.id}
                                               >
@@ -746,6 +747,7 @@ const [candidates, setCandidates] = useState([]);
                                               variant={status.variant}
                                               size="sm"
                                               className="fw-bold"
+                                              style={{ fontSize: '10px', padding: '2px 6px' }}
                                               disabled={status.disabled}
                                               onClick={() => !status.disabled && handleApplyClick(c, int)}
                                             >
@@ -759,7 +761,12 @@ const [candidates, setCandidates] = useState([]);
                                     )})}
                                   <td><span className="badge bg-primary">{c.candidate_id}</span></td>
                                   <td>
-                                    <Button variant="info" size="sm" onClick={() => { setSelectedCandidateDetails(c); setShowDetailsModal(true); }}>
+                                    <Button 
+                                      variant="info" 
+                                      size="sm" 
+                                      className="text-white"
+                                      style={{ fontSize: '10px', padding: '2px 6px' }}
+                                      onClick={() => { setSelectedCandidateDetails(c); setShowDetailsModal(true); }}>
                                       Full Details
                                     </Button>
                                   </td>
