@@ -473,7 +473,7 @@ const [candidates, setCandidates] = useState([]);
                 )}
                 
                  <Row>
-                   <Col md>
+                   <Col md={3} lg={3}>
 <Form.Group className="mb-3">
   <Form.Label className="form-label-custom">Candidate Name</Form.Label>
   <Form.Control
@@ -486,7 +486,7 @@ const [candidates, setCandidates] = useState([]);
   />
 </Form.Group>
                    </Col>
-                   <Col md>
+                   <Col md={3} lg={3}>
 <Form.Label className="form-label-custom">Phone</Form.Label>
                         <Form.Control
                           type="tel"
@@ -497,7 +497,7 @@ const [candidates, setCandidates] = useState([]);
                           placeholder="Enter phone number"
                         />
                    </Col>
-                   <Col md>
+                   <Col md={3} lg={3}>
                      <Form.Group className="mb-3">
 <Form.Label className="form-label-custom">Aadhar Number</Form.Label>
                         <Form.Control
@@ -510,10 +510,7 @@ const [candidates, setCandidates] = useState([]);
                         />
                      </Form.Group>
                    </Col>
-                 </Row>
-
-                <Row>
-                  <Col md={3}>
+                    <Col md={3}>
                     <Form.Group className="mb-3">
 <Form.Label className="form-label-custom">LMP Date</Form.Label>
                        <Form.Control
@@ -526,6 +523,10 @@ const [candidates, setCandidates] = useState([]);
                        />
                     </Form.Group>
                   </Col>
+                 </Row>
+
+                <Row>
+                 
                 </Row>
 
                 <Row>
