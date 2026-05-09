@@ -157,11 +157,11 @@ function Home() {
             </Col>
             <Col xs={12} md={6} className="text-md-end mt-1 mt-md-0">
               <div className="d-flex justify-content-md-end gap-3 flex-wrap small">
-                <Link to="/login" className="text-white text-decoration-none hover-opacity">
+                <Link to="/Login" className="text-white text-decoration-none hover-opacity">
                   <i className="bi bi-box-arrow-in-right"></i> {content.signInBtn}
                 </Link>
                 <span className="text-white-50">|</span>
-                <Link to="/register" className="text-white text-decoration-none hover-opacity">
+                <Link to="/Login" className="text-white text-decoration-none hover-opacity">
                   <i className="bi bi-person-plus"></i> {content.modalRegister}
                 </Link>
               </div>
@@ -187,10 +187,10 @@ function Home() {
                     {content.heroSubtitle}
                   </p>
                   <div className="hero-buttons-gov mt-3 d-flex gap-2">
-                    <Link to="/register" className="btn btn-primary btn-sm px-3">
+                    <Link to="/Login" className="btn btn-primary btn-sm px-3">
                       <i className="bi bi-rocket-takeoff"></i> {content.getStartedBtn}
                     </Link>
-                    <Link to="/learn" className="btn btn-outline-secondary btn-sm px-3">
+                    <Link to="/Login" className="btn btn-outline-secondary btn-sm px-3">
                       <i className="bi bi-file-earmark-text"></i> {content.learnMoreBtn}
                     </Link>
                   </div>
