@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { Container, Card, Table, Modal, Button, Form, Row, Col, Spinner } from "react-bootstrap";
+import axios from "axios";
 import { useAuth } from "../all_login/AuthContext";
 import "../../assets/css/anganwadileftnav.css";
 import AnganwadiLeftNav from "./AnganwadiLeftNav";
@@ -261,6 +262,11 @@ const [formData, setFormData] = useState({
       setFormData({ ...formData, [name]: files[0] });
     } else {
       setFormData({ ...formData, [name]: value });
+      let val = value;
+      if (name === "ifsc_code") {
+        val = value.toUpperCase().substring(0, 11);
+      }
+      setFormData({ ...formData, [name]: val });
     }
   };
 
@@ -601,6 +607,7 @@ const [formData, setFormData] = useState({
       value={formData.ifsc_code}
       onChange={handleInputChange}
       placeholder="Enter IFSC code"
+      maxLength={11}
     />
   </Form.Group>
 </Col>
@@ -614,6 +621,7 @@ const [formData, setFormData] = useState({
       onChange={handleInputChange}
       placeholder="Bank name (auto-filled)"
       readOnly
+      disabled
     />
   </Form.Group>
 </Col>
