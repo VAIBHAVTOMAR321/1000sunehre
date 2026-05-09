@@ -32,18 +32,19 @@ const [candidates, setCandidates] = useState([]);
    const [itemsPerPage] = useState(50);
    const [selectedCandidateDetails, setSelectedCandidateDetails] = useState(null);
    const [showDetailsModal, setShowDetailsModal] = useState(false);
-   const [formData, setFormData] = useState({
-     candidate_name: "",
-     phone: "",
-     aadhar_number: "",
-     aadhar_file: null,
-     lmp_date: "",
-     pan_no: "",
-     pan_file: null,
-     account_number: "",
-     ifsc_code: "",
-     dob_child: ""
-   });
+const [formData, setFormData] = useState({
+      candidate_name: "",
+      phone: "",
+      aadhar_number: "",
+      aadhar_file: null,
+      lmp_date: "",
+      pan_no: "",
+      pan_file: null,
+      account_number: "",
+      ifsc_code: "",
+      dob_child: "",
+      bank_name: ""
+    });
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
 
@@ -343,13 +344,47 @@ const [candidates, setCandidates] = useState([]);
 
   const totalPages = Math.ceil(displayCandidates.length / itemsPerPage);
 
-   useEffect(() => {
-     if (totalPages === 0) {
-       setCurrentPage(1);
-     } else if (currentPage > totalPages) {
-       setCurrentPage(totalPages);
-     }
-   }, [displayCandidates.length, itemsPerPage, currentPage, filterEligible, selectedInterventionFilter]);
+    useEffect(() => {
+      if (totalPages === 0) {
+        setCurrentPage(1);
+      } else if (currentPage > totalPages) {
+        setCurrentPage(totalPages);
+      }
+    }, [displayCandidates.length, itemsPerPage, currentPage, filterEligible, selectedInterventionFilter]);
+
+     // Fetch bank name when IFSC code is entered
+     useEffect(() => {
+       const fetchBankByIfsc = async () => {
+         if (formData.ifsc_code.length === 11) {
+           setLoading(true);
+           try {
+             const response = await axios.get(
+               `https://mahadevaaya.com/backend/api/get-bank-details/?ifsc_code=${formData.ifsc_code}`
+             );
+             console.log("response", response);
+
+             if (response.data && response.data.Bank) {
+               setFormData((prev) => ({
+                 ...prev,
+                 bank_name: response.data.Bank,
+               }));
+             } else {
+               setFormData((prev) => ({ ...prev, bank_name: "" }));
+               alert("Bank name not found for this IFSC code.");
+             }
+           } catch (error) {
+             console.error("Error fetching bank name:", error);
+             alert("Invalid IFSC code or server error.");
+           } finally {
+             setLoading(false);
+           }
+         } else {
+           setFormData((prev) => ({ ...prev, bank_name: "" }));
+         }
+       };
+
+       fetchBankByIfsc();
+     }, [formData.ifsc_code]);
 
   const handleCardClick = (filterType) => {
     setFilterEligible(filterType === 'eligible');
@@ -386,17 +421,18 @@ const [candidates, setCandidates] = useState([]);
         }
       });
 
-       console.log("📤 Submitting payload:", {
-         candidate_name: formData.candidate_name,
-         phone: formData.phone,
-         aadhar_number: formData.aadhar_number,
-         aadhar_file: formData.aadhar_file?.name || "not provided",
-         lmp_date: formData.lmp_date,
-         pan_no: formData.pan_no,
-         pan_file: formData.pan_file?.name || "not provided",
-         account_number: formData.account_number,
-         ifsc_code: formData.ifsc_code
-       });
+        console.log("📤 Submitting payload:", {
+          candidate_name: formData.candidate_name,
+          phone: formData.phone,
+          aadhar_number: formData.aadhar_number,
+          aadhar_file: formData.aadhar_file?.name || "not provided",
+          lmp_date: formData.lmp_date,
+          pan_no: formData.pan_no,
+          pan_file: formData.pan_file?.name || "not provided",
+          account_number: formData.account_number,
+          ifsc_code: formData.ifsc_code,
+          bank_name: formData.bank_name
+        });
 
       const response = await api.post("/candidate-reg/", submitData, {
         headers: {
@@ -408,17 +444,19 @@ const [candidates, setCandidates] = useState([]);
       alert("Candidate registered successfully!");
       setShowRegistrationForm(false);
       fetchCandidates();
-       setFormData({
-         candidate_name: "",
-         phone: "",
-         aadhar_number: "",
-         aadhar_file: null,
-         lmp_date: "",
-         pan_no: "",
-         pan_file: null,
-         account_number: "",
-         ifsc_code: ""
-       });
+        setFormData({
+          candidate_name: "",
+          phone: "",
+          aadhar_number: "",
+          aadhar_file: null,
+          lmp_date: "",
+          pan_no: "",
+          pan_file: null,
+          account_number: "",
+          ifsc_code: "",
+          dob_child: "",
+          bank_name: ""
+        });
     } catch (err) {
       const errorMsg = err.response?.data?.message || 
                       err.response?.data?.errors ||
@@ -554,18 +592,31 @@ const [candidates, setCandidates] = useState([]);
                        />
                     </Form.Group>
                   </Col>
-                  <Col md={3}>
-                    <Form.Group className="mb-3">
-<Form.Label className="form-label-custom">IFSC Code</Form.Label>
-                       <Form.Control
-                         type="text"
-                         name="ifsc_code"
-                         value={formData.ifsc_code}
-                         onChange={handleInputChange}
-                         placeholder="Enter IFSC code"
-                       />
-                    </Form.Group>
-                  </Col>
+<Col md={3}>
+  <Form.Group className="mb-3">
+    <Form.Label className="form-label-custom">IFSC Code</Form.Label>
+    <Form.Control
+      type="text"
+      name="ifsc_code"
+      value={formData.ifsc_code}
+      onChange={handleInputChange}
+      placeholder="Enter IFSC code"
+    />
+  </Form.Group>
+</Col>
+<Col md={3}>
+  <Form.Group className="mb-3">
+    <Form.Label className="form-label-custom">Bank Name</Form.Label>
+    <Form.Control
+      type="text"
+      name="bank_name"
+      value={formData.bank_name}
+      onChange={handleInputChange}
+      placeholder="Bank name (auto-filled)"
+      readOnly
+    />
+  </Form.Group>
+</Col>
                   <Col md={3}>
                     <Form.Group className="mb-3">
                       <Form.Label className="form-label-custom">PAN File</Form.Label>
