@@ -31,21 +31,18 @@ const AnganwadiDashboard = () => {
    const [selectedInterventionFilter, setSelectedInterventionFilter] = useState(null); // null = all, 1-4 for specific
    const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(50);
-  const [formData, setFormData] = useState({
-    candidate_name: "",
-    phone: "",
-    dob: "",
-    aadhar_number: "",
-    aadhar_file: null,
-    pregancy_num: "",
-    child_name: "",
-    lmp_date: "",
-    pan_no: "",
-    pan_file: null,
-    account_number: "",
-    ifsc_code: "",
-    dob_child: ""
-  });
+   const [formData, setFormData] = useState({
+     candidate_name: "",
+     phone: "",
+     aadhar_number: "",
+     aadhar_file: null,
+     lmp_date: "",
+     pan_no: "",
+     pan_file: null,
+     account_number: "",
+     ifsc_code: "",
+     dob_child: ""
+   });
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
 
@@ -388,21 +385,17 @@ const AnganwadiDashboard = () => {
         }
       });
 
-      console.log("📤 Submitting payload:", {
-        candidate_name: formData.candidate_name,
-        phone: formData.phone,
-        dob: formData.dob,
-        aadhar_number: formData.aadhar_number,
-        aadhar_file: formData.aadhar_file?.name || "not provided",
-        pregancy_num: formData.pregancy_num,
-        child_name: formData.child_name,
-        lmp_date: formData.lmp_date,
-        pan_no: formData.pan_no,
-        pan_file: formData.pan_file?.name || "not provided",
-        account_number: formData.account_number,
-        ifsc_code: formData.ifsc_code,
-        dob_child: formData.dob_child
-      });
+       console.log("📤 Submitting payload:", {
+         candidate_name: formData.candidate_name,
+         phone: formData.phone,
+         aadhar_number: formData.aadhar_number,
+         aadhar_file: formData.aadhar_file?.name || "not provided",
+         lmp_date: formData.lmp_date,
+         pan_no: formData.pan_no,
+         pan_file: formData.pan_file?.name || "not provided",
+         account_number: formData.account_number,
+         ifsc_code: formData.ifsc_code
+       });
 
       const response = await api.post("/candidate-reg/", submitData, {
         headers: {
@@ -414,21 +407,17 @@ const AnganwadiDashboard = () => {
       alert("Candidate registered successfully!");
       setShowRegistrationForm(false);
       fetchCandidates();
-      setFormData({
-        candidate_name: "",
-        phone: "",
-        dob: "",
-        aadhar_number: "",
-        aadhar_file: null,
-        pregancy_num: "",
-        child_name: "",
-        lmp_date: "",
-        pan_no: "",
-        pan_file: null,
-        account_number: "",
-        ifsc_code: "",
-        dob_child: ""
-      });
+       setFormData({
+         candidate_name: "",
+         phone: "",
+         aadhar_number: "",
+         aadhar_file: null,
+         lmp_date: "",
+         pan_no: "",
+         pan_file: null,
+         account_number: "",
+         ifsc_code: ""
+       });
     } catch (err) {
       const errorMsg = err.response?.data?.message || 
                       err.response?.data?.errors ||
@@ -482,80 +471,44 @@ const AnganwadiDashboard = () => {
                   </div>
                 )}
                 
-                <Row>
-                  <Col md>
-                    <Form.Group className="mb-3">
-                      <Form.Label className="form-label-custom">Candidate Name</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="candidate_name"
-                        value={formData.candidate_name}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col md>
-                    <Form.Group className="mb-3">
-                      <Form.Label className="form-label-custom">Phone</Form.Label>
-                      <Form.Control
-                        type="tel"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col md>
-                    <Form.Group className="mb-3">
-                      <Form.Label className="form-label-custom">Date of Birth</Form.Label>
-                      <Form.Control
-                        type="date"
-                        name="dob"
-                        value={formData.dob}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col md>
-                    <Form.Group className="mb-3">
-                      <Form.Label className="form-label-custom">Aadhar Number</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="aadhar_number"
-                        value={formData.aadhar_number}
-                        onChange={handleInputChange}
-                        required
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col md>
-                    <Form.Group className="mb-3">
-                      <Form.Label className="form-label-custom">Pregnancy Number</Form.Label>
-                      <Form.Control
-                        type="number"
-                        name="pregancy_num"
-                        value={formData.pregancy_num}
-                        onChange={handleInputChange}
-                      />
-                    </Form.Group>
-                  </Col>
-                </Row>
+                 <Row>
+                   <Col md>
+                     <Form.Group className="mb-3">
+                       <Form.Label className="form-label-custom">Candidate Name</Form.Label>
+                       <Form.Control
+                         type="text"
+                         name="candidate_name"
+                         value={formData.candidate_name}
+                         onChange={handleInputChange}
+                         required
+                       />
+                     </Form.Group>
+                   </Col>
+                   <Col md>
+                     <Form.Label className="form-label-custom">Phone</Form.Label>
+                       <Form.Control
+                         type="tel"
+                         name="phone"
+                         value={formData.phone}
+                         onChange={handleInputChange}
+                         required
+                       />
+                   </Col>
+                   <Col md>
+                     <Form.Group className="mb-3">
+                       <Form.Label className="form-label-custom">Aadhar Number</Form.Label>
+                       <Form.Control
+                         type="text"
+                         name="aadhar_number"
+                         value={formData.aadhar_number}
+                         onChange={handleInputChange}
+                         required
+                       />
+                     </Form.Group>
+                   </Col>
+                 </Row>
 
                 <Row>
-                  <Col md={3}>
-                    <Form.Group className="mb-3">
-                      <Form.Label className="form-label-custom">Child Name</Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="child_name"
-                        value={formData.child_name}
-                        onChange={handleInputChange}
-                      />
-                    </Form.Group>
-                  </Col>
                   <Col md={3}>
                     <Form.Group className="mb-3">
                       <Form.Label className="form-label-custom">LMP Date</Form.Label>
@@ -564,17 +517,7 @@ const AnganwadiDashboard = () => {
                         name="lmp_date"
                         value={formData.lmp_date}
                         onChange={handleInputChange}
-                      />
-                    </Form.Group>
-                  </Col>
-                  <Col md={3}>
-                    <Form.Group className="mb-3">
-                      <Form.Label className="form-label-custom">Child DOB</Form.Label>
-                      <Form.Control
-                        type="date"
-                        name="dob_child"
-                        value={formData.dob_child}
-                        onChange={handleInputChange}
+                        required
                       />
                     </Form.Group>
                   </Col>
@@ -735,18 +678,14 @@ const AnganwadiDashboard = () => {
                                 <th style={{ minWidth: '110px' }}>{int.name}<br/>Payment</th>
                               </React.Fragment>
                             ))}
-                           <th style={{ minWidth: '130px' }}>Candidate ID</th>
-                           <th style={{ minWidth: '150px' }}>Name</th>
-                           <th style={{ minWidth: '110px' }}>Phone</th>
-                           <th style={{ minWidth: '110px' }}>LMP Date</th>
-                           <th style={{ minWidth: '100px' }}>Women DOB</th>
-                           <th style={{ minWidth: '100px' }}>Child DOB</th>
-                           <th style={{ minWidth: '120px' }}>Child Name</th>
-                           <th style={{ minWidth: '70px' }}>Preg #</th>
-                           <th style={{ minWidth: '130px' }}>Aadhar Number</th>
-                           <th style={{ minWidth: '120px' }}>PAN Number</th>
-                           <th style={{ minWidth: '140px' }}>Account Number</th>
-                           <th style={{ minWidth: '100px' }}>IFSC Code</th>
+                            <th style={{ minWidth: '130px' }}>Candidate ID</th>
+                            <th style={{ minWidth: '150px' }}>Name</th>
+                            <th style={{ minWidth: '110px' }}>Phone</th>
+                            <th style={{ minWidth: '110px' }}>LMP Date</th>
+                            <th style={{ minWidth: '130px' }}>Aadhar Number</th>
+                            <th style={{ minWidth: '120px' }}>PAN Number</th>
+                            <th style={{ minWidth: '140px' }}>Account Number</th>
+                            <th style={{ minWidth: '100px' }}>IFSC Code</th>
                          <th style={{ minWidth: '100px' }}>Verified</th>
                          <th style={{ minWidth: '80px' }}>Active</th>
                          <th style={{ minWidth: '100px' }}>Aadhar File</th>
@@ -832,18 +771,14 @@ const AnganwadiDashboard = () => {
                                      </React.Fragment>
                                    );
                                  })}
-                                 <td><span className="badge bg-primary">{c.candidate_id}</span></td>
-                                 <td className="fw-semibold">{c.candidate_name}</td>
-                                 <td>{c.phone}</td>
-                                 <td>{c.lmp_date}</td>
-                                 <td>{c.dob}</td>
-                                 <td>{c.dob_child}</td>
-                                 <td>{c.child_name}</td>
-                                 <td>{c.pregancy_num}</td>
-                                 <td><code className="text-muted small">{c.aadhar_number}</code></td>
-                                 <td><span className="badge bg-secondary">{c.pan_no}</span></td>
-                                 <td><code className="text-muted small">{c.account_number}</code></td>
-                                 <td><span className="badge bg-secondary">{c.ifsc_code}</span></td>
+                                  <td><span className="badge bg-primary">{c.candidate_id}</span></td>
+                                  <td className="fw-semibold">{c.candidate_name}</td>
+                                  <td>{c.phone}</td>
+                                  <td>{c.lmp_date}</td>
+                                  <td><code className="text-muted small">{c.aadhar_number}</code></td>
+                                  <td><span className="badge bg-secondary">{c.pan_no}</span></td>
+                                  <td><code className="text-muted small">{c.account_number}</code></td>
+                                  <td><span className="badge bg-secondary">{c.ifsc_code}</span></td>
                                  <td>
                                    <span className={`badge ${c.is_verified ? 'bg-success' : 'bg-warning'}`}>
                                      {c.is_verified ? 'Yes' : 'No'}
