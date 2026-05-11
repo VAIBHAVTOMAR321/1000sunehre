@@ -101,26 +101,26 @@ const Login = () => {
     }
   }, [roleOptions]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    setError('');
+   const handleChange = (e) => {
+     const { name, value } = e.target;
+     setFormData(prev => ({ ...prev, [name]: value }));
+     setError('');
 
-    // Reset dropdown selections and dependent data when role changes
-    if (name === 'role') {
-      setSelectedDistrict('');
-      setSelectedProject('');
-      setSelectedSector('');
-      setFormData(prev => ({ ...prev, email_or_phone: '' }));
-      const emailValue = value === 'director' ? 'Directorate' : '';
-      setFormData(prev => ({ ...prev, email_or_phone: emailValue }));
-      setDistricts([]);
-      setProjects([]);
-      setSectors([]);
-      setAnganwadis([]);
-      setSupervisorProjectsData([]);
-    }
-  };
+     // Reset dropdown selections and dependent data when role changes
+     if (name === 'role') {
+       setSelectedDistrict('');
+       setSelectedProject('');
+       setSelectedSector('');
+       setFormData(prev => ({ ...prev, email_or_phone: '' }));
+       const emailValue = value === 'director' ? 'Directorate' : value === 'it-cell' ? 'IT Cell' : '';
+       setFormData(prev => ({ ...prev, email_or_phone: emailValue }));
+       setDistricts([]);
+       setProjects([]);
+       setSectors([]);
+       setAnganwadis([]);
+       setSupervisorProjectsData([]);
+     }
+   };
 
   // Fetching logic for Anganwadi dropdowns
   useEffect(() => {
