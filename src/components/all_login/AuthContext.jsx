@@ -208,7 +208,7 @@ export function AuthProvider({ children }) {
           }
 
           // Proactively refresh tokens immediately on page load/refresh
-          refreshAccessToken();
+          // Removed: Proactive refresh is handled by a separate useEffect with an interval.
         } else {
           logout();
         }
@@ -218,7 +218,10 @@ export function AuthProvider({ children }) {
       }
     }
     setIsReady(true);
-  }, [logout, refreshAccessToken]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Run only once on mount to restore authentication state.
+          // Dependencies like 'logout' change when we set state inside this effect, 
+          // which would cause an infinite update loop if included.
 
   // Keep tokensRef in sync with state for the axios interceptors
   useEffect(() => {

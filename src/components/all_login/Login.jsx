@@ -30,6 +30,7 @@ const Login = () => {
   const [selectedDistrict, setSelectedDistrict] = useState('');
   const [selectedProject, setSelectedProject] = useState('');
   const [selectedSector, setSelectedSector] = useState('');
+  const [supervisorProjectsData, setSupervisorProjectsData] = useState([]);
 
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -103,18 +104,34 @@ const Login = () => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     setError('');
+
+    // Reset dropdown selections and dependent data when role changes
+    if (name === 'role') {
+      setSelectedDistrict('');
+      setSelectedProject('');
+      setSelectedSector('');
+      setFormData(prev => ({ ...prev, email_or_phone: '' }));
+      setDistricts([]);
+      setProjects([]);
+      setSectors([]);
+      setAnganwadis([]);
+      setSupervisorProjectsData([]);
+    }
   };
 
   // Fetching logic for Anganwadi dropdowns
   useEffect(() => {
-    if (formData.role === 'anganwadi') {
+    if (formData.role === 'anganwadi' || formData.role === 'supervisor') {
       fetchDistricts();
     }
   }, [formData.role]);
 
   const fetchDistricts = async () => {
+    const url = formData.role === 'anganwadi'
+      ? 'https://mahadevaaya.com/golden100days/golden100days_backend/api/anganwadi-dropdown/'
+      : 'https://mahadevaaya.com/golden100days/golden100days_backend/api/sector-dropdown/';
     try {
-      const res = await axios.get('https://mahadevaaya.com/golden100days/golden100days_backend/api/anganwadi-dropdown/');
+      const res = await axios.get(url);
       if (res.data.success) setDistricts(res.data.data);
     } catch (err) { console.error("Error fetching districts", err); }
   };
@@ -126,10 +143,24 @@ const Login = () => {
     setSelectedSector('');
     setFormData(prev => ({ ...prev, email_or_phone: '' }));
     setProjects([]); setSectors([]); setAnganwadis([]);
+    setSupervisorProjectsData([]);
+
     if (district) {
+      const url = formData.role === 'anganwadi'
+        ? `https://mahadevaaya.com/golden100days/golden100days_backend/api/anganwadi-dropdown/?district=${district}`
+        : `https://mahadevaaya.com/golden100days/golden100days_backend/api/sector-dropdown/?district=${district}`;
+
       try {
-        const res = await axios.get(`https://mahadevaaya.com/golden100days/golden100days_backend/api/anganwadi-dropdown/?district=${district}`);
-        if (res.data.success) setProjects(res.data.data);
+        const res = await axios.get(url);
+        if (res.data.success) {
+          if (formData.role === 'supervisor') {
+            // Sector dropdown API returns projects with nested sectors
+            setSupervisorProjectsData(res.data.data);
+            setProjects(res.data.data.map(item => ({ project: item.project_code })));
+          } else {
+            setProjects(res.data.data);
+          }
+        }
       } catch (err) { console.error("Error fetching projects", err); }
     }
   };
@@ -140,24 +171,36 @@ const Login = () => {
     setSelectedSector('');
     setFormData(prev => ({ ...prev, email_or_phone: '' }));
     setSectors([]); setAnganwadis([]);
+
     if (project) {
-      try {
-        const res = await axios.get(`https://mahadevaaya.com/golden100days/golden100days_backend/api/anganwadi-dropdown/?district=${selectedDistrict}&project=${project}`);
-        if (res.data.success) setSectors(res.data.data);
-      } catch (err) { console.error("Error fetching sectors", err); }
+      if (formData.role === 'supervisor') {
+        const projData = supervisorProjectsData.find(p => p.project_code === project);
+        if (projData) setSectors(projData.sectors);
+      } else {
+        try {
+          const res = await axios.get(`https://mahadevaaya.com/golden100days/golden100days_backend/api/anganwadi-dropdown/?district=${selectedDistrict}&project=${project}`);
+          if (res.data.success) setSectors(res.data.data);
+        } catch (err) { console.error("Error fetching sectors", err); }
+      }
     }
   };
 
   const handleSectorChange = async (e) => {
     const sector = e.target.value;
     setSelectedSector(sector);
-    setFormData(prev => ({ ...prev, email_or_phone: '' }));
     setAnganwadis([]);
-    if (sector) {
-      try {
-        const res = await axios.get(`https://mahadevaaya.com/golden100days/golden100days_backend/api/anganwadi-dropdown/?district=${selectedDistrict}&project=${selectedProject}&sector=${sector}`);
-        if (res.data.success) setAnganwadis(res.data.data);
-      } catch (err) { console.error("Error fetching anganwadis", err); }
+
+    if (formData.role === 'supervisor') {
+      // For supervisor, the selected sector name is the username
+      setFormData(prev => ({ ...prev, email_or_phone: sector }));
+    } else {
+      setFormData(prev => ({ ...prev, email_or_phone: '' }));
+      if (sector) {
+        try {
+          const res = await axios.get(`https://mahadevaaya.com/golden100days/golden100days_backend/api/anganwadi-dropdown/?district=${selectedDistrict}&project=${selectedProject}&sector=${sector}`);
+          if (res.data.success) setAnganwadis(res.data.data);
+        } catch (err) { console.error("Error fetching anganwadis", err); }
+      }
     }
   };
 
@@ -314,7 +357,7 @@ const Login = () => {
                 </div>
               )}
 
-              {formData.role === 'anganwadi' ? (
+              {formData.role === 'anganwadi' || formData.role === 'supervisor' ? (
                 <>
                   <div className="form-group">
                     <label>{content.districtLabel}</label>
@@ -356,7 +399,8 @@ const Login = () => {
                     </select>
                   </div>
 
-                  <div className="form-group">
+                  {formData.role === 'anganwadi' && (
+                    <div className="form-group">
                     <label>{content.anganwadiLabel}</label>
                     <select 
                       className="form-select custom-login-select" 
@@ -371,6 +415,7 @@ const Login = () => {
                       ))}
                     </select>
                   </div>
+                  )}
                 </>
               ) : (
                 <div className="form-group">
