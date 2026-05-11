@@ -9,8 +9,8 @@ import Womenlogo from '../../assets/images/women_logo.jpeg';
 
 const Login = () => {
   const [formData, setFormData] = useState({
-    role: 'supervisor',
-    email_or_phone: '',
+    role: 'it-cell',
+    email_or_phone: 'IT Cell',
     password: '',
   });
   const [loading, setLoading] = useState(false);
@@ -86,6 +86,7 @@ const Login = () => {
       { value: 'cdpo', label: 'परियोजना कार्यक्रम अधिकारी', icon: 'bi-person-badge' },
       { value: 'supervisor', label: 'सुपरवाईजर', icon: 'bi-person-check' },
       { value: 'anganwadi', label: 'आंगनबाड़ी केन्द्र', icon: 'bi-house-door' },
+      { value: 'it-cell', label: 'आईटी सेल', icon: 'bi-cpu' },
     ];
   }, []);
 
@@ -111,6 +112,8 @@ const Login = () => {
       setSelectedProject('');
       setSelectedSector('');
       setFormData(prev => ({ ...prev, email_or_phone: '' }));
+      const emailValue = value === 'director' ? 'Directorate' : '';
+      setFormData(prev => ({ ...prev, email_or_phone: emailValue }));
       setDistricts([]);
       setProjects([]);
       setSectors([]);
@@ -257,6 +260,9 @@ const Login = () => {
         break;
       case 'anganwadi':
         navigate('/AnganwadiDashboard');
+        break;
+      case 'it-cell':
+        navigate('/ITCellDashboard');
         break;
       default:
         navigate('/UserDashboard');
@@ -458,6 +464,7 @@ const Login = () => {
                       value={formData.email_or_phone}
                       onChange={handleChange}
                       placeholder={content.userIdPlaceholder}
+                      readOnly={['director', 'it-cell'].includes(formData.role)}
                     />
                   </div>
                 </div>
