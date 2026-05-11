@@ -453,22 +453,22 @@ const Login = () => {
                   </div>
                   )}
                 </>
-              ) : (
-                <div className="form-group">
-                  <label>{content.userIdLabel}</label>
-                  <div className="input-wrapper-text">
-                    <i className="bi bi-person"></i>
-                    <input
-                      type="text"
-                      name="email_or_phone"
-                      value={formData.email_or_phone}
-                      onChange={handleChange}
-                      placeholder={content.userIdPlaceholder}
-                      readOnly={['director', 'it-cell'].includes(formData.role)}
-                    />
-                  </div>
-                </div>
-              )}
+               ) : (
+                 <div className="form-group">
+                   <label>{content.userIdLabel}</label>
+                   <div className="input-wrapper">
+                     <i className="bi bi-person"></i>
+                     <input
+                       type="text"
+                       name="email_or_phone"
+                       value={formData.email_or_phone}
+                       onChange={handleChange}
+                       placeholder={content.userIdPlaceholder}
+                       readOnly={['director', 'it-cell'].includes(formData.role)}
+                     />
+                   </div>
+                 </div>
+               )}
 
               <div className="form-group">
                 <label>{content.passwordLabel}</label>
