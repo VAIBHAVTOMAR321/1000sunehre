@@ -1167,12 +1167,15 @@ const [candidates, setCandidates] = useState([]);
                <Col md={6}>
                  <strong>Account Number:</strong> {selectedCandidateDetails.account_number || '-'}
                </Col>
-               <Col md={6}>
-                 <strong>IFSC Code:</strong> {selectedCandidateDetails.ifsc_code || '-'}
-               </Col>
-               <Col md={6}>
-                 <strong>Verified:</strong> {selectedCandidateDetails.is_verified ? 'Yes' : 'No'}
-               </Col>
+                <Col md={6}>
+                  <strong>IFSC Code:</strong> {selectedCandidateDetails.ifsc_code || '-'}
+                </Col>
+                <Col md={6}>
+                  <strong>Bank Name:</strong> {selectedCandidateDetails.bank_name || '-'}
+                </Col>
+                <Col md={6}>
+                  <strong>Verified:</strong> {selectedCandidateDetails.is_verified ? 'Yes' : 'No'}
+                </Col>
                <Col md={6}>
                  <strong>Active:</strong> {selectedCandidateDetails.is_active ? 'Yes' : 'No'}
                </Col>
