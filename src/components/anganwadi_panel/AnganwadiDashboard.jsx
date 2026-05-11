@@ -33,7 +33,7 @@ const [candidates, setCandidates] = useState([]);
    const [itemsPerPage] = useState(50);
    const [selectedCandidateDetails, setSelectedCandidateDetails] = useState(null);
    const [showDetailsModal, setShowDetailsModal] = useState(false);
-const [formData, setFormData] = useState({
+ const [formData, setFormData] = useState({
       candidate_name: "",
       phone: "",
       aadhar_number: "",
@@ -43,7 +43,6 @@ const [formData, setFormData] = useState({
       pan_file: null,
       account_number: "",
       ifsc_code: "",
-      dob_child: "",
       bank_name: ""
     });
   const [submitting, setSubmitting] = useState(false);
@@ -407,6 +406,7 @@ const [formData, setFormData] = useState({
   };
 
   const handleSubmit = async (e) => {
+    e.preventDefault();
     setSubmitting(true);
     setSubmitError("");
 
@@ -452,19 +452,18 @@ const [formData, setFormData] = useState({
       alert("Candidate registered successfully!");
       setShowRegistrationForm(false);
       fetchCandidates();
-        setFormData({
-          candidate_name: "",
-          phone: "",
-          aadhar_number: "",
-          aadhar_file: null,
-          lmp_date: "",
-          pan_no: "",
-          pan_file: null,
-          account_number: "",
-          ifsc_code: "",
-          dob_child: "",
-          bank_name: ""
-        });
+         setFormData({
+           candidate_name: "",
+           phone: "",
+           aadhar_number: "",
+           aadhar_file: null,
+           lmp_date: "",
+           pan_no: "",
+           pan_file: null,
+           account_number: "",
+           ifsc_code: "",
+           bank_name: ""
+         });
     } catch (err) {
       const errorMsg = err.response?.data?.message || 
                       err.response?.data?.errors ||
@@ -569,16 +568,12 @@ const [formData, setFormData] = useState({
                        />
                     </Form.Group>
                   </Col>
-                 </Row>
+                  </Row>
 
-                <Row>
-                 
-                </Row>
-
-                <Row>
-                  <Col md={3}>
-                    <Form.Group className="mb-3">
-<Form.Label className="form-label-custom">PAN Number</Form.Label>
+                 <Row>
+                   <Col md={3}>
+                     <Form.Group className="mb-3">
+                       <Form.Label className="form-label-custom">PAN Number</Form.Label>
                        <Form.Control
                          type="text"
                          name="pan_no"
@@ -586,11 +581,11 @@ const [formData, setFormData] = useState({
                          onChange={handleInputChange}
                          placeholder="Enter PAN number"
                        />
-                    </Form.Group>
-                  </Col>
-                  <Col md={3}>
-                    <Form.Group className="mb-3">
-<Form.Label className="form-label-custom">Account Number</Form.Label>
+                     </Form.Group>
+                   </Col>
+                   <Col md={3}>
+                     <Form.Group className="mb-3">
+                       <Form.Label className="form-label-custom">Account Number</Form.Label>
                        <Form.Control
                          type="text"
                          name="account_number"
@@ -598,61 +593,64 @@ const [formData, setFormData] = useState({
                          onChange={handleInputChange}
                          placeholder="Enter account number"
                        />
-                    </Form.Group>
-                  </Col>
-<Col md={3}>
-  <Form.Group className="mb-3">
-    <Form.Label className="form-label-custom">IFSC Code</Form.Label>
-    <Form.Control
-      type="text"
-      name="ifsc_code"
-      value={formData.ifsc_code}
-      onChange={handleInputChange}
-      placeholder="Enter IFSC code"
-      maxLength={11}
-    />
-  </Form.Group>
-</Col>
-<Col md={3}>
-  <Form.Group className="mb-3">
-    <Form.Label className="form-label-custom">Bank Name</Form.Label>
-    <Form.Control
-      type="text"
-      name="bank_name"
-      value={formData.bank_name}
-      onChange={handleInputChange}
-      placeholder="Bank name (auto-filled)"
-      readOnly
-      disabled
-    />
-  </Form.Group>
-</Col>
-                  <Col md={3}>
-                    <Form.Group className="mb-3">
-                      <Form.Label className="form-label-custom">PAN File</Form.Label>
-                      <Form.Control
-                        type="file"
-                        name="pan_file"
-                        onChange={handleInputChange}
-                        accept=".pdf,.jpg,.jpeg,.png"
-                      />
-                    </Form.Group>
-                  </Col>
-                </Row>
+                     </Form.Group>
+                   </Col>
+                   <Col md={3}>
+                     <Form.Group className="mb-3">
+                       <Form.Label className="form-label-custom">IFSC Code</Form.Label>
+                       <Form.Control
+                         type="text"
+                         name="ifsc_code"
+                         value={formData.ifsc_code}
+                         onChange={handleInputChange}
+                         placeholder="Enter IFSC code"
+                         maxLength={11}
+                       />
+                     </Form.Group>
+                   </Col>
+                   <Col md={3}>
+                     <Form.Group className="mb-3">
+                       <Form.Label className="form-label-custom">Bank Name</Form.Label>
+                       <Form.Control
+                         type="text"
+                         name="bank_name"
+                         value={formData.bank_name}
+                         onChange={handleInputChange}
+                         placeholder="Bank name (auto-filled)"
+                         readOnly
+                         disabled
+                       />
+                     </Form.Group>
+                   </Col>
+                 </Row>
 
-                <Row>
-                  <Col md={3}>
-                    <Form.Group className="mb-3">
-                      <Form.Label className="form-label-custom">Aadhar File</Form.Label>
-                      <Form.Control
-                        type="file"
-                        name="aadhar_file"
-                        onChange={handleInputChange}
-                        accept=".pdf,.jpg,.jpeg,.png"
-                      />
-                    </Form.Group>
-                  </Col>
-                </Row>
+                 <Row>
+                   <Col md={3}>
+                     <Form.Group className="mb-3">
+                       <Form.Label className="form-label-custom">PAN File</Form.Label>
+                       <Form.Control
+                         type="file"
+                         name="pan_file"
+                         onChange={handleInputChange}
+                         accept=".pdf,.jpg,.jpeg,.png"
+                       />
+                     </Form.Group>
+                   </Col>
+                 </Row>
+
+                 <Row>
+                   <Col md={3}>
+                     <Form.Group className="mb-3">
+                       <Form.Label className="form-label-custom">Aadhar File</Form.Label>
+                       <Form.Control
+                         type="file"
+                         name="aadhar_file"
+                         onChange={handleInputChange}
+                         accept=".pdf,.jpg,.jpeg,.png"
+                       />
+                     </Form.Group>
+                   </Col>
+                 </Row>
 
                 <div className="d-flex justify-content-end gap-2">
                   <Button variant="secondary" onClick={() => setShowRegistrationForm(false)}>
