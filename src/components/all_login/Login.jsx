@@ -21,6 +21,16 @@ const Login = () => {
   const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
   const [resetPasswordUsername, setResetPasswordUsername] = useState('');
   const [resetPasswordRole, setResetPasswordRole] = useState('');
+
+  // New state for Anganwadi dropdowns
+  const [districts, setDistricts] = useState([]);
+  const [projects, setProjects] = useState([]);
+  const [sectors, setSectors] = useState([]);
+  const [anganwadis, setAnganwadis] = useState([]);
+  const [selectedDistrict, setSelectedDistrict] = useState('');
+  const [selectedProject, setSelectedProject] = useState('');
+  const [selectedSector, setSelectedSector] = useState('');
+
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -32,6 +42,10 @@ const Login = () => {
     userIdLabel: "यूजर आईडी / फोन",
     userIdPlaceholder: "यूजर आईडी या फोन दर्ज करें",
     passwordLabel: "पासवर्ड",
+    districtLabel: "जिला चुनें",
+    projectLabel: "परियोजना चुनें",
+    sectorLabel: "सेक्टर चुनें",
+    anganwadiLabel: "आंगनबाड़ी केंद्र चुनें",
     passwordPlaceholder: "पासवर्ड दर्ज करें",
     rememberMe: "मुझे याद रखें",
     signIn: "साइन इन करें",
@@ -89,6 +103,62 @@ const Login = () => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     setError('');
+  };
+
+  // Fetching logic for Anganwadi dropdowns
+  useEffect(() => {
+    if (formData.role === 'anganwadi') {
+      fetchDistricts();
+    }
+  }, [formData.role]);
+
+  const fetchDistricts = async () => {
+    try {
+      const res = await axios.get('https://mahadevaaya.com/golden100days/golden100days_backend/api/anganwadi-dropdown/');
+      if (res.data.success) setDistricts(res.data.data);
+    } catch (err) { console.error("Error fetching districts", err); }
+  };
+
+  const handleDistrictChange = async (e) => {
+    const district = e.target.value;
+    setSelectedDistrict(district);
+    setSelectedProject('');
+    setSelectedSector('');
+    setFormData(prev => ({ ...prev, email_or_phone: '' }));
+    setProjects([]); setSectors([]); setAnganwadis([]);
+    if (district) {
+      try {
+        const res = await axios.get(`https://mahadevaaya.com/golden100days/golden100days_backend/api/anganwadi-dropdown/?district=${district}`);
+        if (res.data.success) setProjects(res.data.data);
+      } catch (err) { console.error("Error fetching projects", err); }
+    }
+  };
+
+  const handleProjectChange = async (e) => {
+    const project = e.target.value;
+    setSelectedProject(project);
+    setSelectedSector('');
+    setFormData(prev => ({ ...prev, email_or_phone: '' }));
+    setSectors([]); setAnganwadis([]);
+    if (project) {
+      try {
+        const res = await axios.get(`https://mahadevaaya.com/golden100days/golden100days_backend/api/anganwadi-dropdown/?district=${selectedDistrict}&project=${project}`);
+        if (res.data.success) setSectors(res.data.data);
+      } catch (err) { console.error("Error fetching sectors", err); }
+    }
+  };
+
+  const handleSectorChange = async (e) => {
+    const sector = e.target.value;
+    setSelectedSector(sector);
+    setFormData(prev => ({ ...prev, email_or_phone: '' }));
+    setAnganwadis([]);
+    if (sector) {
+      try {
+        const res = await axios.get(`https://mahadevaaya.com/golden100days/golden100days_backend/api/anganwadi-dropdown/?district=${selectedDistrict}&project=${selectedProject}&sector=${sector}`);
+        if (res.data.success) setAnganwadis(res.data.data);
+      } catch (err) { console.error("Error fetching anganwadis", err); }
+    }
   };
 
   const handleLoginSuccess = (data) => {
@@ -244,19 +314,79 @@ const Login = () => {
                 </div>
               )}
 
-              <div className="form-group">
-                <label>{content.userIdLabel}</label>
-                <div className="input-wrapper-text">
-                  <i className="bi bi-person"></i>
-                  <input
-                    type="text"
-                    name="email_or_phone"
-                    value={formData.email_or_phone}
-                    onChange={handleChange}
-                    placeholder={content.userIdPlaceholder}
-                  />
+              {formData.role === 'anganwadi' ? (
+                <>
+                  <div className="form-group">
+                    <label>{content.districtLabel}</label>
+                    <select className="form-select custom-login-select" value={selectedDistrict} onChange={handleDistrictChange}>
+                      <option value="">{content.districtLabel}</option>
+                      {districts.map((d, i) => (
+                        <option key={i} value={d.district}>{d.district}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="form-group">
+                    <label>{content.projectLabel}</label>
+                    <select 
+                      className="form-select custom-login-select" 
+                      value={selectedProject} 
+                      onChange={handleProjectChange} 
+                      disabled={!selectedDistrict}
+                    >
+                      <option value="">{content.projectLabel}</option>
+                      {projects.map((p, i) => (
+                        <option key={i} value={p.project}>{p.project}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="form-group">
+                    <label>{content.sectorLabel}</label>
+                    <select 
+                      className="form-select custom-login-select" 
+                      value={selectedSector} 
+                      onChange={handleSectorChange} 
+                      disabled={!selectedProject}
+                    >
+                      <option value="">{content.sectorLabel}</option>
+                      {sectors.map((s, i) => (
+                        <option key={i} value={s.sector}>{s.sector}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="form-group">
+                    <label>{content.anganwadiLabel}</label>
+                    <select 
+                      className="form-select custom-login-select" 
+                      name="email_or_phone" 
+                      value={formData.email_or_phone} 
+                      onChange={handleChange} 
+                      disabled={!selectedSector}
+                    >
+                      <option value="">{content.anganwadiLabel}</option>
+                      {anganwadis.map((a) => (
+                        <option key={a.id} value={a.awc_code}>{a.display_name}</option>
+                      ))}
+                    </select>
+                  </div>
+                </>
+              ) : (
+                <div className="form-group">
+                  <label>{content.userIdLabel}</label>
+                  <div className="input-wrapper-text">
+                    <i className="bi bi-person"></i>
+                    <input
+                      type="text"
+                      name="email_or_phone"
+                      value={formData.email_or_phone}
+                      onChange={handleChange}
+                      placeholder={content.userIdPlaceholder}
+                    />
+                  </div>
                 </div>
-              </div>
+              )}
 
               <div className="form-group">
                 <label>{content.passwordLabel}</label>
