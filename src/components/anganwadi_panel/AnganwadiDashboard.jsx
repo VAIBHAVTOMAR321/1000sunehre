@@ -19,7 +19,7 @@ const AnganwadiDashboard = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [isTablet, setIsTablet] = useState(false);
 
-  const { user, api } = useAuth();
+  const { user, api, uniqueId } = useAuth();
   const [showRegistrationForm, setShowRegistrationForm] = useState(false);
 
 const [candidates, setCandidates] = useState([]);
@@ -276,18 +276,20 @@ const [formData, setFormData] = useState({
       const response = await api.get("/candidate/details/", {
         params: { ca_id: user?.user_id || "USR-000002" }
       });
-      const processedData = (response?.data?.data || []).map(c => {
-        const completed = [];
-        interventions.forEach(int => {
-          if (c[int.propName]?.length > 0) completed.push(int.id);
+      const processedData = (response?.data?.data || [])
+        .filter(c => c.registered_by === uniqueId)
+        .map(c => {
+          const completed = [];
+          interventions.forEach(int => {
+            if (c[int.propName]?.length > 0) completed.push(int.id);
+          });
+          return {
+            ...c,
+            completed_interventions: completed
+          };
         });
-        return {
-          ...c,
-          completed_interventions: completed
-        };
-      });
       setCandidates(processedData);
-      setTotalRegistrations(response.data.count || 0);
+      setTotalRegistrations(processedData.length);
       
       const eligible = processedData.filter(candidate => {
         return interventions.some(int => {
@@ -312,7 +314,7 @@ const [formData, setFormData] = useState({
 
   useEffect(() => {
     fetchCandidates();
-  }, [user]);
+  }, [user, uniqueId]);
 
    const displayCandidates = useMemo(() => {
      let filtered = candidates;
