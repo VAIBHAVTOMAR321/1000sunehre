@@ -30,26 +30,26 @@ const SupervisorDashBoard = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const fetchCandidates = async () => {
-    setLoading(true);
-    try {
-      const response = await api.get("/candidate/details/", {
-        params: { registred_by: user?.user_id || "USR-000002" }
-      });
-      setCandidates(response.data.data || []);
-      setTotalRegistrations(response.data.count || 0);
-    } catch (err) {
-      console.error("Failed to fetch candidates:", err);
-      setCandidates([]);
-      setTotalRegistrations(0);
-    } finally {
-      setLoading(false);
-    }
-  };
+   const fetchCandidates = async () => {
+     setLoading(true);
+     try {
+       const response = await api.get("/candidate-by-sector/", {
+         params: { sector_id: uniqueId }
+       });
+       setCandidates(response.data.data || []);
+       setTotalRegistrations(response.data.count || 0);
+     } catch (err) {
+       console.error("Failed to fetch candidates:", err);
+       setCandidates([]);
+       setTotalRegistrations(0);
+     } finally {
+       setLoading(false);
+     }
+   };
 
-  useEffect(() => {
-    fetchCandidates();
-  }, [user]);
+   useEffect(() => {
+     fetchCandidates();
+   }, [user, uniqueId]);
 
   useEffect(() => {
     const totalPages = Math.ceil(candidates.length / itemsPerPage);
@@ -136,27 +136,23 @@ const handleCloseTable = () => {
               <>
                 <div className="table-responsive">
                   <Table striped bordered hover size="sm" className="table-hover align-middle mb-0">
-                    <thead className="table-thead" style={{ backgroundColor: '#2c3e50' }}>
-                      <tr>
-                        <th className="text-center" style={{ minWidth: '50px' }}>#</th>
-                        <th style={{ minWidth: '130px' }}>Candidate ID</th>
-                        <th style={{ minWidth: '150px' }}>Name</th>
-                        <th style={{ minWidth: '110px' }}>Phone</th>
-                        <th style={{ minWidth: '110px' }}>LMP Date</th>
-                        <th style={{ minWidth: '100px' }}>Women DOB</th>
-                        <th style={{ minWidth: '100px' }}>Child DOB</th>
-                        <th style={{ minWidth: '120px' }}>Child Name</th>
-                        <th style={{ minWidth: '70px' }}>Preg #</th>
-                        <th style={{ minWidth: '130px' }}>Aadhar Number</th>
-                        <th style={{ minWidth: '120px' }}>PAN Number</th>
-                        <th style={{ minWidth: '140px' }}>Account Number</th>
-                        <th style={{ minWidth: '100px' }}>IFSC Code</th>
-                        <th style={{ minWidth: '100px' }}>Verified</th>
-                        <th style={{ minWidth: '80px' }}>Active</th>
-                        <th style={{ minWidth: '100px' }}>Aadhar File</th>
-                        <th style={{ minWidth: '100px' }}>PAN File</th>
-                      </tr>
-                    </thead>
+                     <thead className="table-thead" style={{ backgroundColor: '#2c3e50' }}>
+                       <tr>
+                         <th className="text-center" style={{ minWidth: '50px' }}>#</th>
+                         <th style={{ minWidth: '130px' }}>Candidate ID</th>
+                         <th style={{ minWidth: '150px' }}>Name</th>
+                         <th style={{ minWidth: '110px' }}>Phone</th>
+                         <th style={{ minWidth: '110px' }}>LMP Date</th>
+                         <th style={{ minWidth: '130px' }}>Aadhar Number</th>
+                         <th style={{ minWidth: '120px' }}>PAN Number</th>
+                         <th style={{ minWidth: '140px' }}>Account Number</th>
+                         <th style={{ minWidth: '100px' }}>IFSC Code</th>
+                         <th style={{ minWidth: '100px' }}>Verified</th>
+                         <th style={{ minWidth: '80px' }}>Active</th>
+                         <th style={{ minWidth: '100px' }}>Aadhar File</th>
+                         <th style={{ minWidth: '100px' }}>PAN File</th>
+                       </tr>
+                     </thead>
                     <tbody>
                       {(() => {
                         const totalItems = candidates.length;
@@ -177,10 +173,6 @@ const handleCloseTable = () => {
                               <td className="fw-semibold">{c.candidate_name}</td>
                               <td>{c.phone}</td>
                               <td>{c.lmp_date}</td>
-                              <td>{c.dob}</td>
-                              <td>{c.dob_child}</td>
-                              <td>{c.child_name}</td>
-                              <td>{c.pregancy_num}</td>
                               <td><code className="text-muted small">{c.aadhar_number}</code></td>
                               <td><span className="badge bg-secondary">{c.pan_no}</span></td>
                               <td><code className="text-muted small">{c.account_number}</code></td>
