@@ -40,8 +40,8 @@ const Login = () => {
     brandSubtitle: "आज का कौशल, कल का सशक्तिकरण",
    
     roleLabel: "अपनी भूमिका चुनें",
-    userIdLabel: "यूजर आईडी / फोन",
-    userIdPlaceholder: "यूजर आईडी या फोन दर्ज करें",
+    userIdLabel: "लॉगिन टाइप",
+    userIdPlaceholder: "लॉगिन प्रकार दर्ज करें",
     passwordLabel: "पासवर्ड",
     districtLabel: "जिला चुनें",
     projectLabel: "परियोजना चुनें",
