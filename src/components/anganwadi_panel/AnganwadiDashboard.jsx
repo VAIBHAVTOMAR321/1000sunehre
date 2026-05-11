@@ -47,6 +47,7 @@ const [candidates, setCandidates] = useState([]);
     });
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const [validationErrors, setValidationErrors] = useState({});
 
   const [currentIntervention, setCurrentIntervention] = useState(null); // New state to store the full intervention object
   // States for Eligibility Questionnaire
@@ -255,19 +256,79 @@ const [candidates, setCandidates] = useState([]);
      }
    };
 
-  const handleInputChange = (e) => {
-    const { name, value, files } = e.target;
-    if (files) {
-      setFormData({ ...formData, [name]: files[0] });
-    } else {
-      setFormData({ ...formData, [name]: value });
-      let val = value;
+    const handleInputChange = (e) => {
+      const { name, value, files } = e.target;
+      let newValue = value;
+
+      // Format IFSC code
       if (name === "ifsc_code") {
-        val = value.toUpperCase().substring(0, 11);
+        newValue = value.toUpperCase().substring(0, 11);
       }
-      setFormData({ ...formData, [name]: val });
-    }
-  };
+
+      // Enforce numeric-only fields
+      if (name === "phone" || name === "aadhar_number" || name === "account_number") {
+        newValue = value.replace(/\D/g, '').substring(0, name === 'account_number' ? 18 : (name === 'phone' ? 10 : 12));
+      }
+
+      // Enforce alphanumeric for PAN (already handled by regex validation, but we limit length)
+      if (name === "pan_no") {
+        newValue = value.replace(/[^A-Za-z0-9]/g, '').substring(0, 10);
+      }
+
+      // Update form data
+      setFormData({ ...formData, [name]: newValue });
+
+      // Live validation
+      const errors = { ...validationErrors };
+
+      if (name === "phone") {
+        if (newValue.length < 10) {
+          errors.phone = `Phone: ${10 - newValue.length} more digits needed`;
+        } else {
+          delete errors.phone;
+        }
+      }
+
+      if (name === "aadhar_number") {
+        if (newValue.length < 12) {
+          errors.aadhar_number = `Aadhar: ${12 - newValue.length} more digits needed`;
+        } else {
+          delete errors.aadhar_number;
+        }
+      }
+
+      if (name === "pan_no") {
+        if (newValue.length < 10 && newValue.length > 0) {
+          errors.pan_no = `PAN: ${10 - newValue.length} more characters needed`;
+        } else if (newValue.length === 10) {
+          delete errors.pan_no;
+        } else if (newValue.length === 0) {
+          delete errors.pan_no;
+        }
+      }
+
+      if (name === "account_number") {
+        if (newValue.length > 0 && newValue.length < 6) {
+          errors.account_number = `Account too short (min 6 digits)`;
+        } else if (newValue.length > 18) {
+          errors.account_number = "Max 18 digits allowed";
+        } else {
+          delete errors.account_number;
+        }
+      }
+
+      if (name === "ifsc_code") {
+        if (newValue.length < 11 && newValue.length > 0) {
+          errors.ifsc_code = `IFSC: ${11 - newValue.length} more characters`;
+        } else if (newValue.length === 11) {
+          delete errors.ifsc_code;
+        } else if (newValue.length === 0) {
+          delete errors.ifsc_code;
+        }
+      }
+
+      setValidationErrors(errors);
+    };
 
   const fetchCandidates = async () => {
     setLoading(true);
@@ -410,6 +471,30 @@ const [candidates, setCandidates] = useState([]);
     setSubmitting(true);
     setSubmitError("");
 
+    // Validate before submission
+    const errors = {};
+    if (formData.phone.length !== 10) {
+      errors.phone = "Phone must be exactly 10 digits";
+    }
+    if (formData.aadhar_number.length !== 12) {
+      errors.aadhar_number = "Aadhar must be exactly 12 digits";
+    }
+    if (formData.pan_no && formData.pan_no.length !== 10) {
+      errors.pan_no = "PAN must be exactly 10 characters";
+    }
+    if (formData.account_number && formData.account_number.length < 6) {
+      errors.account_number = "Account number too short (min 6 digits)";
+    }
+    if (formData.ifsc_code && formData.ifsc_code.length !== 11) {
+      errors.ifsc_code = "IFSC must be exactly 11 characters";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      setValidationErrors(errors);
+      setSubmitting(false);
+      return;
+    }
+
     try {
       // Always use FormData for proper multipart/form-data encoding
       const submitData = new FormData();
@@ -531,8 +616,9 @@ const [candidates, setCandidates] = useState([]);
   />
 </Form.Group>
                    </Col>
-                   <Col md={3} lg={3}>
-<Form.Label className="form-label-custom">Phone</Form.Label>
+                    <Col md={3} lg={3}>
+                      <Form.Group className="mb-3">
+                        <Form.Label className="form-label-custom">Phone</Form.Label>
                         <Form.Control
                           type="tel"
                           name="phone"
@@ -540,11 +626,19 @@ const [candidates, setCandidates] = useState([]);
                           onChange={handleInputChange}
                           required
                           placeholder="Enter phone number"
+                          maxLength={10}
+                          isInvalid={!!validationErrors.phone}
                         />
-                   </Col>
-                   <Col md={3} lg={3}>
-                     <Form.Group className="mb-3">
-<Form.Label className="form-label-custom">Aadhar Number</Form.Label>
+                        {validationErrors.phone && (
+                          <div className="invalid-feedback d-block">
+                            {validationErrors.phone}
+                          </div>
+                        )}
+                      </Form.Group>
+                    </Col>
+                    <Col md={3} lg={3}>
+                      <Form.Group className="mb-3">
+                        <Form.Label className="form-label-custom">Aadhar Number</Form.Label>
                         <Form.Control
                           type="text"
                           name="aadhar_number"
@@ -552,9 +646,16 @@ const [candidates, setCandidates] = useState([]);
                           onChange={handleInputChange}
                           required
                           placeholder="Enter Aadhar number"
+                          maxLength={12}
+                          isInvalid={!!validationErrors.aadhar_number}
                         />
-                     </Form.Group>
-                   </Col>
+                        {validationErrors.aadhar_number && (
+                          <div className="invalid-feedback d-block">
+                            {validationErrors.aadhar_number}
+                          </div>
+                        )}
+                      </Form.Group>
+                    </Col>
                     <Col md={3}>
                     <Form.Group className="mb-3">
 <Form.Label className="form-label-custom">LMP Date</Form.Label>
@@ -571,43 +672,63 @@ const [candidates, setCandidates] = useState([]);
                   </Row>
 
                  <Row>
-                   <Col md={3}>
-                     <Form.Group className="mb-3">
-                       <Form.Label className="form-label-custom">PAN Number</Form.Label>
-                       <Form.Control
-                         type="text"
-                         name="pan_no"
-                         value={formData.pan_no}
-                         onChange={handleInputChange}
-                         placeholder="Enter PAN number"
-                       />
-                     </Form.Group>
-                   </Col>
-                   <Col md={3}>
-                     <Form.Group className="mb-3">
-                       <Form.Label className="form-label-custom">Account Number</Form.Label>
-                       <Form.Control
-                         type="text"
-                         name="account_number"
-                         value={formData.account_number}
-                         onChange={handleInputChange}
-                         placeholder="Enter account number"
-                       />
-                     </Form.Group>
-                   </Col>
-                   <Col md={3}>
-                     <Form.Group className="mb-3">
-                       <Form.Label className="form-label-custom">IFSC Code</Form.Label>
-                       <Form.Control
-                         type="text"
-                         name="ifsc_code"
-                         value={formData.ifsc_code}
-                         onChange={handleInputChange}
-                         placeholder="Enter IFSC code"
-                         maxLength={11}
-                       />
-                     </Form.Group>
-                   </Col>
+                    <Col md={3}>
+                      <Form.Group className="mb-3">
+                        <Form.Label className="form-label-custom">PAN Number</Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="pan_no"
+                          value={formData.pan_no}
+                          onChange={handleInputChange}
+                          placeholder="Enter PAN number"
+                          maxLength={10}
+                          isInvalid={!!validationErrors.pan_no}
+                        />
+                        {validationErrors.pan_no && (
+                          <div className="invalid-feedback d-block">
+                            {validationErrors.pan_no}
+                          </div>
+                        )}
+                      </Form.Group>
+                    </Col>
+                    <Col md={3}>
+                      <Form.Group className="mb-3">
+                        <Form.Label className="form-label-custom">Account Number</Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="account_number"
+                          value={formData.account_number}
+                          onChange={handleInputChange}
+                          placeholder="Enter account number"
+                          maxLength={18}
+                          isInvalid={!!validationErrors.account_number}
+                        />
+                        {validationErrors.account_number && (
+                          <div className="invalid-feedback d-block">
+                            {validationErrors.account_number}
+                          </div>
+                        )}
+                      </Form.Group>
+                    </Col>
+                    <Col md={3}>
+                      <Form.Group className="mb-3">
+                        <Form.Label className="form-label-custom">IFSC Code</Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="ifsc_code"
+                          value={formData.ifsc_code}
+                          onChange={handleInputChange}
+                          placeholder="Enter IFSC code"
+                          maxLength={11}
+                          isInvalid={!!validationErrors.ifsc_code}
+                        />
+                        {validationErrors.ifsc_code && (
+                          <div className="invalid-feedback d-block">
+                            {validationErrors.ifsc_code}
+                          </div>
+                        )}
+                      </Form.Group>
+                    </Col>
                    <Col md={3}>
                      <Form.Group className="mb-3">
                        <Form.Label className="form-label-custom">Bank Name</Form.Label>
