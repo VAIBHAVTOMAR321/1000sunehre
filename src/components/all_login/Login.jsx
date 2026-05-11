@@ -121,17 +121,24 @@ const Login = () => {
 
   // Fetching logic for Anganwadi dropdowns
   useEffect(() => {
-    if (formData.role === 'anganwadi' || formData.role === 'supervisor') {
+    if (['anganwadi', 'supervisor', 'cdpo', 'dpo'].includes(formData.role)) {
       fetchDistricts();
     }
   }, [formData.role]);
 
   const fetchDistricts = async () => {
-    const url = formData.role === 'anganwadi'
-      ? 'https://mahadevaaya.com/golden100days/golden100days_backend/api/anganwadi-dropdown/'
-      : 'https://mahadevaaya.com/golden100days/golden100days_backend/api/sector-dropdown/';
+    let url = '';
+    if (formData.role === 'anganwadi') {
+      url = 'https://mahadevaaya.com/golden100days/golden100days_backend/api/anganwadi-dropdown/';
+    } else if (formData.role === 'supervisor') {
+      url = 'https://mahadevaaya.com/golden100days/golden100days_backend/api/sector-dropdown/';
+    } else if (formData.role === 'cdpo') {
+      url = 'https://mahadevaaya.com/golden100days/golden100days_backend/api/cdpo-dropdown/';
+    } else if (formData.role === 'dpo') {
+      url = 'https://mahadevaaya.com/golden100days/golden100days_backend/api/district-list/';
+    }
     try {
-      const res = await axios.get(url);
+      const res = await axios.get(url || '');
       if (res.data.success) setDistricts(res.data.data);
     } catch (err) { console.error("Error fetching districts", err); }
   };
@@ -146,17 +153,31 @@ const Login = () => {
     setSupervisorProjectsData([]);
 
     if (district) {
-      const url = formData.role === 'anganwadi'
-        ? `https://mahadevaaya.com/golden100days/golden100days_backend/api/anganwadi-dropdown/?district=${district}`
-        : `https://mahadevaaya.com/golden100days/golden100days_backend/api/sector-dropdown/?district=${district}`;
+      if (formData.role === 'dpo') {
+        const selectedObj = districts.find(d => d.district === district);
+        if (selectedObj) {
+          setFormData(prev => ({ ...prev, email_or_phone: selectedObj.sdname }));
+        }
+        return;
+      }
+
+      let url = '';
+      if (formData.role === 'anganwadi') {
+        url = `https://mahadevaaya.com/golden100days/golden100days_backend/api/anganwadi-dropdown/?district=${district}`;
+      } else if (formData.role === 'supervisor') {
+        url = `https://mahadevaaya.com/golden100days/golden100days_backend/api/sector-dropdown/?district=${district}`;
+      } else if (formData.role === 'cdpo') {
+        url = `https://mahadevaaya.com/golden100days/golden100days_backend/api/cdpo-dropdown/?district=${district}`;
+      }
 
       try {
         const res = await axios.get(url);
         if (res.data.success) {
           if (formData.role === 'supervisor') {
-            // Sector dropdown API returns projects with nested sectors
             setSupervisorProjectsData(res.data.data);
             setProjects(res.data.data.map(item => ({ project: item.project_code })));
+          } else if (formData.role === 'cdpo') {
+            setProjects(res.data.data.map(item => ({ project: item.project_name })));
           } else {
             setProjects(res.data.data);
           }
@@ -169,19 +190,24 @@ const Login = () => {
     const project = e.target.value;
     setSelectedProject(project);
     setSelectedSector('');
-    setFormData(prev => ({ ...prev, email_or_phone: '' }));
     setSectors([]); setAnganwadis([]);
 
     if (project) {
       if (formData.role === 'supervisor') {
+        setFormData(prev => ({ ...prev, email_or_phone: '' }));
         const projData = supervisorProjectsData.find(p => p.project_code === project);
         if (projData) setSectors(projData.sectors);
+      } else if (formData.role === 'cdpo') {
+        setFormData(prev => ({ ...prev, email_or_phone: project }));
       } else {
+        setFormData(prev => ({ ...prev, email_or_phone: '' }));
         try {
           const res = await axios.get(`https://mahadevaaya.com/golden100days/golden100days_backend/api/anganwadi-dropdown/?district=${selectedDistrict}&project=${project}`);
           if (res.data.success) setSectors(res.data.data);
         } catch (err) { console.error("Error fetching sectors", err); }
       }
+    } else {
+      setFormData(prev => ({ ...prev, email_or_phone: '' }));
     }
   };
 
@@ -357,7 +383,7 @@ const Login = () => {
                 </div>
               )}
 
-              {formData.role === 'anganwadi' || formData.role === 'supervisor' ? (
+              {['anganwadi', 'supervisor', 'cdpo', 'dpo'].includes(formData.role) ? (
                 <>
                   <div className="form-group">
                     <label>{content.districtLabel}</label>
@@ -369,35 +395,39 @@ const Login = () => {
                     </select>
                   </div>
 
-                  <div className="form-group">
-                    <label>{content.projectLabel}</label>
-                    <select 
-                      className="form-select custom-login-select" 
-                      value={selectedProject} 
-                      onChange={handleProjectChange} 
-                      disabled={!selectedDistrict}
-                    >
-                      <option value="">{content.projectLabel}</option>
-                      {projects.map((p, i) => (
-                        <option key={i} value={p.project}>{p.project}</option>
-                      ))}
-                    </select>
-                  </div>
+                  {formData.role !== 'dpo' && (
+                    <div className="form-group">
+                      <label>{content.projectLabel}</label>
+                      <select 
+                        className="form-select custom-login-select" 
+                        value={selectedProject} 
+                        onChange={handleProjectChange} 
+                        disabled={!selectedDistrict}
+                      >
+                        <option value="">{content.projectLabel}</option>
+                        {projects.map((p, i) => (
+                          <option key={i} value={p.project}>{p.project}</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
 
-                  <div className="form-group">
-                    <label>{content.sectorLabel}</label>
-                    <select 
-                      className="form-select custom-login-select" 
-                      value={selectedSector} 
-                      onChange={handleSectorChange} 
-                      disabled={!selectedProject}
-                    >
-                      <option value="">{content.sectorLabel}</option>
-                      {sectors.map((s, i) => (
-                        <option key={i} value={s.sector}>{s.sector}</option>
-                      ))}
-                    </select>
-                  </div>
+                  {!['cdpo', 'dpo'].includes(formData.role) && (
+                    <div className="form-group">
+                      <label>{content.sectorLabel}</label>
+                      <select 
+                        className="form-select custom-login-select" 
+                        value={selectedSector} 
+                        onChange={handleSectorChange} 
+                        disabled={!selectedProject}
+                      >
+                        <option value="">{content.sectorLabel}</option>
+                        {sectors.map((s, i) => (
+                          <option key={i} value={s.sector}>{s.sector}</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
 
                   {formData.role === 'anganwadi' && (
                     <div className="form-group">
